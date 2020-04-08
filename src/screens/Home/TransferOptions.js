@@ -9,8 +9,8 @@ import Text from '../../components/primary/Text';
 const TransferOptions = ({ navigation }) => {
   return (
     <Block scroll background>
-      <Header backTitle='Transfer Cash' />
-      <Block space='evenly' paddingHorizontal={SIZES.padding}>
+      <Header backTitle="Transfer Cash" />
+      <Block space="evenly" paddingHorizontal={SIZES.padding}>
         <Block marginVertical={50}>
           <Button
             center
@@ -21,13 +21,15 @@ const TransferOptions = ({ navigation }) => {
             elevation={10}
             row
             height={120}
-            onPress={() => navigation.navigate('TransferCash')}>
+            onPress={() => navigation.navigate('TransferCash')}
+          >
             <Block
               paddingHorizontal={SIZES.padding}
               paddingVertical={SIZES.padding * 2}
               middle
               row
-              center>
+              center
+            >
               <Block flex={2} column>
                 <Text h2>Tmoni account</Text>
                 <Text left gray body>
@@ -36,7 +38,7 @@ const TransferOptions = ({ navigation }) => {
               </Block>
 
               <Block flex={1} />
-              <ImageIcon style={{}} name='avatar' />
+              <ImageIcon style={{}} name="avatar" />
             </Block>
           </Button>
         </Block>
