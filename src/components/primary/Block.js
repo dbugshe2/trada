@@ -1,20 +1,10 @@
-import React, { Component } from "react";
-import {
-  Animated,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  ScrollView
-} from "react-native";
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { Component } from 'react';
+import { Animated, SafeAreaView, StyleSheet, View, ScrollView } from 'react-native';
 
-import {
-  COLORS,
-  SIZES,
-} from "../../utils/theme";
+import { COLORS, SIZES } from '../../utils/theme';
 
-import {
-spacing,
-} from "../../utils/helpers";
+import { spacing } from '../../utils/helpers';
 
 /**
  * https://facebook.github.io/react-native/docs/view
@@ -41,7 +31,7 @@ spacing,
  *   <Text>text 1</Text>
  *   <Text>text 2</Text>
  * </Block>
- * 
+ *
  * - horizontal centering the content
  * <Block middle>
  *   <Text>text 1</Text>
@@ -128,7 +118,6 @@ spacing,
  * </Block>
  */
 
-const { SIZES, COLORS } = theme;
 class Block extends Component {
   getSpacings(type) {
     const {
@@ -146,55 +135,52 @@ class Block extends Component {
       paddingLeft,
       paddingVertical,
       paddingHorizontal,
-      theme
+      theme,
     } = this.props;
 
-    if (type === "margin") {
+    if (type === 'margin') {
       return [
         margin && spacing(type, margin, SIZES.base),
         marginTop && { marginTop: marginTop === true ? SIZES.base : marginTop },
         marginRight && {
-          marginRight: marginRight === true ? SIZES.base : marginRight
+          marginRight: marginRight === true ? SIZES.base : marginRight,
         },
         marginBottom && {
-          marginBottom: marginBottom === true ? SIZES.base : marginBottom
+          marginBottom: marginBottom === true ? SIZES.base : marginBottom,
         },
         marginLeft && {
-          marginLeft: marginLeft === true ? SIZES.base : marginLeft
+          marginLeft: marginLeft === true ? SIZES.base : marginLeft,
         },
         marginVertical && {
-          marginVertical: marginVertical === true ? SIZES.base : marginVertical
+          marginVertical: marginVertical === true ? SIZES.base : marginVertical,
         },
         marginHorizontal && {
-          marginHorizontal:
-            marginHorizontal === true ? SIZES.base : marginHorizontal
-        }
+          marginHorizontal: marginHorizontal === true ? SIZES.base : marginHorizontal,
+        },
       ];
     }
 
-    if (type === "padding") {
+    if (type === 'padding') {
       return [
         padding && spacing(type, padding, SIZES.base),
         paddingTop && {
-          paddingTop: paddingTop === true ? SIZES.base : paddingTop
+          paddingTop: paddingTop === true ? SIZES.base : paddingTop,
         },
         paddingRight && {
-          paddingRight: paddingRight === true ? SIZES.base : paddingRight
+          paddingRight: paddingRight === true ? SIZES.base : paddingRight,
         },
         paddingBottom && {
-          paddingBottom: paddingBottom === true ? SIZES.base : paddingBottom
+          paddingBottom: paddingBottom === true ? SIZES.base : paddingBottom,
         },
         paddingLeft && {
-          paddingLeft: paddingLeft === true ? SIZES.base : paddingLeft
+          paddingLeft: paddingLeft === true ? SIZES.base : paddingLeft,
         },
         paddingVertical && {
-          paddingVertical:
-            paddingVertical === true ? SIZES.base : paddingVertical
+          paddingVertical: paddingVertical === true ? SIZES.base : paddingVertical,
         },
         paddingHorizontal && {
-          paddingHorizontal:
-            paddingHorizontal === true ? SIZES.base : paddingHorizontal
-        }
+          paddingHorizontal: paddingHorizontal === true ? SIZES.base : paddingHorizontal,
+        },
       ];
     }
   }
@@ -240,8 +226,8 @@ class Block extends Component {
       ...props
     } = this.props;
 
-    const marginSpacing = this.getSpacings("margin");
-    const paddingSpacing = this.getSpacings("padding");
+    const marginSpacing = this.getSpacings('margin');
+    const paddingSpacing = this.getSpacings('padding');
 
     const blockStyles = StyleSheet.flatten([
       styles.block,
@@ -261,7 +247,7 @@ class Block extends Component {
         shadowColor: COLORS.primary,
         shadowOffset: { width: 0, height: elevation - 1 },
         shadowOpacity: 0.1,
-        shadowRadius: elevation
+        shadowRadius: elevation,
       },
       space && { justifyContent: `space-${space}` },
       radius && { borderRadius: radius },
@@ -276,8 +262,8 @@ class Block extends Component {
       gray && { backgroundColor: COLORS.gray },
       muted && { backgroundColor: COLORS.muted },
       inactive && { backgroundColor: COLORS.inactive },
-      lightgray && {backgroundColor: COLORS.lightgray},
-      style // rewrite predefined styles
+      lightgray && { backgroundColor: COLORS.lightgray },
+      style, // rewrite predefined styles
     ]);
 
     if (animated) {
@@ -332,38 +318,38 @@ Block.defaultProps = {
   animated: false,
   safe: false,
   style: {},
-  theme: {}
+  theme: {},
 };
 
 export default Block;
 
 export const styles = StyleSheet.create({
   block: {
-    flex: 1
+    flex: 1,
   },
   row: {
-    flexDirection: "row"
+    flexDirection: 'row',
   },
   column: {
-    flexDirection: "column"
+    flexDirection: 'column',
   },
   center: {
-    alignItems: "center"
+    alignItems: 'center',
   },
   middle: {
-    justifyContent: "center"
+    justifyContent: 'center',
   },
   left: {
-    justifyContent: "flex-start"
+    justifyContent: 'flex-start',
   },
   right: {
-    justifyContent: "flex-end"
+    justifyContent: 'flex-end',
   },
   top: {
-    justifyContent: "flex-start"
+    justifyContent: 'flex-start',
   },
   bottom: {
-    justifyContent: "flex-end"
+    justifyContent: 'flex-end',
   },
-  wrap: { flexWrap: "wrap" }
+  wrap: { flexWrap: 'wrap' },
 });
