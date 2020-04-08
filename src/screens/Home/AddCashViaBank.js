@@ -10,8 +10,16 @@ const AddCashViaBankTransfer = () => {
   // const { userDetails } = auth;
   return (
     <Block background>
-      <Block scroll marginVertical={60} marginHorizontal={30} paddingHorizontal={SIZES.padding}>
-        <Text muted>Make a bank transfer into the following account to fund your Trada wallet</Text>
+      <Block
+        scroll
+        marginVertical={60}
+        marginHorizontal={30}
+        paddingHorizontal={SIZES.padding}
+      >
+        <Text muted>
+          Make a bank transfer into the following account to fund your Trada
+          wallet
+        </Text>
 
         <Block marginVertical={50}>
           <Block>
