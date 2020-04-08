@@ -2982,6 +2982,21 @@ expo-asset@~8.1.3:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
+expo-background-fetch@~8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/expo-background-fetch/-/expo-background-fetch-8.1.0.tgz#0397507486233963b38db948308e04706a639f18"
+  integrity sha512-Ltpi1qjx0dP/LK6Cjh3TlhEup9PMFqmxXhXeYUZBNl+k390WWlIdwETK6XbZVMv5YYyN/my90BT/JFJ3e+xsyQ==
+  dependencies:
+    expo-task-manager "~8.1.0"
+
+expo-camera@~8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-8.2.0.tgz#9c849f0dc409e1fe6ee886f479e0ee0050b6d386"
+  integrity sha512-wGVqQVVR4YCkHuI7u+qloI1p2UbYwpU8hs0IEM+1Th4JQekAPUEfOmJI6ZHGj36El8f87ghRed2MXzOssn4hHg==
+  dependencies:
+    lodash "^4.6.0"
+    prop-types "^15.6.0"
+
 expo-constants@*, expo-constants@~9.0.0:
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-9.0.0.tgz#35c600079ee91d38fe4f56375caae6e90f122fdd"
@@ -3029,6 +3044,11 @@ expo-permissions@~8.1.0:
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-8.1.0.tgz#a7f2ee91ba76ce3a467e7b10adaa9ca5201b226f"
   integrity sha512-QBHD+1J9+sGFnhoEGzMRchPweeEE0OJ9ehG/0l1BMRBA7qsLS9vRC1FTJ55NwjI0Kr4RTha9r6ZX1kZHT09f/w==
 
+expo-secure-store@~8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-8.1.0.tgz#1dcc4705c5264c828592a83842b8be8bbfb5f77f"
+  integrity sha512-EjCx9M2nH7iW3eNOjXl0I7oPypI0es6OStZakimR2iD8riLZp9LYHTj+39Iuz2o1m3OKi+bpwr3cHL52DxcDnA==
+
 expo-sqlite@~8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/expo-sqlite/-/expo-sqlite-8.1.0.tgz#858eb28e1143db281de8a49c99b4a953a81d0834"
@@ -3037,6 +3057,11 @@ expo-sqlite@~8.1.0:
     "@expo/websql" "^1.0.1"
     "@types/websql" "^0.0.27"
     lodash "^4.17.15"
+
+expo-task-manager@~8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/expo-task-manager/-/expo-task-manager-8.1.0.tgz#54ffb17bfe8d337a39e99b0a079ecc1b8cd8e8d0"
+  integrity sha512-rhlf5RN8NNHUnQTLnqAKGbEKiWg3WO7Xr3CLSxClFaG0CEkqwlXnlBpeKRkDRe3OcdjBvvJDuCwZlNlc4S1/hw==
 
 expo-web-browser@~8.1.0:
   version "8.1.0"
@@ -4663,6 +4688,11 @@ mkdirp@^1.0.3:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
+moment@^2.24.0:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
+
 morgan@^1.9.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.10.0.tgz#091778abc1fc47cd3509824653dae1faab6b17d7"
@@ -5377,6 +5407,11 @@ react-is@^16.12.0, react-is@^16.13.0, react-is@^16.7.0, react-is@^16.8.1, react-
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-moment@^0.9.7:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/react-moment/-/react-moment-0.9.7.tgz#ca570466595b1aa4f7619e62da18b3bb2de8b6f3"
+  integrity sha512-ifzUrUGF6KRsUN2pRG5k56kO0mJBr8kRkWb0wNvtFIsBIxOuPxhUpL1YlXwpbQCbHq23hUu6A0VEk64HsFxk9g==
 
 react-native-gesture-handler@~1.6.0:
   version "1.6.1"
