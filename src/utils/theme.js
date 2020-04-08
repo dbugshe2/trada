@@ -119,5 +119,3 @@ export const FONTS = {
   small: { fontSize: SIZES.small },
   tiny: { fontSize: SIZES.tiny },
 };
-
-export default { COLORS, SIZES, WEIGHTS, STYLES, FONTS };
