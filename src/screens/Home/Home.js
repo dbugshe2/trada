@@ -48,15 +48,20 @@ const Home = ({ navigation }) => {
               radius={5}
               height={30}
               paddingHorizontal={SIZES.padding}
-              row>
+              row
+            >
               <Text primary mtlight small marginHorizontal={SIZES.base}>
                 {/* {userDetails.wallet.bankName} */}
               </Text>
               <Text muted mtlight small spacing={LETTERSPACING.two_point_4}>
                 {/* {userDetails.wallet.accountNumber} */}
               </Text>
-              <Button onPress={() => handleCopy()} transparent paddingHorizontal={SIZES.padding}>
-                <ImageIcon name='copy' />
+              <Button
+                onPress={() => handleCopy()}
+                transparent
+                paddingHorizontal={SIZES.padding}
+              >
+                <ImageIcon name="copy" />
               </Button>
             </Block>
           </Block>
@@ -75,15 +80,20 @@ const Home = ({ navigation }) => {
               radius={5}
               height={30}
               paddingHorizontal={SIZES.padding}
-              row>
+              row
+            >
               <Text primary mtlight small marginHorizontal={SIZES.base}>
                 {/* {userDetails.wallet.bankName} */}
               </Text>
               <Text muted mtlight small spacing={LETTERSPACING.two_point_4}>
                 {/* {userDetails.wallet.accountNumber} */}
               </Text>
-              <Button onPress={() => handleCopy()} transparent paddingHorizontal={SIZES.padding}>
-                <ImageIcon name='copy' />
+              <Button
+                onPress={() => handleCopy()}
+                transparent
+                paddingHorizontal={SIZES.padding}
+              >
+                <ImageIcon name="copy" />
               </Button>
             </Block>
           </Block>
@@ -93,19 +103,26 @@ const Home = ({ navigation }) => {
       <Text mtmedium secondary tiny center>
         {message}
       </Text>
-      <Block space='evenly' paddingHorizontal={SIZES.padding}>
+      <Block space="evenly" paddingHorizontal={SIZES.padding}>
         {/* two */}
         <Block>
-          <Block space='evenly' row center paddingTop={30} paddingHorizontal={SIZES.padding * 2}>
+          <Block
+            space="evenly"
+            row
+            center
+            paddingTop={30}
+            paddingHorizontal={SIZES.padding * 2}
+          >
             <Button
               center
               middle
               height={50}
               width={100}
               odd
-              onPress={() => navigation.navigate('TransferToTmoni')}>
+              onPress={() => navigation.navigate('TransferToTmoni')}
+            >
               <Block middle center row>
-                <ImageIcon style={{}} name='sentAlt' />
+                <ImageIcon style={{}} name="sentAlt" />
 
                 <Text mtmedium gray marginLeft={8}>
                   Send
@@ -119,9 +136,10 @@ const Home = ({ navigation }) => {
               height={50}
               width={100}
               odd
-              onPress={() => navigation.navigate('AddCashTab')}>
+              onPress={() => navigation.navigate('AddCashTab')}
+            >
               <Block middle center row>
-                <ImageIcon name='recievedAlt' />
+                <ImageIcon name="recievedAlt" />
 
                 <Text mtmedium gray marginLeft={8}>
                   Recieve
@@ -142,22 +160,27 @@ const Home = ({ navigation }) => {
             elevation={10}
             row
             height={150}
-            onPress={() => navigation.navigate('Store', { screen: 'BuyInputs' })}>
+            onPress={() =>
+              navigation.navigate('Store', { screen: 'BuyInputs' })
+            }
+          >
             <Block
               paddingHorizontal={SIZES.padding}
               paddingVertical={SIZES.padding * 2}
               middle
               row
-              center>
+              center
+            >
               <Block column>
                 <Text gray mtregular h2>
                   Buy your inputs
                 </Text>
                 <Text left muted body>
-                  Get inputs from leading agro companies Across the world at guaranteed lowest price
+                  Get inputs from leading agro companies Across the world at
+                  guaranteed lowest price
                 </Text>
               </Block>
-              <ImageIcon name='cart' />
+              <ImageIcon name="cart" />
             </Block>
           </Button>
 
@@ -171,22 +194,27 @@ const Home = ({ navigation }) => {
             elevation={10}
             row
             height={150}
-            onPress={() => navigation.navigate('Store', { screen: 'SellOutputs' })}>
+            onPress={() =>
+              navigation.navigate('Store', { screen: 'SellOutputs' })
+            }
+          >
             <Block
               paddingHorizontal={SIZES.padding}
               paddingVertical={SIZES.padding * 2}
               middle
               row
-              center>
+              center
+            >
               <Block column>
                 <Text gray mtregular h2>
                   Sell your Outputs
                 </Text>
                 <Text left muted body>
-                  Get inputs from leading agro companies Across the world at guaranteed lowest price
+                  Get inputs from leading agro companies Across the world at
+                  guaranteed lowest price
                 </Text>
               </Block>
-              <ImageIcon name='basket' />
+              <ImageIcon name="basket" />
             </Block>
           </Button>
         </Block>
