@@ -2,11 +2,7 @@
   "expo": {
     "name": "trada",
     "slug": "trada",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,11 +14,28 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgrounModes": ["location", "fetch"]
+      }
+    },
+    "androidStatusBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#FFFFFF"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "maroof-shittu",
+            "project": "tradabeta",
+            "authToken": "fad42d2942e4422587b7ebd934cf3c0ad8dc4278a5fc4a7c9d15e8b865764247"
+          }
+        }
+      ]
     }
   }
 }
