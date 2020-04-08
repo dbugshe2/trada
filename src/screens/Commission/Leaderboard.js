@@ -1,6 +1,5 @@
 import React from 'react';
 import { SIZES } from '../../utils/theme';
-import { data } from '../../data/index';
 import LeaderboardItem from '../../components/LeaderboardItem';
 import Header from '../../components/Header';
 import ImageIcon from '../../components/primary/ImageIcon';
@@ -10,7 +9,7 @@ import Text from '../../components/primary/Text';
 const Leaderboard = () => {
   return (
     <Block background>
-      <Header title='LeaderBoard' />
+      <Header title="LeaderBoard" />
       <Block paddingHorizontal={SIZES.base}>
         <Block flex middle>
           {/* <FlatList

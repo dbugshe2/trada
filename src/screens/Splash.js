@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import ImageIcon from '../components/primary/ImageIcon';
 
-export function Splash() {
+function Splash() {
   const styles = {
     containerStyles: {
       flex: 1,
@@ -19,7 +19,11 @@ export function Splash() {
     <View style={styles.containerStyles}>
       <ImageIcon name="logo" />
 
-      <ActivityIndicator style={styles.spinnerStyle} animating color="#91CC42" />
+      <ActivityIndicator
+        style={styles.spinnerStyle}
+        animating
+        color="#91CC42"
+      />
     </View>
   );
 }

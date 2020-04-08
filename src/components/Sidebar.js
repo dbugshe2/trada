@@ -14,9 +14,14 @@ const Sidebar = (props) => {
   // const { logout, userDetails } = auth;
   const navigation = useNavigation();
   return (
-    <Block scroll showVerticalScrollIndicator={false} space='between'>
+    <Block scroll showVerticalScrollIndicator={false} space="between">
       <Block>
-        <Block height={166} center marginVertical={SIZES.padding * 2} space='evenly'>
+        <Block
+          height={166}
+          center
+          marginVertical={SIZES.padding * 2}
+          space="evenly"
+        >
           {/* <Image
             source={{
               uri: userDetails.profileImage,
@@ -30,7 +35,8 @@ const Sidebar = (props) => {
             secondary
             height={18}
             paddingHorizontal={SIZES.padding}
-            onPress={() => navigation.navigate('ProfileTab')}>
+            onPress={() => navigation.navigate('Profile')}
+          >
             <Text small white center mtmedium>
               Edit Profile
             </Text>
@@ -42,9 +48,9 @@ const Sidebar = (props) => {
       </Block>
       <DrawerItem
         {...props}
-        icon={({ focused, color, size }) => <ImageIcon name='logout' />}
+        icon={({ focused, color, size }) => <ImageIcon name="logout" />}
         // onPress={() => logout()}
-        label='Logout'
+        label="Logout"
       />
     </Block>
   );

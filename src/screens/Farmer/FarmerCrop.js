@@ -4,7 +4,7 @@ import Text from '../../components/primary/Text';
 import Input from '../../components/primary/Input';
 import Button from '../../components/primary/Button';
 import Header from '../../components/Header';
-import Dropdown from '../../components/Dropdown;';
+import Dropdown from '../../components/Dropdown';
 
 import { SIZES } from '../../utils/theme';
 

@@ -4,7 +4,7 @@ import { SIZES } from '../../utils/theme';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 
-const AddCashViaBankTransfer = () => {
+const AddCashViaBank = () => {
   // const auth = useAuthContext();
 
   // const { userDetails } = auth;
@@ -54,4 +54,4 @@ const AddCashViaBankTransfer = () => {
   );
 };
 
-export default AddCashViaBankTransfer;
+export default AddCashViaBank;

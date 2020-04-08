@@ -1,5 +1,4 @@
-import { theme } from '../utils';
-const { COLORS, SIZES } = theme;
+import { COLORS, SIZES } from '../utils/theme';
 export const headerStyles = {};
 
 export const bottomBarStyles = {

@@ -6,14 +6,20 @@ import { COLORS, SIZES } from '../../utils/theme';
 // import { VariationContext } from '../../context/variation/VariationContext';
 import { useForm } from 'react-hook-form';
 import { captureException } from 'sentry-expo';
-import { GENDERS, EDUCATION_LEVELS, MONTHS, DATE, YEARS } from '../../constants/onboarding';
+import {
+  GENDERS,
+  EDUCATION_LEVELS,
+  MONTHS,
+  DATE,
+  YEARS,
+} from '../../constants/onboarding';
 import Dropdown from '../../components/Dropdown';
 import Input from '../../components/primary/Input';
 import StepIndicator from '../../components/StepIndicator';
 import Button from '../../components/primary/Button';
 import Block from '../../components/primary/Block';
 import Header from '../../components/Header';
-import Text from '../../components/Text';
+import Text from '../../components/primary/Text';
 
 const steps = 4;
 const initialViewProp = 0; // use initialView of 0
@@ -132,7 +138,10 @@ const Register = ({ navigation }) => {
   // logs
 
   useEffect(() => {
-    register({ name: 'firstName' }, { required: 'Please enter you first name' });
+    register(
+      { name: 'firstName' },
+      { required: 'Please enter you first name' }
+    );
     register({ name: 'lastName' }, { required: 'Please enter your last name' });
     register(
       { name: 'phone' },
@@ -153,14 +162,23 @@ const Register = ({ navigation }) => {
         },
       }
     );
-    register({ name: 'state' }, { required: 'Please select the state you live in' });
+    register(
+      { name: 'state' },
+      { required: 'Please select the state you live in' }
+    );
     register({ name: 'lga' }, { required: 'pleasse select your ' });
     register({ name: 'district' });
     register({ name: 'gender' }, { required: 'please select a gender' });
-    register({ name: 'education' }, { required: 'please select your education level' });
+    register(
+      { name: 'education' },
+      { required: 'please select your education level' }
+    );
     register({ name: 'pin' }, { required: 'please create a pin' });
     register({ name: 'confirmPin' }, {});
-    register({ name: 'address' }, { required: 'Please enter your full address' });
+    register(
+      { name: 'address' },
+      { required: 'Please enter your full address' }
+    );
     register(
       { name: 'dateOfBirth' },
       {
@@ -175,7 +193,7 @@ const Register = ({ navigation }) => {
 
   return (
     <Block background paddingHorizontal={SIZES.padding}>
-      <Header backTitle='' />
+      <Header backTitle="" />
       <Text center body secondary>
         <Text secondary>{message}</Text>
       </Text>
@@ -189,13 +207,13 @@ const Register = ({ navigation }) => {
               customStyles={tabsCustomStyle}
               stepCount={steps}
               labels={labels}
-              direction='horizontal'
+              direction="horizontal"
             />
           </Block>
 
           <Block flex={4}>
             <ViewPager
-              orientation='horizontal'
+              orientation="horizontal"
               style={{ flex: 1 }}
               initialPage={initialViewProp}
               pageMargin={10}
@@ -207,45 +225,51 @@ const Register = ({ navigation }) => {
               onPageSelected={(e) => {
                 const position = e.nativeEvent.position;
                 handleScroll(position);
-              }}>
+              }}
+            >
               {/* EnterPhysical */}
-              <Block key='physical' scroll>
+              <Block key="physical" scroll>
                 <Input
                   onChangeText={(text) => setFirstName(text)}
-                  label='First Name'
+                  label="First Name"
                   error={errors.firstName}
                 />
                 <Input
                   onChangeText={(text) => setLastName(text)}
-                  label='Last Name'
-                  returnKeyType='next'
+                  label="Last Name"
+                  returnKeyType="next"
                   error={errors.lastName}
                 />
                 <Input
                   onChangeText={(text) => setPhone(text)}
-                  keyboardType='number-pad'
-                  label='Phone Number'
+                  keyboardType="number-pad"
+                  label="Phone Number"
                   defaultValue={(phone && phone) || ''}
                   error={errors.phone}
                   maxLength={11}
                 />
                 <Input
                   onChangeText={(text) => setEmail(text)}
-                  keyboardType='email-address'
-                  label='Email'
-                  autoCapitalize='none'
+                  keyboardType="email-address"
+                  label="Email"
+                  autoCapitalize="none"
                   error={errors.email}
                 />
               </Block>
               {/* /EnterPhysical */}
               {/* EnterLocation */}
-              <Block key='location' space='around'>
+              <Block key="location" space="around">
                 <Block>
                   <Dropdown
                     // options={states_and_lgas}
                     // defaultValue={loading ? 'loading...' : 'Select State'}
                     renderRow={(state, index, isSelected) => (
-                      <Text gray h6 paddingHorizontal={SIZES.base} paddingVertical={SIZES.padding}>
+                      <Text
+                        gray
+                        h6
+                        paddingHorizontal={SIZES.base}
+                        paddingVertical={SIZES.padding}
+                      >
                         {state.name}
                       </Text>
                     )}
@@ -264,12 +288,12 @@ const Register = ({ navigation }) => {
                     error={errors.lga}
                   />
                   <Input
-                    label='District'
+                    label="District"
                     onChangeText={(text) => setDistrict(text)}
                     error={errors.address}
                   />
                   <Input
-                    label='Address'
+                    label="Address"
                     onChangeText={(text) => setAddress(text)}
                     error={errors.address}
                   />
@@ -277,31 +301,36 @@ const Register = ({ navigation }) => {
               </Block>
               {/* / EnterLocation */}
               {/* ENterBio */}
-              <Block key='bio'>
+              <Block key="bio">
                 <Dropdown
                   options={GENDERS}
-                  defaultValue='Gender'
+                  defaultValue="Gender"
                   onSelect={handleGenderSelect}
                   error={errors.gender}
                 />
                 <Text small muted marginVertical={2}>
                   Date of Birth
                 </Text>
-                <Block row flex={0} space='between'>
+                <Block row flex={0} space="between">
                   <Dropdown
                     options={DATE}
                     onSelect={handleDateSelect}
                     error={errors.dateOfBirth}
-                    defaultValue='Date'
+                    defaultValue="Date"
                   />
                   <Dropdown
                     flex={1}
                     options={MONTHS}
                     onSelect={handleMonthSelect}
                     error={errors.dateOfBirth}
-                    defaultValue='Month'
+                    defaultValue="Month"
                     renderRow={(month, index, isSelected) => (
-                      <Text gray h6 paddingHorizontal={SIZES.base} paddingVertical={SIZES.padding}>
+                      <Text
+                        gray
+                        h6
+                        paddingHorizontal={SIZES.base}
+                        paddingVertical={SIZES.padding}
+                      >
                         {month.name}
                       </Text>
                     )}
@@ -315,7 +344,7 @@ const Register = ({ navigation }) => {
                     options={YEARS}
                     onSelect={handleYearSelect}
                     error={errors.dateOfBirth}
-                    defaultValue='Year'
+                    defaultValue="Year"
                   />
                 </Block>
                 {errors.dateOfBirth && (
@@ -325,7 +354,7 @@ const Register = ({ navigation }) => {
                 )}
                 <Dropdown
                   options={EDUCATION_LEVELS}
-                  defaultValue='Highest Degree'
+                  defaultValue="Highest Degree"
                   onSelect={handleEducationSelect}
                   message={errors.education && errors.education.message}
                   error={errors.education}
@@ -333,25 +362,29 @@ const Register = ({ navigation }) => {
               </Block>
               {/* EnterBio */}
               {/* SetPassword */}
-              <Block key='password'>
+              <Block key="password">
                 <Input
-                  label='Set Pin'
+                  label="Set Pin"
                   secureTextEntry
                   onChangeText={(text) => setPin(text)}
                   message={errors.pin && errors.pin.message}
                   error={errors.pin}
                 />
                 <Input
-                  label='Confirm Pin'
+                  label="Confirm Pin"
                   secureTextEntry
                   onChangeText={(text) => setConfirmPin(text)}
                   message={errors.confirmPin && errors.confirmPin.message}
                   error={errors.confirmPin}
                 />
                 {sending ? (
-                  <ActivityIndicator animating size='large' />
+                  <ActivityIndicator animating size="large" />
                 ) : (
-                  <Button marginVertical={SIZES.padding} secondary onPress={() => onSubmit()}>
+                  <Button
+                    marginVertical={SIZES.padding}
+                    secondary
+                    onPress={() => onSubmit()}
+                  >
                     <Text white center>
                       Submit
                     </Text>
@@ -361,7 +394,7 @@ const Register = ({ navigation }) => {
               {/* /SetPassword */}
             </ViewPager>
           </Block>
-          <Block flex={0.5} space='between' row>
+          <Block flex={0.5} space="between" row>
             <Block>
               {activeView > 0 && (
                 <Button transparent onPress={() => handleViewSelected('prev')}>
@@ -373,7 +406,11 @@ const Register = ({ navigation }) => {
             </Block>
             <Block>
               {activeView <= steps - 2 && (
-                <Button radius={0} transparent onPress={() => handleViewSelected('next')}>
+                <Button
+                  radius={0}
+                  transparent
+                  onPress={() => handleViewSelected('next')}
+                >
                   <Text right mtregular primary h5>
                     Next
                   </Text>

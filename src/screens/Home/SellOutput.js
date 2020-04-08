@@ -8,10 +8,10 @@ import Header from '../../components/Header';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 
-const SellInput = () => {
+const SellOutput = () => {
   return (
     <Block background>
-      <Header backTitle='Sell Your Outputs' />
+      <Header backTitle="Sell Your Outputs" />
       <Text marginVertical={5} paddingHorizontal={SIZES.padding}>
         Place item available for sell
       </Text>
@@ -19,7 +19,7 @@ const SellInput = () => {
         <Block marginVertical={8} center middle flex={0} column>
           <Button muted center middle width={80} height={80}>
             <Block center middle>
-              <ImageIcon name='add' />
+              <ImageIcon name="add" />
             </Block>
           </Button>
           <Text marginVertical={6} small muted>
@@ -27,22 +27,22 @@ const SellInput = () => {
           </Text>
         </Block>
         <Block middle flex={0}>
-          <Input label='Description' />
-          <Input label='Select State' />
-          <Dropdown label='LGA' />
-          <Dropdown label='Category' />
-          <Block flex={0} space='around' row>
+          <Input label="Description" />
+          <Input label="Select State" />
+          <Dropdown label="LGA" />
+          <Dropdown label="Category" />
+          <Block flex={0} space="around" row>
             <Block>
-              <Dropdown label='Item' />
+              <Dropdown label="Item" />
               <Text primary small>
                 Minimum of 10 item per order
               </Text>
             </Block>
             <Block>
-              <Dropdown label='Qty:10' />
+              <Dropdown label="Qty:10" />
             </Block>
           </Block>
-          <Input label='Delivery location' />
+          <Input label="Delivery location" />
           <Text primary small>
             Estimated Price:
             <Text black small>
@@ -63,4 +63,4 @@ const SellInput = () => {
   );
 };
 
-export default SellInput;
+export default SellOutput;
