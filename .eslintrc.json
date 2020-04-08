@@ -1,38 +1,8 @@
 {
   "parser": "babel-eslint",
-  "extends": ["prettier", "prettier/react", "@react-native-community"],
-  "plugins": ["react", "jsx-a11y", "import", "eslint-plugin-react"],
-  "rules": {
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "import/prefer-default-export": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/prefer-stateless-function": [0],
-    "react/jsx-indent": [2, 2],
-    "react/jsx-indent-props": [1, 2],
-    "react/sort-comp": [0],
-    "react/destructuring-assignment": [0],
-    "react/forbid-prop-types": [0],
-    "react/no-unescaped-entities": ["error", { "forbid": [">", "}"] }],
-    "jsx-quotes": ["error", "prefer-single"],
-    "camelcase": "off",
-    "no-use-before-define": [
-      "error",
-      { "functions": true, "classes": true, "variables": false }
-    ],
-    "semi": ["error", "always"],
-    "prettier/prettier": [
-      "error",
-      {
-        "trailingComma": "es5",
-        "singleQuote": true,
-        "jsxSingleQuote": true,
-        "printWidth": 100,
-        "semi": true,
-        "jsxBracketSameLine": true,
-        "comma_dangle": true
-      }
-    ]
-  },
+  "extends": [
+    "@react-native-community"
+  ],
   "env": {
     "react-native/react-native": true,
     "node": true,
