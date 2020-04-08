@@ -1,22 +1,20 @@
-import React from "react";
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import Block from './primary/Block';
 import ImageIcon from './primary/ImageIcon';
-import Text  from "./primary/Text";
-import {
-  COLORS,
-} from "../../utils/theme";
+import Text from './primary/Text';
+import { COLORS } from '../utils/theme';
 
 import { CurrencyFormatter } from '../utils/currency';
 
-const Commission = props => {
-  const {amount, date}  = props
+const Commission = (props) => {
+  const { amount, date } = props;
   return (
     <Block
       marginVertical={15}
       style={{
         borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: COLORS.lightgray
+        borderBottomColor: COLORS.lightgray,
       }}
       row
       space="between"

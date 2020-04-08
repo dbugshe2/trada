@@ -9,27 +9,27 @@ import Text from '../../components/primary/Text';
 const BuyInput = () => {
   return (
     <Block background>
-      <Header backTitle='Buy Your Inputs' />
+      <Header backTitle="Buy Your Inputs" />
       <Text marginVertical={5} paddingHorizontal={SIZES.padding}>
         Transfer funds to your Tmoni account
       </Text>
       <Block marginVertical={25} paddingHorizontal={SIZES.padding}>
         <Block middle flex={0}>
-          <Dropdown defaultValue='Select State' />
-          <Dropdown defaultValue='LGA' />
-          <Dropdown defaultValue='Category' />
-          <Block flex={0} space='around' row>
+          <Dropdown defaultValue="Select State" />
+          <Dropdown defaultValue="LGA" />
+          <Dropdown defaultValue="Category" />
+          <Block flex={0} space="around" row>
             <Block>
-              <Dropdown defaultValue='Category' />
+              <Dropdown defaultValue="Category" />
               <Text primary small>
                 Minimum of 10 item per order
               </Text>
             </Block>
             <Block>
-              <Dropdown defaultValue='Qty:10' />
+              <Dropdown defaultValue="Qty:10" />
             </Block>
           </Block>
-          <Dropdown defaultValue='Pickup location' />
+          <Dropdown defaultValue="Pickup location" />
         </Block>
       </Block>
       <Block flex={0}>

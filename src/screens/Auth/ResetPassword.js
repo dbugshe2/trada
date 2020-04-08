@@ -9,7 +9,7 @@ import Input from '../../components/primary/Input';
 import Button from '../../components/primary/Button';
 import Block from '../../components/primary/Block';
 import Header from '../../components/Header';
-import Text from '../../components/Text';
+import Text from '../../components/primary/Text';
 
 const ResetPassword = ({ navigation }) => {
   // const auth = useAuthContext();
@@ -44,31 +44,35 @@ const ResetPassword = ({ navigation }) => {
 
   return (
     <Block background>
-      <Header backTitle='Reset Password' />
+      <Header backTitle="Reset Password" />
       <Block>
-        <Block paddingHorizontal={SIZES.padding} space='between'>
+        <Block paddingHorizontal={SIZES.padding} space="between">
           <Text secondary>{message}</Text>
           <Input
-            label='New Pin'
+            label="New Pin"
             secureTextEntry
             maxLength={4}
-            keyboardType='number-pad'
+            keyboardType="number-pad"
             onChangeText={(text) => setValue('newPin', text)}
             error={errors.newPin}
           />
           <Input
-            label='Confirm New Pin'
+            label="Confirm New Pin"
             maxLength={4}
             secureTextEntry
-            keyboardType='number-pad'
+            keyboardType="number-pad"
             onChangeText={(text) => setValue('confirmPin', text)}
             error={errors.confirmPin}
           />
           <Block middle>
             {sending ? (
-              <ActivityIndicator animating size='large' />
+              <ActivityIndicator animating size="large" />
             ) : (
-              <Button marginVertical={SIZES.padding} primary onPress={handleSubmit(onSubmit)}>
+              <Button
+                marginVertical={SIZES.padding}
+                primary
+                onPress={handleSubmit(onSubmit)}
+              >
                 <Text white center>
                   Reset Password
                 </Text>
@@ -83,7 +87,8 @@ const ResetPassword = ({ navigation }) => {
           <Button
             transparent
             marginHorizontal={SIZES.base}
-            onPress={() => navigation.navigate('Login')}>
+            onPress={() => navigation.navigate('Login')}
+          >
             <Text primary small>
               Log In
             </Text>

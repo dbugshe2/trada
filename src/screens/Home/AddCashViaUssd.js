@@ -13,21 +13,22 @@ const AddCashViaUssd = () => {
   const [amount, setAmount] = useState('');
   return (
     <Block background paddingHorizontal={SIZES.padding}>
-      <KeyboardAvoidingView behavior='padding'>
+      <KeyboardAvoidingView behavior="padding">
         <Input
-          keyboardType='numeric'
+          keyboardType="numeric"
           clearTextOnFocus
           onChangeText={(text) => setAmount(text)}
-          label='Enter Amount'
+          label="Enter Amount"
           // value={amount}
         />
       </KeyboardAvoidingView>
       <Block scroll paddingHorizontal={SIZES.padding * 2}>
         <Text paddingVertical={30} muted>
-          Make a USSD transfer into your Trada wallet by selecting Providus Bank as destination bank
+          Make a USSD transfer into your Trada wallet by selecting Providus Bank
+          as destination bank
         </Text>
 
-        <Block space='evenly'>
+        <Block space="evenly">
           <Block>
             <Text gray h6>
               ACCESS BANK

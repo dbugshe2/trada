@@ -6,13 +6,16 @@ import { SIZES, COLORS, LINE_HEIGHTS, LETTERSPACING } from '../../utils/theme';
 //   useAuthContext
 // } from "../../context";
 import { ActivityIndicator } from 'react-native-paper';
-import { CurrencyFormatter, saveToClipboard, decode } from '../../utils';
+import { CurrencyFormatter } from '../../utils/currency';
 import Swiper from '../../components/Swiper';
 import Button from '../../components/primary/Button';
 import ImageIcon from '../../components/primary/ImageIcon';
 import Header from '../../components/Header';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
+import { decode } from '../../utils/token';
+import { saveToClipboard } from '../../utils/clipboard';
+
 const Home = ({ navigation }) => {
   // const auth = useAuthContext();
 
@@ -119,7 +122,7 @@ const Home = ({ navigation }) => {
               height={50}
               width={100}
               odd
-              onPress={() => navigation.navigate('TransferToTmoni')}
+              onPress={() => navigation.navigate('TransferOptions')}
             >
               <Block middle center row>
                 <ImageIcon style={{}} name="sentAlt" />
@@ -136,7 +139,7 @@ const Home = ({ navigation }) => {
               height={50}
               width={100}
               odd
-              onPress={() => navigation.navigate('AddCashTab')}
+              onPress={() => navigation.navigate('AddCash')}
             >
               <Block middle center row>
                 <ImageIcon name="recievedAlt" />
