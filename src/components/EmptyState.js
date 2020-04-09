@@ -1,15 +1,26 @@
-import React from 'react'
-import { 
-  View, 
-  Text 
-} from 'react-native'
+import React from 'react';
+import Block from './primary/Block';
+import Text from './primary/Text';
+import ImageIcon from './primary/ImageIcon';
+import { ActivityIndicator } from 'react-native-paper';
+import { COLORS, SIZES } from '../utils/theme';
 
-const EmptyState = () => {
+const EmptyState = (props) => {
+  const { text, icon, loading } = props;
   return (
-    <View>
-      <Text>nothing to see here</Text>
-    </View>
-  )
-}
+    <Block center middle>
+      {loading ? (
+        <ActivityIndicator color={COLORS.primary} />
+      ) : (
+        <>
+          <ImageIcon name={(icon && icon) || 'add'} />
+          <Text center mtmedium small marginVertical={SIZES.padding}>
+            {text}
+          </Text>
+        </>
+      )}
+    </Block>
+  );
+};
 
-export default EmptyState
+export default EmptyState;
