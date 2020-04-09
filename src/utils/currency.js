@@ -20,10 +20,12 @@ const decimalSeparator = ',';
 const thousandSeparator = '.';
 
 function position(currencyPosition, value) {
-  return currencyPosition === 'left' ? `${currencyCode}${value}` : `${value}${currencyCode}`;
+  return currencyPosition === 'left'
+    ? `${currencyCode}${value}`
+    : `${value}${currencyCode}`;
 }
 
-const CurrencyFormatter = (value) => {
+export const CurrencyFormatter = (value) => {
   const string = 'string';
   let result;
 
@@ -37,13 +39,21 @@ const CurrencyFormatter = (value) => {
     return position(currencyPosition, 0);
   }
 
-  const valueSplit = String(value.toFixed(maxFractionDigits)).split(`${thousandSeparator}`);
+  const valueSplit = String(value.toFixed(maxFractionDigits)).split(
+    `${thousandSeparator}`
+  );
   const firstvalue = valueSplit[0];
   const secondvalue = valueSplit[1];
-  const valueReal = String(firstvalue).replace(/\B(?=(\d{3})+(?!\d))/g, `${thousandSeparator}`);
+  const valueReal = String(firstvalue).replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    `${thousandSeparator}`
+  );
 
   if (Number(secondvalue) > 0) {
-    result = position(currencyPosition, `${valueReal}${thousandSeparator}${secondvalue}`);
+    result = position(
+      currencyPosition,
+      `${valueReal}${thousandSeparator}${secondvalue}`
+    );
   } else {
     result = position(currencyPosition, `${valueReal}`);
   }
@@ -69,18 +79,24 @@ export const NumberFormatter = (value) => {
     return numberPosition(currencyPosition, 0);
   }
 
-  const valueSplit = String(value.toFixed(maxFractionDigits)).split(`${thousandSeparator}`);
+  const valueSplit = String(value.toFixed(maxFractionDigits)).split(
+    `${thousandSeparator}`
+  );
   const firstvalue = valueSplit[0];
   const secondvalue = valueSplit[1];
-  const valueReal = String(firstvalue).replace(/\B(?=(\d{3})+(?!\d))/g, `${thousandSeparator}`);
+  const valueReal = String(firstvalue).replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    `${thousandSeparator}`
+  );
 
   if (Number(secondvalue) > 0) {
-    result = position(currencyPosition, `${valueReal}${thousandSeparator}${secondvalue}`);
+    result = position(
+      currencyPosition,
+      `${valueReal}${thousandSeparator}${secondvalue}`
+    );
   } else {
     result = position(currencyPosition, `${valueReal}`);
   }
 
   return result;
 };
-
-export default CurrencyFormatter;

@@ -1,15 +1,18 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import { AsyncStorage } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
-const TOKEN_KEY = '@token';
-const USER_KEY = '@user';
+const TOKEN_KEY = 'token';
+const USER_KEY = 'user';
 
 export const getUserToken = async () => {
   try {
     const token = await SecureStore.getItemAsync(TOKEN_KEY);
 
-    if (token !== null) return token;
-    else return null;
+    if (token !== null) {
+      return token;
+    } else {
+      return null;
+    }
   } catch (error) {
     throw new Error(error);
   }
@@ -25,7 +28,7 @@ export const setUserToken = async (data) => {
 
 export const removeUserToken = async () => {
   try {
-    return await SecureStore.deleteItemAsync(TOKEN_KEY);
+    await SecureStore.deleteItemAsync(TOKEN_KEY);
   } catch (error) {
     throw new Error(error);
   }
@@ -35,8 +38,11 @@ export const getUser = async () => {
   try {
     const user = await AsyncStorage.getItem(USER_KEY);
 
-    if (user !== null) return user;
-    else return null;
+    if (user !== null) {
+      return user;
+    } else {
+      return null;
+    }
   } catch (error) {
     throw new Error(error);
   }
@@ -51,7 +57,7 @@ export const setUser = async (data) => {
 };
 export const removeUser = async () => {
   try {
-    return await AsyncStorage.removeItem(USER_KEY);
+    await AsyncStorage.removeItem(USER_KEY);
   } catch (error) {
     throw new Error(error);
   }

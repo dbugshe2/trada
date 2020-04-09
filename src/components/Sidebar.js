@@ -5,14 +5,17 @@ import Block from './primary/Block';
 import Text from './primary/Text';
 import Button from './primary/Button';
 import { Image } from 'react-native';
-// import { useAuthContext } from "../context/auth/AuthContext";
+import { useAuthContext } from '../context/auth/AuthContext';
 import { SIZES } from '../utils/theme';
 import ImageIcon from './primary/ImageIcon';
 
 const Sidebar = (props) => {
-  // const auth = useAuthContext();
-  // const { logout, userDetails } = auth;
+  const { logout, userDetails } = useAuthContext();
   const navigation = useNavigation();
+  async function logMeOut() {
+    await logout();
+  }
+
   return (
     <Block scroll showVerticalScrollIndicator={false} space="between">
       <Block>
@@ -22,14 +25,14 @@ const Sidebar = (props) => {
           marginVertical={SIZES.padding * 2}
           space="evenly"
         >
-          {/* <Image
+          <Image
             source={{
               uri: userDetails.profileImage,
             }}
             style={{ width: 100, height: 100, borderRadius: 100 }}
-          /> */}
+          />
           <Text h5 gray mtmedium>
-            {/* {userDetails.firstName} {userDetails.lastName} */}
+            {userDetails.firstName} {userDetails.lastName}
           </Text>
           <Button
             secondary
@@ -49,7 +52,7 @@ const Sidebar = (props) => {
       <DrawerItem
         {...props}
         icon={({ focused, color, size }) => <ImageIcon name="logout" />}
-        // onPress={() => logout()}
+        onPress={() => logMeOut()}
         label="Logout"
       />
     </Block>
