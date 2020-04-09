@@ -1,8 +1,8 @@
-import React from "react";
-import { Image, StyleSheet, ImageBackground } from "react-native";
-import icons from "../../constants/icons";
+import React from 'react';
+import { Image, StyleSheet, ImageBackground } from 'react-native';
+import icons from '../../constants/icons';
 
-const ImageIcon = props => {
+const ImageIcon = (props) => {
   const {
     name,
     style,
@@ -13,27 +13,27 @@ const ImageIcon = props => {
     left,
     children,
     background,
-    resize
+    resize,
   } = props;
   const { icon, height, width } = icons[`${name}`];
   const iconStyles = StyleSheet.flatten(
     {
       height: height,
-      width: width
+      width: width,
     },
     absolute && { position: absolute },
     top && { top },
     right && { right },
     bottom && { bottom },
     left && { left },
-    style
+    style && { ...style }
   );
   if (background) {
     return (
       <ImageBackground
         source={icon}
         style={iconStyles}
-        resizeMode={(resize && resize) || "contain"}
+        resizeMode={(resize && resize) || 'contain'}
         {...props}
       >
         {children}
@@ -44,14 +44,14 @@ const ImageIcon = props => {
     <Image
       source={icon}
       style={iconStyles}
-      resizeMode={(resize && resize) || "contain"}
+      resizeMode={(resize && resize) || 'contain'}
       {...props}
     />
   );
 };
 
 ImageIcon.defaultProps = {
-  name: "add"
+  name: 'add',
 };
 
 export default ImageIcon;

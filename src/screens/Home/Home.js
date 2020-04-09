@@ -1,10 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { SIZES, COLORS, LINE_HEIGHTS, LETTERSPACING } from '../../utils/theme';
-// import AuthProvider, {
-//   AuthContext,
-//   CommissionContext,
-//   useAuthContext
-// } from "../../context";
+import { useAuthContext } from '../../context/auth/AuthContext';
 import { ActivityIndicator } from 'react-native-paper';
 import { CurrencyFormatter } from '../../utils/currency';
 import Swiper from '../../components/Swiper';
@@ -13,23 +9,51 @@ import ImageIcon from '../../components/primary/ImageIcon';
 import Header from '../../components/Header';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
-import { decode } from '../../utils/token';
 import { saveToClipboard } from '../../utils/clipboard';
+import Toast from 'react-native-tiny-toast';
+import { useFocusEffect } from '@react-navigation/native';
+import { captureException } from 'sentry-expo';
 
 const Home = ({ navigation }) => {
-  // const auth = useAuthContext();
+  const {
+    userDetails,
+    fetchUserDetails,
+    setUserDetails,
+    validateToken,
+  } = useAuthContext();
 
-  // const { userDetails } = auth;
-
-  const [showMessage, setShowMessage] = useState(false);
-  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleCopy = async () => {
     console.log('copy clicked');
-    // await saveToClipboard(userDetails.wallet.accountNumber);
+    await saveToClipboard(userDetails.wallet.accountNumber);
     console.log('copied');
-    // setMessage(`${userDetails.wallet.accountNumber} copied!`);
+    const copyToast = Toast.showSuccess(`${userDetails.wallet.accountNumber}`);
+    Toast.hide(copyToast);
   };
+
+  // useEffect(() => {
+  //   async function refreshUserDetails() {
+  //     try {
+  //       setLoading(true);
+  //       const token = await validateToken();
+  //       if (token) {
+  //         const user = await fetchUserDetails(token);
+  //         if (user) {
+  //           setUserDetails(user);
+  //           setLoading(false);
+  //         } else {
+  //           console.log('failed to update user details');
+  //           setLoading(false);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       captureException(error);
+  //       setLoading(false);
+  //     }
+  //   }
+  //   refreshUserDetails();
+  // }, []);
 
   return (
     <Block scroll background>
@@ -41,9 +65,16 @@ const Home = ({ navigation }) => {
             <Text small muted mtmedium>
               Tmoni Wallet Balance
             </Text>
-            <Text gray height={LINE_HEIGHTS.fourty_1} h1 mtregular>
-              {/* {CurrencyFormatter(userDetails.wallet.balance)} */}
-            </Text>
+            {loading ? (
+              <ActivityIndicator color={COLORS.primary} size="small" />
+            ) : (
+              <>
+                <Text gray height={LINE_HEIGHTS.fourty_1} h1 mtregular>
+                  {CurrencyFormatter(userDetails.wallet.balance)}
+                </Text>
+              </>
+            )}
+
             <Block
               marginTop={SIZES.padding}
               lightgray
@@ -53,12 +84,19 @@ const Home = ({ navigation }) => {
               paddingHorizontal={SIZES.padding}
               row
             >
-              <Text primary mtlight small marginHorizontal={SIZES.base}>
-                {/* {userDetails.wallet.bankName} */}
-              </Text>
-              <Text muted mtlight small spacing={LETTERSPACING.two_point_4}>
-                {/* {userDetails.wallet.accountNumber} */}
-              </Text>
+              {loading ? (
+                <ActivityIndicator color={COLORS.primary} size="small" />
+              ) : (
+                <>
+                  <Text primary mtlight small marginHorizontal={SIZES.base}>
+                    {userDetails.wallet.bankName}
+                  </Text>
+                  <Text muted mtlight small spacing={LETTERSPACING.two_point_4}>
+                    {userDetails.wallet.accountNumber}
+                  </Text>
+                </>
+              )}
+
               <Button
                 onPress={() => handleCopy()}
                 transparent
@@ -73,9 +111,11 @@ const Home = ({ navigation }) => {
             <Text small muted mtmedium>
               Commission Balance
             </Text>
-            <Text gray height={LINE_HEIGHTS.fourty_1} h1 mtregular>
-              {/* {CurrencyFormatter(userDetails.commissionWallet.balance)} */}
-            </Text>
+            <>
+              <Text gray height={LINE_HEIGHTS.fourty_1} h1 mtregular>
+                {CurrencyFormatter(userDetails.commissionWallet.balance)}
+              </Text>
+            </>
             <Block
               marginTop={SIZES.padding}
               lightgray
@@ -85,12 +125,19 @@ const Home = ({ navigation }) => {
               paddingHorizontal={SIZES.padding}
               row
             >
-              <Text primary mtlight small marginHorizontal={SIZES.base}>
-                {/* {userDetails.wallet.bankName} */}
-              </Text>
-              <Text muted mtlight small spacing={LETTERSPACING.two_point_4}>
-                {/* {userDetails.wallet.accountNumber} */}
-              </Text>
+              {loading ? (
+                <ActivityIndicator color={COLORS.primary} size="small" />
+              ) : (
+                <>
+                  <Text primary mtlight small marginHorizontal={SIZES.base}>
+                    {userDetails.wallet.bankName}
+                  </Text>
+                  <Text muted mtlight small spacing={LETTERSPACING.two_point_4}>
+                    {userDetails.wallet.accountNumber}
+                  </Text>
+                </>
+              )}
+
               <Button
                 onPress={() => handleCopy()}
                 transparent
@@ -103,9 +150,6 @@ const Home = ({ navigation }) => {
         </Swiper>
       </Block>
       {/* card */}
-      <Text mtmedium secondary tiny center>
-        {message}
-      </Text>
       <Block space="evenly" paddingHorizontal={SIZES.padding}>
         {/* two */}
         <Block>

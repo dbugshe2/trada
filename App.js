@@ -8,6 +8,8 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import RootNavigator from './src/navigation/RootNavigator';
 import { captureException } from 'sentry-expo';
 import { COLORS } from './src/utils/theme';
+import { AuthProvider } from './src/context/auth/AuthContext';
+import { CommissionProvider } from './src/context/commission/CommissionContext';
 
 console.disableYellowBox = true;
 
@@ -48,12 +50,16 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <RootNavigator />
-      </View>
-    </SafeAreaProvider>
+    <AuthProvider>
+      <CommissionProvider>
+        <SafeAreaProvider>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <RootNavigator />
+          </View>
+        </SafeAreaProvider>
+      </CommissionProvider>
+    </AuthProvider>
   );
 }
 
