@@ -210,7 +210,7 @@ export const CommissionProvider = (props) => {
       captureException(error);
     }
   };
-  console.log('commisssion__>>', state);
+  // console.log('commisssion__>>', state);
   const values = useMemo(() => {
     return {
       commissionWallet: state.commissionWallet,

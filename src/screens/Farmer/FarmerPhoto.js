@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import Block from '../../components/primary/Block'
-import Text from '../../components/primary/Text'
-import Input from '../../components/primary/Input'
-import Button from '../../components/primary/Button'
-import Header from '../../components/Header'
-import Dropdown from '../../components/Dropdown'
+import React, { useState } from 'react';
+import Block from '../../components/primary/Block';
+import Text from '../../components/primary/Text';
+import Input from '../../components/primary/Input';
+import Button from '../../components/primary/Button';
+import Header from '../../components/Header';
+import Dropdown from '../../components/Dropdown';
 
-import { SIZES } from "../../utils/theme";
-import { Image } from "react-native";
+import { SIZES } from '../../utils/theme';
+import { Image } from 'react-native';
 
 const FarmerPhoto = ({ navigation }) => {
   return (
@@ -22,7 +22,7 @@ const FarmerPhoto = ({ navigation }) => {
           <Block center marginTop={80} flex={0}>
             <Image
               source={{
-                uri: "https://api.adorable.io/avatars/100/tradaAvatar.png"
+                uri: 'https://api.adorable.io/avatars/100/tradaAvatar.png',
               }}
               style={{ width: 200, height: 200, borderRadius: 100 }}
             />
@@ -37,7 +37,7 @@ const FarmerPhoto = ({ navigation }) => {
           </Block>
 
           <Block marginVertical={20} flex={0}>
-            <Button onPress={() => navigation.navigate("FarmerSummary")}>
+            <Button onPress={() => navigation.navigate('FarmerSummary')}>
               <Text white center h6>
                 Yes use this one
               </Text>
