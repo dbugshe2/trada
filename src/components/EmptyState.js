@@ -8,13 +8,13 @@ import { COLORS, SIZES } from '../utils/theme';
 const EmptyState = (props) => {
   const { text, icon, loading } = props;
   return (
-    <Block center middle>
+    <Block center middle background>
       {loading ? (
         <ActivityIndicator color={COLORS.primary} />
       ) : (
         <>
           <ImageIcon name={(icon && icon) || 'add'} />
-          <Text center mtmedium small marginVertical={SIZES.padding}>
+          <Text muted center mtmedium small marginVertical={SIZES.padding}>
             {text}
           </Text>
         </>

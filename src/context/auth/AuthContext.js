@@ -71,7 +71,6 @@ export const AuthProvider = (props) => {
         return res;
       }
     } catch (error) {
-      console.log(error);
       captureException(error);
     }
   };

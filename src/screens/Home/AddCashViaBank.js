@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { SIZES } from '../../utils/theme';
-// import { useAuthContext } from '../../context/index';
+import { useAuthContext } from '../../context/auth/AuthContext';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 
 const AddCashViaBank = () => {
-  // const auth = useAuthContext();
+  const { userDetails } = useAuthContext();
 
-  // const { userDetails } = auth;
   return (
     <Block background>
       <Block
@@ -27,7 +26,7 @@ const AddCashViaBank = () => {
               ACCOUNT NAME
             </Text>
             <Text primary small>
-              {/* {userDetails.wallet.accountName} */}
+              {userDetails.wallet.accountName}
             </Text>
           </Block>
 
@@ -36,7 +35,7 @@ const AddCashViaBank = () => {
               ACCOUNT NUMBER
             </Text>
             <Text primary small>
-              {/* {userDetails.wallet.accountNumber} */}
+              {userDetails.wallet.accountNumber}
             </Text>
           </Block>
 
@@ -45,7 +44,7 @@ const AddCashViaBank = () => {
               BANK NAME
             </Text>
             <Text primary small>
-              {/* {userDetails.wallet.bankName} */}
+              {userDetails.wallet.bankName}
             </Text>
           </Block>
         </Block>

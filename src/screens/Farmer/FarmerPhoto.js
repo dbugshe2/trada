@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';

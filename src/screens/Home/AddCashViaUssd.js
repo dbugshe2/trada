@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
 import { SIZES } from '../../utils/theme';
-// import { useAuthContext } from "../../context/index";
+import { useAuthContext } from '../../context/auth/AuthContext';
 import { KeyboardAvoidingView } from 'react-native';
 import Input from '../../components/primary/Input';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 
 const AddCashViaUssd = () => {
-  // const auth = useAuthContext();
+  const { userDetails } = useAuthContext();
 
-  // const { userDetails } = auth;
   const [amount, setAmount] = useState('');
   return (
-    <Block background paddingHorizontal={SIZES.padding}>
+    <Block
+      background
+      paddingHorizontal={SIZES.padding}
+      marginTop={SIZES.padding}
+    >
       <KeyboardAvoidingView behavior="padding">
         <Input
           keyboardType="numeric"
           clearTextOnFocus
           onChangeText={(text) => setAmount(text)}
           label="Enter Amount"
-          // value={amount}
+          value={amount}
         />
       </KeyboardAvoidingView>
       <Block scroll paddingHorizontal={SIZES.padding * 2}>
@@ -34,7 +37,7 @@ const AddCashViaUssd = () => {
               ACCESS BANK
             </Text>
             <Text mtmedium primary small>
-              {/* *901*1*{amount}*{userDetails.wallet.accountNumber}# */}
+              *901*1*{amount}*{userDetails.wallet.accountNumber}#
             </Text>
           </Block>
 
@@ -43,7 +46,7 @@ const AddCashViaUssd = () => {
               DIAMOND BANK
             </Text>
             <Text mtmedium primary small>
-              {/* *426*{amount}*{userDetails.wallet.accountNumber}# */}
+              *426*{amount}*{userDetails.wallet.accountNumber}#
             </Text>
           </Block>
 
@@ -52,7 +55,7 @@ const AddCashViaUssd = () => {
               FCMB
             </Text>
             <Text mtmedium primary small>
-              {/* *329*{amount}*{userDetails.wallet.accountNumber}# */}
+              *329*{amount}*{userDetails.wallet.accountNumber}#
             </Text>
           </Block>
 
@@ -61,7 +64,7 @@ const AddCashViaUssd = () => {
               FIDELITY BANK
             </Text>
             <Text mtmedium primary small>
-              {/* *770*{userDetails.wallet.accountNumber}*{amount}# */}
+              *770*{userDetails.wallet.accountNumber}*{amount}#
             </Text>
           </Block>
 
@@ -70,7 +73,7 @@ const AddCashViaUssd = () => {
               FIRST BANK
             </Text>
             <Text mtmedium primary small>
-              {/* *894*{amount}*{userDetails.wallet.accountNumber}# */}
+              *894*{amount}*{userDetails.wallet.accountNumber}#
             </Text>
           </Block>
         </Block>
