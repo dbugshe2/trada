@@ -86,7 +86,6 @@ export const CommissionProvider = (props) => {
           .internalError((err) => console.log('server Error', err))
           .fetchError((err) => console.log('Netwrok error', err))
           .json();
-        console.log(data);
         if (data) {
           dispatch({
             type: COMMISSION_HISTORY_SUCCESS,

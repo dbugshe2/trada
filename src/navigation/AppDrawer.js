@@ -70,14 +70,14 @@ const AppDrawer = () => {
         }}
         component={SettingsNavigator}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Support"
         options={{
           drawerLabel: 'Support',
           drawerIcon: () => <ImageIcon name="support" />,
         }}
         component={BottomTabs}
-      />
+      /> */}
       <Drawer.Screen
         name="About"
         options={{

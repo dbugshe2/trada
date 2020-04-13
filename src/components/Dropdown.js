@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import DropdownType from 'react-native-modal-dropdown';
 import { COLORS, SIZES } from '../utils/theme';
@@ -49,9 +50,9 @@ const Dropdown = (props) => {
         color={COLORS.muted}
         size={15}
       />
-      {props.message && (
-        <Text small color={COLORS.primary}>
-          {props.message}
+      {props.error && (
+        <Text small error>
+          {props.error.message}
         </Text>
       )}
     </Block>

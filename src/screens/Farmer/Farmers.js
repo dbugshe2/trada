@@ -8,6 +8,7 @@ import Text from '../../components/primary/Text';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import { apiGet } from '../../utils/fetcher';
 import { SIZES } from '../../utils/theme';
+import { Image } from 'react-native';
 
 const Farmers = ({ navigation }) => {
   const { validateToken, phone } = useAuthContext();
@@ -19,10 +20,9 @@ const Farmers = ({ navigation }) => {
       const phoneFormat = phone.replace('+234', '0');
       const token = await validateToken();
       if (token) {
-        console.log(token);
         const res = await apiGet(
           '/farmers',
-          { skip: 0, limit: 10, phone: phoneFormat },
+          { skip: 0, limit: 10 },
           token,
           true
         )
@@ -45,15 +45,20 @@ const Farmers = ({ navigation }) => {
   }, []);
 
   const RenderFarmers = ({ item }) => (
-    <Block row space="between">
-      <Block center>{/* // <Image source={} /> */}</Block>
+    <Block row space="between" marginVertical={SIZES.base * 2}>
+      <Block center>
+        <Image
+          source={{
+            uri: 'https://api.adorable.io/avatars/100/tradaAvatar.png',
+          }}
+          style={{ width: 44, height: 44, borderRadius: 44 }}
+        />
+      </Block>
       <Block flex={2}>
-        <Text>name</Text>
-        <Text>name</Text>
+        <Text mtmedium body gray>{` ${item.firstName} ${item.lastName}`}</Text>
+        <Text muted mtmedium small>{` ${item.lga} ${item.state}`}</Text>
       </Block>
-      <Block>
-        <Text primary>name</Text>
-      </Block>
+      <Block>{/* <Text primary>name</Text> */}</Block>
     </Block>
   );
 

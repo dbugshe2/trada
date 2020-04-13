@@ -17,8 +17,8 @@ const Sidebar = (props) => {
   }
 
   return (
-    <Block scroll showVerticalScrollIndicator={false} space="between">
-      <Block>
+    <Block space="between">
+      <Block scroll showVerticalScrollIndicator={false}>
         <Block
           height={166}
           center

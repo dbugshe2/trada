@@ -1,6 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { Component } from 'react';
-import { Animated, SafeAreaView, StyleSheet, View, ScrollView } from 'react-native';
+import {
+  Animated,
+  SafeAreaView,
+  StyleSheet,
+  View,
+  ScrollView,
+} from 'react-native';
 
 import { COLORS, SIZES } from '../../utils/theme';
 
@@ -155,7 +161,8 @@ class Block extends Component {
           marginVertical: marginVertical === true ? SIZES.base : marginVertical,
         },
         marginHorizontal && {
-          marginHorizontal: marginHorizontal === true ? SIZES.base : marginHorizontal,
+          marginHorizontal:
+            marginHorizontal === true ? SIZES.base : marginHorizontal,
         },
       ];
     }
@@ -176,10 +183,12 @@ class Block extends Component {
           paddingLeft: paddingLeft === true ? SIZES.base : paddingLeft,
         },
         paddingVertical && {
-          paddingVertical: paddingVertical === true ? SIZES.base : paddingVertical,
+          paddingVertical:
+            paddingVertical === true ? SIZES.base : paddingVertical,
         },
         paddingHorizontal && {
-          paddingHorizontal: paddingHorizontal === true ? SIZES.base : paddingHorizontal,
+          paddingHorizontal:
+            paddingHorizontal === true ? SIZES.base : paddingHorizontal,
         },
       ];
     }
@@ -276,15 +285,19 @@ class Block extends Component {
 
     if (safe) {
       return (
-        <SafeAreaView showVerticalScrollIndicator={false} style={blockStyles} {...props}>
+        <SafeAreaView
+          showVerticalScrollIndicator={false}
+          style={blockStyles}
+          {...props}
+        >
           {children}
         </SafeAreaView>
       );
     }
     if (scroll) {
       return (
-        <View style={blockStyles} {...props}>
-          <ScrollView>{children}</ScrollView>
+        <View style={blockStyles}>
+          <ScrollView {...props}>{children}</ScrollView>
         </View>
       );
     }

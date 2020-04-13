@@ -10,6 +10,7 @@ import { captureException } from 'sentry-expo';
 import { COLORS } from './src/utils/theme';
 import { AuthProvider } from './src/context/auth/AuthContext';
 import { CommissionProvider } from './src/context/commission/CommissionContext';
+import { VariationProvider } from './src/context/variation/VariationContext';
 
 console.disableYellowBox = true;
 
@@ -51,14 +52,16 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <CommissionProvider>
-        <SafeAreaProvider>
-          <View style={styles.container}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            <RootNavigator />
-          </View>
-        </SafeAreaProvider>
-      </CommissionProvider>
+      <VariationProvider>
+        <CommissionProvider>
+          <SafeAreaProvider>
+            <View style={styles.container}>
+              {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+              <RootNavigator />
+            </View>
+          </SafeAreaProvider>
+        </CommissionProvider>
+      </VariationProvider>
     </AuthProvider>
   );
 }
