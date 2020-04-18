@@ -11,16 +11,31 @@ import TransferCash from '../screens/Home/TransferCash';
 import TransferDetails from '../screens/Home/TransferDetails';
 import TransferOptions from '../screens/Home/TransferOptions';
 import ProfileNavigator from './ProfileNavigator';
+import { topTabOptions } from '../constants/navigation';
 
 const Stack = createStackNavigator();
 
 const Tab = createMaterialTopTabNavigator();
 
-const AddCash = () => (
-  <Tab.Navigator>
+const AddCashTab = () => (
+  <Tab.Navigator tabBarOptions={topTabOptions}>
     <Tab.Screen name="AddCashViaBank" component={AddCashViaBank} />
     <Tab.Screen name="AddCashViaUssd" component={AddCashViaUssd} />
   </Tab.Navigator>
+);
+
+const AddCash = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      options={{
+        header: ({ scene, previous, navigation }) => (
+          <Header backTitle="Add Cash" />
+        ),
+      }}
+      name="AddCashTab"
+      component={AddCashTab}
+    />
+  </Stack.Navigator>
 );
 
 const HomeNavigator = () => {
@@ -35,7 +50,7 @@ const HomeNavigator = () => {
       <Stack.Screen name="TransferDetails" component={TransferDetails} />
       <Stack.Screen
         name="AddCash"
-        screenOptions={{
+        options={{
           header: ({ scene, previous, navigation }) => (
             <Header backTitle="Add Cash" />
           ),

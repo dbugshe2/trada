@@ -9,11 +9,29 @@ import Text from '../../components/primary/Text';
 const StoreInputs = ({ navigation }) => {
   return (
     <Block background>
-      <Block space='evenly' paddingHorizontal={SIZES.padding} marginVertical={35} background>
+      <Block
+        space="evenly"
+        paddingHorizontal={SIZES.padding}
+        marginVertical={35}
+        background
+      >
         <Block flex={1}>
-          <Button center middle radius={8} white shadow elevation={8} row height={150}>
-            <Block column paddingHorizontal={SIZES.padding} paddingVertical={SIZES.padding}>
-              <Block space='between' center middle row>
+          <Button
+            center
+            middle
+            radius={8}
+            white
+            shadow
+            elevation={8}
+            row
+            height={150}
+          >
+            <Block
+              column
+              paddingHorizontal={SIZES.padding}
+              paddingVertical={SIZES.padding}
+            >
+              <Block space="between" center middle row>
                 <Text gray h4>
                   Fertilizer NPK
                 </Text>
@@ -22,7 +40,7 @@ const StoreInputs = ({ navigation }) => {
                 </Text>
               </Block>
               <Divider />
-              <Block marginVertical={8} space='between' column>
+              <Block marginVertical={8} space="between" column>
                 <Text muted small>
                   Pickup Status
                 </Text>
@@ -34,7 +52,11 @@ const StoreInputs = ({ navigation }) => {
           </Button>
         </Block>
       </Block>
-      <FAB right={15} bottom={35} onPress={() => navigation.navigate('BuyInput')} />
+      <FAB
+        right={15}
+        bottom={35}
+        onPress={() => navigation.navigate('BuyInput')}
+      />
     </Block>
   );
 };
