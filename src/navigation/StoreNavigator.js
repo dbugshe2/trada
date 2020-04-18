@@ -9,6 +9,7 @@ import StoreOutputs from '../screens/Store/StoreOutputs';
 import PhotoUpload from '../screens/Home/PhotoUpload';
 import BuyInput from '../screens/Home/BuyInput';
 import SellOutput from '../screens/Home/SellOutput';
+import { topTabOptions } from '../constants/navigation';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -18,9 +19,10 @@ const StoreTab = () => {
     <Tab.Navigator
       initialRouteName="StoreInputs"
       screenOptions={{ headerShown: false }}
+      tabBarOptions={topTabOptions}
     >
-      <Tab.Screen name="Buy Your Inputs" component={StoreInputs} />
-      <Tab.Screen name="Sell Your Outputs" component={StoreOutputs} />
+      <Tab.Screen name="Buy your Inputs" component={StoreInputs} />
+      <Tab.Screen name="Sell your Outputs" component={StoreOutputs} />
     </Tab.Navigator>
   );
 };
