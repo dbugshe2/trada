@@ -110,16 +110,9 @@ const AddFarmer = ({ navigation }) => {
       const token = await validateToken();
       if (token) {
         console.log(token);
-        const res = await apiPost('/farmers', getValues(), token, true)
-          .unauthorized((err) => console.log('unauthorized', err))
-          .notFound((err) => console.log('not found', err))
-          .timeout((err) => console.log('timeout', err))
-          .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
-          .json();
+        const res = await apiPost('/farmers', getValues(), token, true).json();
         if (res) {
           console.log(res);
-          Toast.showSuccess('Farmer added');
           navigation.navigate('Farmers');
         }
       }

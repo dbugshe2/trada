@@ -14,7 +14,12 @@ import { useAuthContext } from '../../context/auth/AuthContext';
 import Toast from 'react-native-tiny-toast';
 import { captureException } from 'sentry-expo';
 import { apiPost } from '../../utils/fetcher';
-
+import {
+  toast,
+  loadingMessage,
+  clearMessage,
+  errorMessage,
+} from '../../utils/toast';
 const TransferCash = ({ navigation }) => {
   //state
   const [sending, setSending] = useState(false);
@@ -24,8 +29,10 @@ const TransferCash = ({ navigation }) => {
   const [accName, setAccName] = useState('');
   const [accNumber, setAccNumber] = useState('');
 
+  // form
   const { register, setValue, handleSubmit, errors } = useForm();
 
+  //context
   const {
     getBanks,
     loading,
@@ -63,6 +70,7 @@ const TransferCash = ({ navigation }) => {
     }
   };
 
+  // effects
   useEffect(() => {
     const bootstrap = async () => {
       await getBanks();
@@ -88,13 +96,7 @@ const TransferCash = ({ navigation }) => {
     try {
       const token = await validateToken();
       if (token) {
-        const res = await apiPost('/wallet/withdraw', data, token, true)
-          .unauthorized((err) => console.log('unauthorized', err))
-          .notFound((err) => console.log('not found', err))
-          .timeout((err) => console.log('timeout', err))
-          .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
-          .json();
+        const res = await apiPost('/wallet/withdraw', data, token, true).json();
         console.log(res);
         if (res) {
           Toast.showSuccess(`${data.amount} sent to ${data.accountName}`);
@@ -102,7 +104,7 @@ const TransferCash = ({ navigation }) => {
       }
       setSending(false);
     } catch (error) {
-      Toast.show(`An error occurred, ${error.message}`);
+      errorMessage(`An error occurred, ${error.message}`);
       console.log(error);
       setSending(false);
       captureException(error);

@@ -1,4 +1,6 @@
+import React from 'react';
 import wretch from 'wretch';
+import { errorMessage } from './toast';
 
 /*
  * Fetcher - wrapppers and helpers
@@ -41,7 +43,14 @@ export const apiPost = (url, data, token = '', auth = false) =>
       return w;
     })
     .json(data)
-    .post();
+    .post()
+    .badRequest((err) => errorMessage(err.message))
+    .unauthorized((err) => errorMessage(err.message))
+    .forbidden((err) => errorMessage(err.message))
+    .notFound((err) => errorMessage(err.message))
+    .timeout((err) => errorMessage(err.message))
+    .internalError((err) => errorMessage(err.message))
+    .fetchError((err) => errorMessage(err.message));
 
 export const apiPut = (url, data, token = '', auth = false) =>
   wretch(baseUrl)
@@ -56,7 +65,14 @@ export const apiPut = (url, data, token = '', auth = false) =>
       return w;
     })
     .json(data)
-    .put();
+    .put()
+    .badRequest((err) => errorMessage(err.message))
+    .unauthorized((err) => errorMessage(err.message))
+    .forbidden((err) => errorMessage(err.message))
+    .notFound((err) => errorMessage(err.message))
+    .timeout((err) => errorMessage(err.message))
+    .internalError((err) => errorMessage(err.message))
+    .fetchError((err) => errorMessage(err.message));
 
 export const apiDel = (url, data, token = '', auth = false) =>
   wretch(baseUrl)
@@ -71,4 +87,11 @@ export const apiDel = (url, data, token = '', auth = false) =>
       return w;
     })
     .json(data)
-    .delete();
+    .delete()
+    .badRequest((err) => errorMessage(err.message))
+    .unauthorized((err) => errorMessage(err.message))
+    .forbidden((err) => errorMessage(err.message))
+    .notFound((err) => errorMessage(err.message))
+    .timeout((err) => errorMessage(err.message))
+    .internalError((err) => errorMessage(err.message))
+    .fetchError((err) => errorMessage(err.message));

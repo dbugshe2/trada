@@ -47,13 +47,12 @@ export const CommissionProvider = (props) => {
     try {
       const token = await validateToken();
       if (token) {
-        const data = await apiGet('/commissions/wallet', {}, token, true)
-          .unauthorized((err) => console.log('unauthorized', err))
-          .notFound((err) => console.log('not found', err))
-          .timeout((err) => console.log('timeout', err))
-          .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
-          .json();
+        const data = await apiGet(
+          '/commissions/wallet',
+          {},
+          token,
+          true
+        ).json();
         if (data) {
           dispatch({
             type: COMMISSION_WALLET_SUCCESS,
@@ -79,13 +78,7 @@ export const CommissionProvider = (props) => {
           { skip: 0, limit: limit },
           token,
           true
-        )
-          .unauthorized((err) => console.log('unauthorized', err))
-          .notFound((err) => console.log('not found', err))
-          .timeout((err) => console.log('timeout', err))
-          .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
-          .json();
+        ).json();
         if (data) {
           dispatch({
             type: COMMISSION_HISTORY_SUCCESS,
@@ -112,13 +105,7 @@ export const CommissionProvider = (props) => {
           { skip: skip, limit: limit },
           token,
           true
-        )
-          .unauthorized((err) => console.log('unauthorized', err))
-          .notFound((err) => console.log('not found', err))
-          .timeout((err) => console.log('timeout', err))
-          .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
-          .json();
+        ).json();
         console.log(res);
         if (res) {
           dispatch({
@@ -148,13 +135,7 @@ export const CommissionProvider = (props) => {
           formData,
           token,
           true
-        )
-          .unauthorized((err) => console.log('unauthorized', err))
-          .notFound((err) => console.log('not found', err))
-          .timeout((err) => console.log('timeout', err))
-          .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
-          .json();
+        ).json();
         if (data.status === 'success') {
           console.log('cash out sucessfull', data);
           dispatch({
@@ -185,13 +166,7 @@ export const CommissionProvider = (props) => {
           { skip: skip, limit: limit },
           token,
           true
-        )
-          .unauthorized((err) => console.log('unauthorized', err))
-          .notFound((err) => console.log('not found', err))
-          .timeout((err) => console.log('timeout', err))
-          .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
-          .json();
+        ).json();
         console.log(data);
         if (data) {
           dispatch({

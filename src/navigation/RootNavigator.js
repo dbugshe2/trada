@@ -6,6 +6,7 @@ import AppDrawer from './AppDrawer';
 import { captureException } from 'sentry-expo';
 import Splash from '../screens/Splash';
 import { useAuthContext } from '../context/auth/AuthContext';
+import { toast } from '../utils/toast';
 const Stack = createStackNavigator();
 
 const RootNavigator = (props) => {
@@ -15,6 +16,7 @@ const RootNavigator = (props) => {
       try {
         await verifyLogin();
       } catch (error) {
+        toast(error.message);
         captureException(error);
       }
     };

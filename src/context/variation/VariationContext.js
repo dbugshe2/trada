@@ -15,6 +15,7 @@ import {
 } from '../types';
 import { apiGet, apiPost } from '../../utils/fetcher';
 import { variationReducer } from './variationReducer';
+import { errorMessage, successMessage } from '../../utils/toast';
 
 const VariationContext = createContext();
 
@@ -34,19 +35,16 @@ export const VariationProvider = (props) => {
   const getStatesDetails = async () => {
     try {
       setLoading(true);
-      const res = await apiGet('/variation/states_and_lga')
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
-        .json();
+      const res = await apiGet('/variation/states_and_lga').json();
       if (res) {
         dispatch({
           type: GET_STATES_AND_LGAS_SUCCESS,
           payload: res,
         });
+        successMessage(res.message);
+        return;
       }
+      errorMessage(res.message);
       setLoading(false);
       return res.data;
     } catch (error) {
@@ -77,13 +75,7 @@ export const VariationProvider = (props) => {
   const getBanks = async () => {
     try {
       setLoading(true);
-      const res = await apiGet('/variation/banks')
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
-        .json();
+      const res = await apiGet('/variation/banks').json();
       if (res) {
         console.log(res.data);
         const names = Object.values(res.data);
@@ -105,13 +97,7 @@ export const VariationProvider = (props) => {
       const res = await apiPost('/variation/banks/resolve', {
         bankCode: code,
         bankAccount: number,
-      })
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
-        .json();
+      }).json();
       if (res) {
         return res;
       }

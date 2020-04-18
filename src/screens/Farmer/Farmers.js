@@ -25,13 +25,7 @@ const Farmers = ({ navigation }) => {
           { skip: 0, limit: 10 },
           token,
           true
-        )
-          .unauthorized((err) => console.log('unauthorized', err))
-          .notFound((err) => console.log('not found', err))
-          .timeout((err) => console.log('timeout', err))
-          .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
-          .json();
+        ).json();
 
         if (res) {
           console.log(res);
@@ -49,7 +43,7 @@ const Farmers = ({ navigation }) => {
       <Block center>
         <Image
           source={{
-            uri: 'https://api.adorable.io/avatars/100/tradaAvatar.png',
+            uri: 'https://via.placeholder.com/140',
           }}
           style={{ width: 44, height: 44, borderRadius: 44 }}
         />

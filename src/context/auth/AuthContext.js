@@ -29,13 +29,12 @@ import {
   USER_DETAILS,
   CLEAR_MESSAGE,
 } from '../types';
-
 import { COLORS } from '../../utils/theme';
 import Text from '../../components/primary/Text';
 import { apiGet, apiPost, apiPut } from '../../utils/fetcher';
 import { isValid } from '../../utils/token';
 import { authReducer } from './authReducer';
-
+import { toast, errorMessage } from '../../utils/toast';
 const AuthContext = createContext();
 
 export const AuthProvider = (props) => {
@@ -56,13 +55,7 @@ export const AuthProvider = (props) => {
 
   const requestOtp = async (formData) => {
     try {
-      const res = await apiPost('/users/phone/otp', formData)
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
-        .json();
+      const res = await apiPost('/users/phone/otp', formData).json();
       if (res) {
         dispatch({
           type: OTP_SUCCESS,
@@ -71,19 +64,14 @@ export const AuthProvider = (props) => {
         return res;
       }
     } catch (error) {
+      errorMessage(error.message);
       captureException(error);
     }
   };
 
   const verifyOtp = async (formData) => {
     try {
-      const res = await apiPost('/users/phone/otp/confirm', formData)
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
-        .json();
+      const res = await apiPost('/users/phone/otp/confirm', formData).json();
       if (res) {
         dispatch({
           type: VERIFY_OTP_SUCCESS,
@@ -91,7 +79,7 @@ export const AuthProvider = (props) => {
         return res;
       }
     } catch (error) {
-      console.log(error);
+      errorMessage(error.message);
       captureException(error);
     }
   };
@@ -105,13 +93,7 @@ export const AuthProvider = (props) => {
 
   const signup = async (formData) => {
     try {
-      const res = await apiPost('/users/onboarding', formData)
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
-        .json();
+      const res = await apiPost('/users/onboarding', formData).json();
       if (res) {
         dispatch({
           type: REGISTER_SUCCESS,
@@ -119,6 +101,7 @@ export const AuthProvider = (props) => {
         return res;
       }
     } catch (error) {
+      errorMessage(error.message);
       console.log(error);
       captureException(error);
     }
@@ -129,33 +112,19 @@ export const AuthProvider = (props) => {
     console.log('Fetching User Details..');
     // check definition and wretch docs
     return apiGet('/users/find', {}, token, true)
-      .unauthorized((err) => console.log('unauthorized', err))
-      .notFound((err) => console.log('not found', err))
-      .timeout((err) => console.log('timeout', err))
-      .internalError((err) => console.log('server Error', err))
-      .fetchError((err) => console.log('Netwrok error', err))
       .json()
       .then((data) => {
         console.log('data from fetchuserdta', data);
         return data;
-      })
-      .catch((err) => {
-        captureException(err);
-        return null;
       });
   };
 
   const login = async (formData) => {
     setLoading(true);
     try {
-      const data = await apiPost('/users/login', formData)
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
-        .json();
+      const data = await apiPost('/users/login', formData).json();
       console.log('login res..', data);
-      if (data) {
+      if (typeof data !== undefined && data !== null) {
         await setUserToken(data.access_token);
         dispatch({
           type: LOGIN_SUCCESS,
@@ -164,6 +133,7 @@ export const AuthProvider = (props) => {
 
         const user = await fetchUserDetails(data.access_token);
         console.log('getting that user..');
+        errorMessage('getting that user..');
         if (user !== null) {
           await setUser(JSON.stringify(user));
           dispatch({
@@ -180,6 +150,7 @@ export const AuthProvider = (props) => {
         type: LOGIN_FAIL,
       });
       console.log('login err', err);
+      errorMessage(err.message);
       captureException(err);
       setLoading(false);
     }
@@ -204,11 +175,11 @@ export const AuthProvider = (props) => {
           setLoading(false);
         }
       } else {
-        await logout();
+        // await logout('');
         setLoading(false);
       }
     } catch (error) {
-      console.log('verify login failed', error);
+      errorMessage(error.message);
       captureException(error);
       setLoading(false);
     }
@@ -216,13 +187,7 @@ export const AuthProvider = (props) => {
 
   const requestResetOtp = async (formData) => {
     try {
-      const res = await apiPost('/users/pin/forgot', formData)
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
-        .json();
+      const res = await apiPost('/users/pin/forgot', formData).json();
       if (res) {
         dispatch({
           type: FORGOT_PIN_SUCCESS,
@@ -231,6 +196,7 @@ export const AuthProvider = (props) => {
         return res;
       }
     } catch (error) {
+      errorMessage(error.message);
       console.log(error);
       captureException(error);
     }
@@ -248,13 +214,7 @@ export const AuthProvider = (props) => {
       const res = await apiPost('/users/pin/reset', {
         resetPinOtp: state.resetPinOtp,
         newPin: formData.newPin,
-      })
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
-        .json();
+      }).json();
       if (res) {
         dispatch({
           type: PIN_RESET_SUCCESS,
@@ -263,21 +223,25 @@ export const AuthProvider = (props) => {
         return res;
       }
     } catch (error) {
+      errorMessage(error.message);
       console.log(error);
       captureException(error);
     }
   };
 
-  const logout = async (message = '') => {
+  const logout = async (message = "You've been logged out Successfully") => {
     try {
-      setLoading(true);
+      // setLoading(true);
       await removeUserToken();
       await removeUser();
-      dispatch({ type: LOGOUT, payload: message });
+      dispatch({ type: LOGOUT });
       setLoading(false);
+      toast(message);
     } catch (err) {
+      errorMessage(err.message);
+      console.log(err);
       captureException(err);
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -292,10 +256,12 @@ export const AuthProvider = (props) => {
           return null;
         }
       } else {
-        await logout('welcome');
+        await logout('sessions Expired, log in to continue');
+        errorMessage('what the fuck');
         return null;
       }
     } catch (error) {
+      errorMessage(error.message);
       console.log(error);
       captureException(error);
       return null;
