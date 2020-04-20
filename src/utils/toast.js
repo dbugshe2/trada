@@ -2,6 +2,7 @@ import React from 'react';
 
 import Toast from 'react-native-tiny-toast';
 import { COLORS, SIZES } from './theme';
+import rgba from '../utils/rgba';
 
 const defaultOptions = {
   duration: Toast.duration.SHORT,
@@ -13,7 +14,7 @@ const defaultOptions = {
 };
 const loadingOptions = {
   containerStyle: { backgroundColor: COLORS.odd },
-  maskColor: COLORS.primary,
+  // maskColor: rgba(COLORS.primary, 0.5),
   textColor: COLORS.gray,
   textStyle: { fontFamily: 'montserratMedium', fontSize: SIZES.small },
   position: Toast.position.CENTER,

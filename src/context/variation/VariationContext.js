@@ -73,7 +73,6 @@ export const VariationProvider = (props) => {
     }
   };
 
-  console.log(state);
   const getBanks = async () => {
     try {
       setLoading(true);

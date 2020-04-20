@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native';
 import EmptyState from '../../components/EmptyState';
 import FAB from '../../components/FAB';
 import Header from '../../components/Header';
@@ -7,17 +7,17 @@ import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import { apiGet } from '../../utils/fetcher';
-import { SIZES } from '../../utils/theme';
-import { Image } from 'react-native';
+import { SIZES, LETTERSPACING } from '../../utils/theme';
+import { Image, StyleSheet } from 'react-native';
+import { Divider } from 'react-native-paper';
 
 const Farmers = ({ navigation }) => {
-  const { validateToken, phone } = useAuthContext();
+  const { validateToken } = useAuthContext();
   const [farmers, setFarmers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchFamrers() {
-      const phoneFormat = phone.replace('+234', '0');
       const token = await validateToken();
       if (token) {
         const res = await apiGet(
@@ -42,24 +42,48 @@ const Farmers = ({ navigation }) => {
     }
 
     fetchFamrers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const RenderFarmers = ({ item }) => (
-    <Block row space="between" marginVertical={SIZES.base * 2}>
-      <Block center>
-        <Image
-          source={{
-            uri: 'https://api.adorable.io/avatars/100/tradaAvatar.png',
-          }}
-          style={{ width: 44, height: 44, borderRadius: 44 }}
-        />
+    <>
+      <Block
+        row
+        space="between"
+        paddingTop={SIZES.padding}
+        marginVertical={SIZES.base}
+      >
+        <Block center>
+          <Image
+            source={{
+              uri: 'https://via.placeholder.com/140',
+            }}
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{ width: 44, height: 44, borderRadius: 44 }}
+          />
+        </Block>
+        <Block flex={2}>
+          <Text
+            mtmedium
+            body
+            gray
+          >{` ${item.firstName} ${item.lastName}`}</Text>
+          <Text muted mtmedium small>{` ${item.lga} ${item.state}`}</Text>
+        </Block>
+        <Block center middle>
+          <Text primary mtmedium body spacing={LETTERSPACING.point_4}>
+            +10 point
+          </Text>
+        </Block>
       </Block>
-      <Block flex={2}>
-        <Text mtmedium body gray>{` ${item.firstName} ${item.lastName}`}</Text>
-        <Text muted mtmedium small>{` ${item.lga} ${item.state}`}</Text>
-      </Block>
-      <Block>{/* <Text primary>name</Text> */}</Block>
-    </Block>
+      <Divider
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{
+          alignSelf: 'center',
+          width: '90%',
+        }}
+      />
+    </>
   );
 
   return (
