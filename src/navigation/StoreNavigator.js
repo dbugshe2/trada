@@ -37,7 +37,11 @@ const StoreNavigator = () => (
     <Stack.Screen name="Store" component={StoreTab} />
     <Stack.Screen name="StoreItemSummary" component={StoreItemSummary} />
     <Stack.Screen name="PhotoUpload" component={PhotoUpload} />
-    <Stack.Screen name="BuyInput" component={BuyInput} />
+    <Stack.Screen
+      options={{ headerShown: false }}
+      name="BuyInput"
+      component={BuyInput}
+    />
     <Stack.Screen name="SellOutput" component={SellOutput} />
   </Stack.Navigator>
 );

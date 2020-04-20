@@ -1,20 +1,13 @@
-import React, { useState } from "react";
-import { TextInput } from "react-native-paper";
-import {
-  COLORS,
-  SIZES,
-} from "../../utils/theme";
-import {
-  StyleSheet,
-} from "react-native";
-import Block from "./Block";
-import Text from "./Text";
+import React, { useState } from 'react';
+import { TextInput } from 'react-native-paper';
+import { COLORS, SIZES } from '../../utils/theme';
+import { StyleSheet } from 'react-native';
+import Block from './Block';
+import Text from './Text';
 
-
-
-const Input = props => {
+const Input = (props) => {
   /*
-  //#region 
+  //#region
    *
    * Props
    * mode
@@ -212,7 +205,6 @@ const Input = props => {
   //   );
   // }
 
-
   return (
     <Block flex={(props.flex && props.flex) || 0}>
       <TextInput
@@ -224,7 +216,7 @@ const Input = props => {
             surface: COLORS.background,
             background: COLORS.background,
             disabled: COLORS.muted,
-            text: COLORS.gray
+            text: COLORS.gray,
           },
         }}
         style={{ marginVertical: SIZES.base }}
@@ -242,20 +234,20 @@ const Input = props => {
 
 export default Input;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  autocomplete:{
-   // position:"relative",
-    backgroundColor:"#cecece",
-    zIndex:999999999
-  },
-  autocompleteText:{
-    zIndex:999999999,
-    flex:1,
-    padding:10,
-    fontSize:17,
-    fontWeight:"bold"
-  }
-});
+// const styles = StyleSheet.create({
+// container: {
+//   flex: 1,
+// },
+// autocomplete: {
+//   // position:"relative",
+//   backgroundColor: '#cecece',
+//   zIndex: 999999999,
+// },
+// autocompleteText: {
+//   zIndex: 999999999,
+//   flex: 1,
+//   padding: 10,
+//   fontSize: 17,
+//   fontWeight: 'bold',
+// },
+// });

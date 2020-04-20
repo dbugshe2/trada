@@ -18,6 +18,7 @@ export const apiGet = (url, query = {}, token = '', auth = false) =>
     .accept('application/json')
     .middlewares([logMiddleware()])
     .url(url)
+    .errorType('json')
     .defer((w, url, options) => {
       if (auth) {
         // get token, validate, and handle validity
@@ -33,6 +34,7 @@ export const apiPost = (url, data, token = '', auth = false) =>
     .content('application/json')
     .middlewares([logMiddleware()])
     .url(url)
+    .errorType('json')
     .defer((w, url, options) => {
       if (auth) {
         // get token, validate, and handle validity
@@ -48,6 +50,7 @@ export const apiPut = (url, data, token = '', auth = false) =>
     .content('application/json')
     .middlewares([logMiddleware()])
     .url(url)
+    .errorType('json')
     .defer((w, url, options) => {
       if (auth) {
         // get token, validate, and handle validity

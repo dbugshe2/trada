@@ -4,7 +4,8 @@ import Block from './primary/Block';
 import ImageIcon from './primary/ImageIcon';
 import Text from './primary/Text';
 import { COLORS } from '../utils/theme';
-
+import Moment from 'react-moment';
+import moment from 'moment';
 import { CurrencyFormatter } from '../utils/currency';
 
 const Commission = (props) => {
@@ -26,7 +27,7 @@ const Commission = (props) => {
             Cash out
           </Text>
           <Text mtmedium body muted>
-            {new Date(date).toLocaleString()}
+            {moment(date).format('hh:mm, MMM D YYYY')}
           </Text>
         </Block>
       </Block>

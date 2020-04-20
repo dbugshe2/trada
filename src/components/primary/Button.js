@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
   TouchableHighlight,
   TouchableNativeFeedback,
-  TouchableWithoutFeedback
-} from "react-native";
+  TouchableWithoutFeedback,
+} from 'react-native';
 
-import { LinearGradient } from "expo-linear-gradient";
+import { LinearGradient } from 'expo-linear-gradient';
 
 import {
   COLORS,
@@ -17,16 +17,11 @@ import {
   WEIGHTS,
   STYLES,
   FONTS,
-} from "../../utils/theme";
+} from '../../utils/theme';
 
-import {
-  spacing,
-  } from "../../utils/helpers";
-  
-import { 
-  rgba 
-} from "../../utils/rgba";
+import { spacing } from '../../utils/helpers';
 
+import rgba from '../../utils/rgba';
 
 /**
  * https://facebook.github.io/react-native/docs/touchableopacity
@@ -92,55 +87,55 @@ class Button extends Component {
       paddingLeft,
       paddingVertical,
       paddingHorizontal,
-      theme
+      theme,
     } = this.props;
 
-    if (type === "margin") {
+    if (type === 'margin') {
       return [
         margin && spacing(type, margin, SIZES.base),
         marginTop && { marginTop: marginTop === true ? SIZES.base : marginTop },
         marginRight && {
-          marginRight: marginRight === true ? SIZES.base : marginRight
+          marginRight: marginRight === true ? SIZES.base : marginRight,
         },
         marginBottom && {
-          marginBottom: marginBottom === true ? SIZES.base : marginBottom
+          marginBottom: marginBottom === true ? SIZES.base : marginBottom,
         },
         marginLeft && {
-          marginLeft: marginLeft === true ? SIZES.base : marginLeft
+          marginLeft: marginLeft === true ? SIZES.base : marginLeft,
         },
         marginVertical && {
-          marginVertical: marginVertical === true ? SIZES.base : marginVertical
+          marginVertical: marginVertical === true ? SIZES.base : marginVertical,
         },
         marginHorizontal && {
           marginHorizontal:
-            marginHorizontal === true ? SIZES.base : marginHorizontal
-        }
+            marginHorizontal === true ? SIZES.base : marginHorizontal,
+        },
       ];
     }
 
-    if (type === "padding") {
+    if (type === 'padding') {
       return [
         padding && spacing(type, padding, SIZES.base),
         paddingTop && {
-          paddingTop: paddingTop === true ? SIZES.base : paddingTop
+          paddingTop: paddingTop === true ? SIZES.base : paddingTop,
         },
         paddingRight && {
-          paddingRight: paddingRight === true ? SIZES.base : paddingRight
+          paddingRight: paddingRight === true ? SIZES.base : paddingRight,
         },
         paddingBottom && {
-          paddingBottom: paddingBottom === true ? SIZES.base : paddingBottom
+          paddingBottom: paddingBottom === true ? SIZES.base : paddingBottom,
         },
         paddingLeft && {
-          paddingLeft: paddingLeft === true ? SIZES.base : paddingLeft
+          paddingLeft: paddingLeft === true ? SIZES.base : paddingLeft,
         },
         paddingVertical && {
           paddingVertical:
-            paddingVertical === true ? SIZES.base : paddingVertical
+            paddingVertical === true ? SIZES.base : paddingVertical,
         },
         paddingHorizontal && {
           paddingHorizontal:
-            paddingHorizontal === true ? SIZES.base : paddingHorizontal
-        }
+            paddingHorizontal === true ? SIZES.base : paddingHorizontal,
+        },
       ];
     }
   }
@@ -188,19 +183,20 @@ class Button extends Component {
       ...props
     } = this.props;
 
-    const marginSpacing = this.getSpacings("margin");
-    const paddingSpacing = this.getSpacings("padding");
+    const marginSpacing = this.getSpacings('margin');
+    const paddingSpacing = this.getSpacings('padding');
 
     const buttonStyles = StyleSheet.flatten([
       {
         height: SIZES.base * 10,
-        borderRadius: SIZES.btnRadius,
+        borderRadius: radius !== null ? radius : SIZES.btnRadius,
         backgroundColor: COLORS.primary,
-        justifyContent: "center"
+        justifyContent: 'center',
       },
-      transparent && { backgroundColor: "transparent" },
+      transparent && { backgroundColor: 'transparent' },
       primary && { backgroundColor: COLORS.primary },
       secondary && { backgroundColor: COLORS.secondary },
+      disabled && { backgroundColor: COLORS.muted },
       odd && { backgroundColor: COLORS.odd },
       black && { backgroundColor: COLORS.black },
       white && { backgroundColor: COLORS.white },
@@ -221,24 +217,19 @@ class Button extends Component {
         shadowColor: COLORS.black,
         shadowOffset: { width: 0, height: elevation - 1 },
         shadowOpacity: 0.1,
-        shadowRadius: elevation
+        shadowRadius: elevation,
       },
-      radius && { borderRadius: radius },
+      // radius ? { borderRadius: radius } : { borderRadius: SIZES.btnRadius },
       marginSpacing,
       paddingSpacing,
-      style
+      style,
     ]);
-
-    if (disabled) {
-      const backgroundColor = StyleSheet.flatten(buttonStyles).backgroundColor;
-      buttonStyles.backgroundColor = rgba(backgroundColor, 0.5);
-    }
 
     if (outlined) {
       const backgroundColor = StyleSheet.flatten(buttonStyles).backgroundColor;
       buttonStyles.borderWidth = 1;
       buttonStyles.borderColor = backgroundColor;
-      buttonStyles.backgroundColor = "transparent";
+      buttonStyles.backgroundColor = 'transparent';
     }
 
     const ButtonType = highlight
@@ -310,7 +301,7 @@ Button.defaultProps = {
   endColor: COLORS.secondary,
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
-  locations: [0.1, 0.9]
+  locations: [0.1, 0.9],
   // opacity: 0.8,
 };
 

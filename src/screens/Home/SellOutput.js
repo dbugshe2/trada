@@ -52,7 +52,7 @@ const SellOutput = () => {
         </Block>
       </Block>
       <Block flex={0}>
-        <Button radius={false}>
+        <Button radius={0}>
           <Text white center h6>
             Pay N5,000
           </Text>

@@ -35,6 +35,7 @@ import Text from '../../components/primary/Text';
 import { apiGet, apiPost, apiPut } from '../../utils/fetcher';
 import { isValid } from '../../utils/token';
 import { authReducer } from './authReducer';
+import { errorMessage } from '../../utils/toast';
 
 const AuthContext = createContext();
 
@@ -60,6 +61,9 @@ export const AuthProvider = (props) => {
         .unauthorized((err) => console.log('unauthorized', err))
         .notFound((err) => console.log('not found', err))
         .timeout((err) => console.log('timeout', err))
+        .error(403, (err) => {
+          errorMessage('this user exist please login instead');
+        })
         .internalError((err) => console.log('server Error', err))
         .fetchError((err) => console.log('Netwrok error', err))
         .json();
@@ -72,6 +76,7 @@ export const AuthProvider = (props) => {
       }
     } catch (error) {
       captureException(error);
+      return error;
     }
   };
 
