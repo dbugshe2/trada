@@ -20,7 +20,7 @@ const Home = ({ navigation }) => {
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefeshing] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
   const handleCopy = async () => {
     console.log('copy clicked');
@@ -101,109 +101,115 @@ const Home = ({ navigation }) => {
         }
       >
         <Block paddingTop={SIZES.padding} paddingBottom={SIZES.padding * 2}>
-          <Swiper showPagination>
-            {/* one */}
-            <Block center middle width={SIZES.width}>
-              <Text small muted mtmedium>
-                Tmoni Wallet Balance
-              </Text>
-              {loading ? (
-                <ActivityIndicator color={COLORS.primary} size="small" />
-              ) : (
+          {user !== null && typeof user !== 'undefined' ? (
+            <Swiper showPagination>
+              {/* one */}
+              <Block center middle width={SIZES.width}>
+                <Text small muted mtmedium>
+                  Tmoni Wallet Balance
+                </Text>
+                {loading ? (
+                  <ActivityIndicator color={COLORS.primary} size="small" />
+                ) : (
+                  <>
+                    <Text gray height={LINE_HEIGHTS.fourty_1} h1 mtregular>
+                      {CurrencyFormatter(user.data.wallet.balance)}
+                    </Text>
+                  </>
+                )}
+
+                <Block
+                  marginTop={SIZES.padding}
+                  lightgray
+                  center
+                  radius={5}
+                  height={30}
+                  paddingHorizontal={SIZES.padding}
+                  row
+                >
+                  {loading ? (
+                    <ActivityIndicator color={COLORS.primary} size="small" />
+                  ) : (
+                    <>
+                      <Text primary mtlight small marginHorizontal={SIZES.base}>
+                        {user.data.wallet.bankName}
+                      </Text>
+                      <Text
+                        muted
+                        mtlight
+                        small
+                        spacing={LETTERSPACING.two_point_4}
+                      >
+                        {user.data.wallet.accountNumber}
+                      </Text>
+                    </>
+                  )}
+
+                  <Button
+                    onPress={() => handleCopy()}
+                    transparent
+                    paddingHorizontal={SIZES.padding}
+                  >
+                    <ImageIcon name="copy" />
+                  </Button>
+                </Block>
+              </Block>
+
+              <Block center middle width={SIZES.width}>
+                <Text small muted mtmedium>
+                  Commission Balance
+                </Text>
                 <>
-                  <Text gray height={LINE_HEIGHTS.fourty_1} h1 mtregular>
-                    {CurrencyFormatter(user.data.wallet.balance)}
-                  </Text>
+                  {loading ? (
+                    <ActivityIndicator />
+                  ) : (
+                    <Text gray height={LINE_HEIGHTS.fourty_1} h1 mtregular>
+                      {CurrencyFormatter(user.data.commissionWallet.balance)}
+                    </Text>
+                  )}
                 </>
-              )}
-
-              <Block
-                marginTop={SIZES.padding}
-                lightgray
-                center
-                radius={5}
-                height={30}
-                paddingHorizontal={SIZES.padding}
-                row
-              >
-                {loading ? (
-                  <ActivityIndicator color={COLORS.primary} size="small" />
-                ) : (
-                  <>
-                    <Text primary mtlight small marginHorizontal={SIZES.base}>
-                      {user.data.wallet.bankName}
-                    </Text>
-                    <Text
-                      muted
-                      mtlight
-                      small
-                      spacing={LETTERSPACING.two_point_4}
-                    >
-                      {user.data.wallet.accountNumber}
-                    </Text>
-                  </>
-                )}
-
-                <Button
-                  onPress={() => handleCopy()}
-                  transparent
+                <Block
+                  marginTop={SIZES.padding}
+                  lightgray
+                  center
+                  radius={5}
+                  height={30}
                   paddingHorizontal={SIZES.padding}
+                  row
                 >
-                  <ImageIcon name="copy" />
-                </Button>
-              </Block>
-            </Block>
+                  {loading ? (
+                    <ActivityIndicator color={COLORS.primary} size="small" />
+                  ) : (
+                    <>
+                      <Text primary mtlight small marginHorizontal={SIZES.base}>
+                        {user.data.wallet.bankName}
+                      </Text>
+                      <Text
+                        muted
+                        mtlight
+                        small
+                        spacing={LETTERSPACING.two_point_4}
+                      >
+                        {user.data.wallet.accountNumber}
+                      </Text>
+                    </>
+                  )}
 
-            <Block center middle width={SIZES.width}>
-              <Text small muted mtmedium>
-                Commission Balance
-              </Text>
-              <>
-                {loading ? (
-                  <ActivityIndicator />
-                ) : (
-                  <Text gray height={LINE_HEIGHTS.fourty_1} h1 mtregular>
-                    {CurrencyFormatter(user.data.commissionWallet.balance)}
-                  </Text>
-                )}
-              </>
-              <Block
-                marginTop={SIZES.padding}
-                lightgray
-                center
-                radius={5}
-                height={30}
-                paddingHorizontal={SIZES.padding}
-                row
-              >
-                {loading ? (
-                  <ActivityIndicator color={COLORS.primary} size="small" />
-                ) : (
-                  <>
-                    <Text primary mtlight small marginHorizontal={SIZES.base}>
-                      {user.data.wallet.bankName}
-                    </Text>
-                    <Text
-                      muted
-                      mtlight
-                      small
-                      spacing={LETTERSPACING.two_point_4}
-                    >
-                      {user.data.wallet.accountNumber}
-                    </Text>
-                  </>
-                )}
-
-                <Button
-                  onPress={() => handleCopy()}
-                  transparent
-                  paddingHorizontal={SIZES.padding}
-                >
-                  <ImageIcon name="copy" />
-                </Button>
+                  <Button
+                    onPress={() => handleCopy()}
+                    transparent
+                    paddingHorizontal={SIZES.padding}
+                  >
+                    <ImageIcon name="copy" />
+                  </Button>
+                </Block>
               </Block>
-            </Block>
-          </Swiper>
+            </Swiper>
+          ) : (
+            <Text center mtmedium grey>
+              Unable to fetch Wallet, pull down to retry
+            </Text>
+          )}
         </Block>
         <Block flex={3} paddingHorizontal={SIZES.padding}>
           {/* two */}
@@ -263,7 +269,7 @@ const Home = ({ navigation }) => {
               row
               height={150}
               onPress={() =>
-                navigation.navigate('Store', { screen: 'BuyInputs' })
+                navigation.navigate('Store', { screen: 'MyInputs' })
               }
             >
               <Block
@@ -297,7 +303,7 @@ const Home = ({ navigation }) => {
               row
               height={150}
               onPress={() =>
-                navigation.navigate('Store', { screen: 'SellOutputs' })
+                navigation.navigate('Store', { screen: 'MyOutputs' })
               }
             >
               <Block

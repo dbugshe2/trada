@@ -311,6 +311,7 @@ const BuyInput = () => {
             disabled={amount === null}
             radius={0}
             onPress={() => onSubmit()}
+            height={48}
           >
             <Text white center h6>
               Pay {CurrencyFormatter(amount)}

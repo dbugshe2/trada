@@ -13,7 +13,7 @@ const defaultOptions = {
   textStyle: { fontFamily: 'montserratMedium', fontSize: SIZES.small },
 };
 const loadingOptions = {
-  containerStyle: { backgroundColor: COLORS.odd },
+  containerStyle: { backgroundColor: COLORS.primary },
   // maskColor: rgba(COLORS.primary, 0.5),
   textColor: COLORS.gray,
   textStyle: { fontFamily: 'montserratMedium', fontSize: SIZES.small },

@@ -191,6 +191,11 @@ const icons = {
     width: 30,
     height: 30,
   },
+  camera: {
+    icon: require('../assets/icons/camera.png'),
+    width: 68,
+    height: 68,
+  },
 };
 
 export default icons;
