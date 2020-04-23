@@ -206,11 +206,14 @@ const Input = (props) => {
   // }
 
   return (
-    <Block flex={(props.flex && props.flex) || 0}>
+    <Block
+      flex={(props.flex && props.flex) || 0}
+      marginVertical={SIZES.base * 3}
+      {...props.containerProps}
+    >
       <TextInput
         theme={{
-          mode: 'exact',
-          roudness: 4,
+          roundess: 4,
           colors: {
             primary: COLORS.primary,
             surface: COLORS.background,
@@ -219,8 +222,8 @@ const Input = (props) => {
             text: COLORS.gray,
           },
         }}
-        style={{ marginVertical: SIZES.base }}
         mode="outlined"
+        style={{ height: 56 }}
         {...props}
       />
       {props.error && (

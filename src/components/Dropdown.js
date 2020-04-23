@@ -5,16 +5,17 @@ import { COLORS, SIZES } from '../utils/theme';
 import Block from './primary/Block';
 import Text from './primary/Text';
 import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
 
 const Dropdown = (props) => {
   const { flex, containerProps, error } = props;
 
   const style = {
-    borderColor: (error && COLORS.error) || COLORS.gray,
+    borderColor: (error && COLORS.error) || COLORS.muted,
     borderRadius: SIZES.radius,
-    height: SIZES.base * 14,
-    justifyContent: 'center',
     borderWidth: 1,
+    height: 56,
+    justifyContent: 'center',
   };
   const textStyle = {
     paddingHorizontal: SIZES.padding,
@@ -33,7 +34,7 @@ const Dropdown = (props) => {
     <Block
       flex={(flex && flex) || 0}
       middle
-      marginVertical={SIZES.base}
+      marginVertical={SIZES.base * 3}
       {...containerProps}
     >
       <DropdownType

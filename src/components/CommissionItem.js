@@ -4,7 +4,6 @@ import Block from './primary/Block';
 import ImageIcon from './primary/ImageIcon';
 import Text from './primary/Text';
 import { COLORS } from '../utils/theme';
-import Moment from 'react-moment';
 import moment from 'moment';
 import { CurrencyFormatter } from '../utils/currency';
 

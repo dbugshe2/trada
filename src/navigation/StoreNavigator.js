@@ -16,33 +16,52 @@ const Tab = createMaterialTopTabNavigator();
 
 const StoreTab = () => {
   return (
-    <Tab.Navigator
-      initialRouteName="StoreInputs"
-      screenOptions={{ headerShown: false }}
-      tabBarOptions={topTabOptions}
-    >
-      <Tab.Screen name="Buy your Inputs" component={StoreInputs} />
-      <Tab.Screen name="Sell your Outputs" component={StoreOutputs} />
+    <Tab.Navigator initialRouteName="MyInputs" tabBarOptions={topTabOptions}>
+      <Tab.Screen
+        name="MyInputs"
+        component={StoreInputs}
+        options={{ title: 'My Inputs' }}
+      />
+      <Tab.Screen
+        name="MyOutputs"
+        component={StoreOutputs}
+        options={{ title: 'My Outputs' }}
+      />
     </Tab.Navigator>
   );
 };
 
 const StoreNavigator = () => (
-  <Stack.Navigator
-    initialRouteName="Store"
-    screenOptions={{
-      header: ({ scene, previous, navigation }) => <Header title="My Store" />,
-    }}
-  >
-    <Stack.Screen name="Store" component={StoreTab} />
-    <Stack.Screen name="StoreItemSummary" component={StoreItemSummary} />
-    <Stack.Screen name="PhotoUpload" component={PhotoUpload} />
+  <Stack.Navigator initialRouteName="Store">
+    <Stack.Screen
+      options={{
+        header: ({ scene, previous, navigation }) => (
+          <Header title="My Store" />
+        ),
+      }}
+      name="Store"
+      component={StoreTab}
+    />
+    <Stack.Screen
+      options={{ headerShown: false }}
+      name="StoreItemSummary"
+      component={StoreItemSummary}
+    />
+    <Stack.Screen
+      options={{ headerShown: false }}
+      name="PhotoUpload"
+      component={PhotoUpload}
+    />
     <Stack.Screen
       options={{ headerShown: false }}
       name="BuyInput"
       component={BuyInput}
     />
-    <Stack.Screen name="SellOutput" component={SellOutput} />
+    <Stack.Screen
+      options={{ headerShown: false }}
+      name="SellOutput"
+      component={SellOutput}
+    />
   </Stack.Navigator>
 );
 
