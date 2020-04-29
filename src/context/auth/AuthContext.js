@@ -154,7 +154,7 @@ export const AuthProvider = (props) => {
     setLoading(true);
     try {
       const data = await apiPost('/users/login', formData)
-        .notFound((err) => console.log('not found', err))
+        .notFound((err) => errorMessage(err.json.message))
         .timeout((err) => console.log('timeout', err))
         .internalError((err) => console.log('server Error', err))
         .fetchError((err) => console.log('Netwrok error', err))

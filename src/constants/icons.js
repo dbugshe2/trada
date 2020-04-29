@@ -128,8 +128,8 @@ const icons = {
 
   coin: {
     icon: require('../assets/icons/coin.png'),
-    width: 30,
-    height: 60,
+    width: 14,
+    height: 14,
   },
   support: {
     icon: require('../assets/icons/support.png'),

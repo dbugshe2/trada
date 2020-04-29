@@ -18,7 +18,7 @@ const LeaderboardItem = (props) => {
       <Text muted paddingRight={8}>
         {id}
       </Text>
-      <Block>
+      <Block flex={4}>
         <Text
           mtmedium
           spacing={LETTERSPACING.point_25}
@@ -29,17 +29,21 @@ const LeaderboardItem = (props) => {
           {name}
         </Text>
       </Block>
-      <ImageIcon name="coin" />
-      <Text
-        mtmedium
-        spacing={LETTERSPACING.point_25}
-        height={LINE_HEIGHTS.twenty}
-        gray
-        paddingLeft={6}
-        h6
-      >
-        {NumberFormatter(coins)}
-      </Text>
+      <Block center>
+        <ImageIcon absolute top={2} bottom={2} right={0} name="coin" />
+      </Block>
+      <Block flex={0}>
+        <Text
+          mtmedium
+          spacing={LETTERSPACING.point_25}
+          height={LINE_HEIGHTS.twenty}
+          gray
+          h6
+          right
+        >
+          {coins > 0 ? NumberFormatter(coins) : `${'\u20A6'}0`}
+        </Text>
+      </Block>
     </Block>
   );
 };
