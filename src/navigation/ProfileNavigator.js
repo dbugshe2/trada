@@ -17,7 +17,11 @@ const ProfileTab = () => {
       tabBarOptions={topTabOptions}
       initialRouteName="PersonalInfo"
     >
-      <Tab.Screen name="PersonalInfo" component={PersonalInfo} />
+      <Tab.Screen
+        options={{ title: 'Personal info' }}
+        name="PersonalInfo"
+        component={PersonalInfo}
+      />
       <Tab.Screen name="Verification" component={VerifyBvn} />
     </Tab.Navigator>
   );

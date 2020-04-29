@@ -21,7 +21,7 @@ const ImageIcon = (props) => {
       height: height,
       width: width,
     },
-    absolute && { position: absolute },
+    absolute && { position: 'absolute' },
     top && { top },
     right && { right },
     bottom && { bottom },

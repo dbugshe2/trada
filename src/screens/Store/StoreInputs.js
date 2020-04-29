@@ -21,7 +21,12 @@ const StoreInputs = ({ navigation }) => {
     try {
       const token = await validateToken();
       if (token) {
-        const res = await apiGet('/inputs', {}, token, true)
+        const res = await apiGet(
+          '/transactions/query',
+          { serviceType: 'input' },
+          token,
+          true
+        )
           .badRequest((err) => {
             console.log(err.status);
           })
@@ -100,8 +105,6 @@ const StoreInputs = ({ navigation }) => {
     <Block background>
       {loading ? (
         <ActivityIndicator color={COLORS.primary} />
-      ) : myInputs.length === 0 ? (
-        <EmptyState text="your input orders will appear here" />
       ) : (
         <Block space="evenly" background>
           <FlatList data={myInputs} renderItem={renderItem} />

@@ -23,10 +23,8 @@ const Home = ({ navigation }) => {
   const [user, setUser] = useState(null);
 
   const handleCopy = async () => {
-    console.log('copy clicked');
     await saveToClipboard(user.data.wallet.accountNumber);
-    console.log('copied');
-    successMessage(`${user.data.wallet.accountNumber}`);
+    successMessage(`${user.data.wallet.accountNumber} copied`);
   };
 
   const refreshUserDetails = async () => {

@@ -109,7 +109,6 @@ const StoreOutputs = ({ navigation }) => {
         })
         .json();
       if (res) {
-        console.log(res);
         setTransactions(res.data);
         filterOutput();
       }
