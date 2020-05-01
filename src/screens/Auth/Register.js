@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
 import { COLORS, SIZES } from '../../utils/theme';
-// import { useAuthContext } from "../../context";
-// import { VariationContext } from '../../context/variation/VariationContext';
+import { useAuthContext } from '../../context/auth/AuthContext';
 import { useForm } from 'react-hook-form';
 import { captureException } from 'sentry-expo';
 import {
@@ -20,18 +19,14 @@ import Button from '../../components/primary/Button';
 import Block from '../../components/primary/Block';
 import Header from '../../components/Header';
 import Text from '../../components/primary/Text';
+import STATES from '../../constants/states';
 
 const steps = 4;
 const initialViewProp = 0; // use initialView of 0
 
 const Register = ({ navigation }) => {
-  // const auth = useAuthContext();
-  // const variation = useContext(VariationContext);
+  const { signup } = useAuthContext();
   const { register, setValue, getValues, handleSubmit, errors } = useForm();
-
-  // const { signup } = auth;
-  // const { getStatesDetails, states_and_lgas, loading } = variation;
-  // const variationMessage = variation.message;
 
   const [activeView, setActiveView] = useState(initialViewProp); // state of activetab initialized to initialView
   const [activeState, setActiveState] = useState(null);
@@ -128,9 +123,11 @@ const Register = ({ navigation }) => {
       setMessage('the form contains some errors');
       setSending(false);
     } else {
-      // const res = await signup(getValues());
-      // if (res) setMessage(res.message);
-      // console.log("returned, by submit", res);
+      const res = await signup(getValues());
+      if (res) {
+        setMessage(res.message);
+      }
+      console.log('returned, by submit', res);
       navigation.navigate('App');
     }
   };
@@ -261,8 +258,8 @@ const Register = ({ navigation }) => {
               <Block key="location" space="around">
                 <Block>
                   <Dropdown
-                    // options={states_and_lgas}
-                    // defaultValue={loading ? 'loading...' : 'Select State'}
+                    options={STATES}
+                    defaultValue={'Select State'}
                     renderRow={(state, index, isSelected) => (
                       <Text
                         gray

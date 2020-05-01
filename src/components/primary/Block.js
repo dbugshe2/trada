@@ -227,6 +227,7 @@ class Block extends Component {
       radius,
       wrap,
       animated,
+      outlined,
       theme,
       safe,
       scroll,
@@ -272,6 +273,7 @@ class Block extends Component {
       muted && { backgroundColor: COLORS.muted },
       inactive && { backgroundColor: COLORS.inactive },
       lightgray && { backgroundColor: COLORS.lightgray },
+      outlined && { borderWidth: 1 },
       style, // rewrite predefined styles
     ]);
 

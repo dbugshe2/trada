@@ -13,12 +13,13 @@ import { errorMessage } from '../../utils/toast';
 import { ActivityIndicator, Flatlist, Image, FlatList } from 'react-native';
 import { CurrencyFormatter } from '../../utils/currency';
 import moment from 'moment';
+import EmptyState from '../../components/EmptyState';
 const StoreOutputs = ({ navigation }) => {
   // context
   const { validateToken } = useAuthContext();
 
   // state
-  const [transactions, setTransactions] = useState(null);
+  const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // handlers
@@ -37,7 +38,11 @@ const StoreOutputs = ({ navigation }) => {
       height={134}
       marginVertical={SIZES.padding}
       marginHorizontal={SIZES.padding}
-      onPress={() => navigation.navigate('StoreItemSummary')}
+      onPress={() =>
+        navigation.navigate('StoreItemSummary', {
+          outputItem: JSON.stringify(item),
+        })
+      }
     >
       <Block
         column
@@ -55,6 +60,7 @@ const StoreOutputs = ({ navigation }) => {
           </Block>
           <Image
             source={{ uri: item.outputImageUrl }}
+            // eslint-disable-next-line react-native/no-inline-styles
             style={{ height: 60, width: 67 }}
             name="riceBag"
           />
@@ -122,12 +128,18 @@ const StoreOutputs = ({ navigation }) => {
     fetchTransactions();
   }, []);
 
-  // useEffect();
+  if (loading) {
+    return (
+      <Block center middle>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </Block>
+    );
+  }
 
   return (
     <Block background>
-      {loading ? (
-        <ActivityIndicator color={COLORS.primary} />
+      {transactions.lenght === 0 ? (
+        <EmptyState icon="add" text="Sell your Farm Output" />
       ) : (
         <Block background>
           <Block flex={2}>

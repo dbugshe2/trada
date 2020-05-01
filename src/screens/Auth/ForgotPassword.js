@@ -3,7 +3,7 @@ import { ActivityIndicator } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { captureException } from 'sentry-expo';
 import { SIZES, COLORS } from '../../utils/theme';
-// import { useAuthContext } from '../../context';
+import { useAuthContext } from '../../context/auth/AuthContext';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 import Header from '../../components/Header';
@@ -14,8 +14,7 @@ const ForgotPassword = ({ navigation }) => {
   const { register, handleSubmit, setValue, errors } = useForm();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  // const auth = useAuthContext();
-  // const { requestResetOtp } = auth;
+  const { requestResetOtp } = useAuthContext();
 
   useEffect(() => {
     register(
@@ -31,34 +30,35 @@ const ForgotPassword = ({ navigation }) => {
     );
   }, [register]);
 
-  const onSubmit = (data) => {
-    setLoading(true);
-    // requestResetOtp(data)
-    // .then((res) => {
-    //   console.log({ ...res });
-    //   if (res.status === 'success') {
-    //     navigation.navigate('VerifyPasswordReset');
-    //   } else {
-    //     setMessage(res.message);
-    //     setLoading(false);
-    //   }
-    // })
-    // .catch((err) => {
-    //   captureException(err);
-    //   setLoading(false);
-    //   setMessage({ ...err });
-    // });
-    setLoading(false);
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      const res = await requestResetOtp(data);
+
+      if (res) {
+        navigation.navigate('VerifyPasswordReset');
+      } else {
+        setMessage(res.message);
+      }
+    } catch (error) {
+      captureException(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Block background>
-      <Header backTitle='Password Reset' />
-      <Block space='around' marginVertical={SIZES.padding} paddingHorizontal={SIZES.padding}>
+      <Header backTitle="Password Reset" />
+      <Block
+        space="around"
+        marginVertical={SIZES.padding}
+        paddingHorizontal={SIZES.padding}
+      >
         <Block>
           <Input
-            label='Phone Number'
-            keyboardType='phone-pad'
+            label="Phone Number"
+            keyboardType="phone-pad"
             onChangeText={(text) => {
               setValue('phone', text);
             }}
@@ -74,9 +74,9 @@ const ForgotPassword = ({ navigation }) => {
         </Block>
         <Block middle>
           {loading ? (
-            <ActivityIndicator animating size='large' color={COLORS.primary} />
+            <ActivityIndicator animating size="large" color={COLORS.primary} />
           ) : (
-            <Button onPress={() => navigation.navigate('VerifyPasswordReset')}>
+            <Button onPress={handleSubmit(onSubmit)}>
               <Text white center h6>
                 Continue
               </Text>
@@ -92,7 +92,8 @@ const ForgotPassword = ({ navigation }) => {
           <Button
             marginHorizontal={SIZES.base}
             transparent
-            onPress={() => navigation.navigate('Login')}>
+            onPress={() => navigation.navigate('Login')}
+          >
             <Text body primary>
               Log In
             </Text>

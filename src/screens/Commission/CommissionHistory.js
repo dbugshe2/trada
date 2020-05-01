@@ -1,23 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { SIZES, COLORS } from '../../utils/theme';
-import { useCommissionContext } from '../../context/commission/CommissionContext';
 import { ActivityIndicator, FlatList } from 'react-native';
 import Header from '../../components/Header';
 import CommissionItem from '../../components/CommissionItem';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAuthContext } from '../../context/auth/AuthContext';
+import { apiGet } from '../../utils/fetcher';
+import { captureException } from 'sentry-expo';
 
 const CommissionHistory = () => {
+  const { validateToken } = useAuthContext();
+
   const [loading, setLoading] = useState(true);
   const [full, setFull] = useState(false);
+  const [fullHistory, setFullHistory] = useState([]);
+  const [historyCount, setHistoryCount] = useState(null);
 
-  const {
-    getCommissionHistory,
-    fullHistory,
-    historyCount,
-  } = useCommissionContext();
-
+  const getCommissionHistory = async (limit, skip) => {
+    try {
+      const token = await validateToken();
+      if (token) {
+        const res = await apiGet(
+          '/commissions/history',
+          { skip: skip, limit: limit },
+          token,
+          true
+        )
+          .unauthorized((err) => console.log('unauthorized', err))
+          .notFound((err) => console.log('not found', err))
+          .timeout((err) => console.log('timeout', err))
+          .internalError((err) => console.log('server Error', err))
+          .fetchError((err) => console.log('Netwrok error', err))
+          .json();
+        if (res) {
+          setHistoryCount(res.totalDocumentCount);
+          setFullHistory((prevState) => [...prevState, ...res.data]);
+        }
+      }
+    } catch (error) {
+      captureException(error);
+    }
+  };
   useFocusEffect(() => {
     (async () => {
       setLoading(true);

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { COLORS, SIZES } from '../../utils/theme';
-// import { useAuthContext } from "../../context";
-// import { VariationContext } from "../../context/variation/VariationContext";
+import { useAuthContext } from '../../context/auth/AuthContext';
 import { useForm } from 'react-hook-form';
 import { captureException } from 'sentry-expo';
 import Input from '../../components/primary/Input';
@@ -12,24 +11,27 @@ import Header from '../../components/Header';
 import Text from '../../components/primary/Text';
 
 const ResetPassword = ({ navigation }) => {
-  // const auth = useAuthContext();
+  const { resetPin } = useAuthContext();
   const { register, setValue, getValues, handleSubmit, errors } = useForm();
-
-  // const { resetPin } = auth;
 
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState('');
 
   const onSubmit = async (data) => {
-    setSending(true);
-    // const res = await resetPin(data);
-    // if (res.status === "success") {
-    //   setMessage("Pin reset Successfully");
-    //   navigation.navigate("Login");
-    // } else {
-    //   setMessage(res.message);
-    // }
-    setSending(false);
+    try {
+      setSending(true);
+      const res = await resetPin(data);
+      if (res) {
+        setMessage('Pin reset Successfully');
+        navigation.navigate('Login');
+      } else {
+        setMessage(res.message);
+      }
+    } catch (error) {
+      captureException(error);
+    } finally {
+      setSending(false);
+    }
   };
   useEffect(() => {
     register({ name: 'newPin' }, { required: 'please set a new pin' });
@@ -37,10 +39,13 @@ const ResetPassword = ({ navigation }) => {
       { name: 'confirmPin' },
       {
         required: 'please enter your pin again',
-        validate: (value) => value === getValues(),
+        // validate: {
+        //   confirmed: (value) =>
+        //     value == getValues('newPin') || "The two Pins don't NOT match",
+        // },
       }
     );
-  }, [register, getValues]);
+  }, [register]);
 
   return (
     <Block background>

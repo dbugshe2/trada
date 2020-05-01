@@ -329,15 +329,6 @@ const PersonalInfo = ({ navigation }) => {
               onSelect={handleLgaSelected}
               error={errors.lga}
             />
-            {/* <Text small muted marginVertical={2}>
-              District
-            </Text>
-            <Input
-              placeholder="District"
-              onChangeText={(text) => setDistrict(text)}
-              defaultValue={district}
-              error={errors.address}
-            /> */}
             <Text small muted marginVertical={2}>
               {`Date of Birth  (${dateOfBirth && dateOfBirth})`}
             </Text>

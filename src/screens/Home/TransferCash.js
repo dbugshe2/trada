@@ -2,18 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { SIZES, COLORS } from '../../utils/theme';
 import { useForm } from 'react-hook-form';
 import { ActivityIndicator } from 'react-native';
-// import { useVariationContext } from '../../context';
 import Dropdown from '../../components/Dropdown';
 import Button from '../../components/primary/Button';
 import Input from '../../components/primary/Input';
 import Header from '../../components/Header';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
-import { useVariationContext } from '../../context/variation/VariationContext';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import Toast from 'react-native-tiny-toast';
 import { captureException } from 'sentry-expo';
-import { apiPost } from '../../utils/fetcher';
+import { apiPost, apiGet } from '../../utils/fetcher';
 
 const TransferCash = ({ navigation }) => {
   //state
@@ -23,18 +21,55 @@ const TransferCash = ({ navigation }) => {
   const [activeBankCode, setActiveBankCode] = useState(null);
   const [accName, setAccName] = useState('');
   const [accNumber, setAccNumber] = useState('');
-
+  const [banks, setBanks] = useState(null);
+  const [bankNames, setBankNames] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { register, setValue, handleSubmit, errors } = useForm();
 
-  const {
-    getBanks,
-    loading,
-    banks,
-    bankNames,
-    resolveBankAcc,
-  } = useVariationContext();
   const { validateToken } = useAuthContext();
-
+  const getBanks = async () => {
+    try {
+      setLoading(true);
+      const res = await apiGet('/variation/banks')
+        .unauthorized((err) => console.log('unauthorized', err))
+        .notFound((err) => console.log('not found', err))
+        .timeout((err) => console.log('timeout', err))
+        .internalError((err) => console.log('server Error', err))
+        .fetchError((err) => console.log('Netwrok error', err))
+        .json();
+      if (res) {
+        console.log(res.data);
+        const names = Object.values(res.data);
+        console.log('names', names);
+        setBanks(res);
+        setBankNames(names);
+        setLoading(false);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      captureException(error);
+    }
+  };
+  const resolveBankAcc = async (code, number) => {
+    try {
+      const res = await apiPost('/variation/banks/resolve', {
+        bankCode: code,
+        bankAccount: number,
+      })
+        .unauthorized((err) => console.log('unauthorized', err))
+        .notFound((err) => console.log('not found', err))
+        .timeout((err) => console.log('timeout', err))
+        .internalError((err) => console.log('server Error', err))
+        .fetchError((err) => console.log('Netwrok error', err))
+        .json();
+      if (res) {
+        return res;
+      }
+    } catch (error) {
+      captureException(error);
+    }
+  };
   // handlers
   const getKeyByValue = (object, value) => {
     return Object.keys(object).find((key) => object[key] === value);

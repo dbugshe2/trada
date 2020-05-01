@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { SIZES, COLORS } from '../../utils/theme';
-// import { useAuthContext } from "../../context";
+import { useAuthContext } from '../../context/auth/AuthContext';
 import { captureException } from 'sentry-expo';
 import { useForm } from 'react-hook-form';
 import Timer from '../../components/Timer';
@@ -12,30 +12,57 @@ import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 
 const VerifyPasswordReset = ({ navigation }) => {
-  // const auth = useAuthContext();
+  const { phone, setResetPinOtp, requestResetOtp } = useAuthContext();
   const { register, handleSubmit, setValue } = useForm();
 
-  // const { phone, setResetPinOtp } = auth;
+  // const = auth;
 
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [canResend, setCanResend] = useState(false);
+  const [resending, setResending] = useState(false);
 
   const onSubmit = async (data) => {
-    setLoading(true);
-    // setResetPinOtp(data);
-    navigation.navigate('ResetPassword');
-    setLoading(false);
+    try {
+      setLoading(true);
+      setResetPinOtp(data);
+      navigation.navigate('ResetPassword');
+    } catch (error) {
+      captureException(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resendOtp = async () => {
+    try {
+      setResending(true);
+      const res = await requestResetOtp(phone);
+
+      if (res) {
+        setMessage('New OTP Sent to phone');
+      }
+    } catch (error) {
+      captureException(error);
+      setMessage(error.message);
+    } finally {
+      setResending(false);
+    }
   };
   useEffect(() => {
     register({ name: 'resetPinOtp' }, { required: true, minLength: 4 });
   }, [register]);
   return (
     <Block background>
-      <Header backTitle='Enter OTP' />
-      <Block space='around' marginVertical={SIZES.padding} paddingHorizontal={SIZES.padding}>
+      <Header backTitle="Enter OTP" />
+      <Block
+        space="around"
+        marginVertical={SIZES.padding}
+        paddingHorizontal={SIZES.padding}
+      >
         <Block middle center flex={2}>
           <PinInput
+            // eslint-disable-next-line react-native/no-inline-styles
             style={{ width: '80%' }}
             pinCount={4}
             autoFocusOnLoad
@@ -47,32 +74,42 @@ const VerifyPasswordReset = ({ navigation }) => {
             {message}
           </Text>
         </Block>
-        <Block flex={2} justifyContent='flex-start' marginVertical={SIZES.padding * 2}>
+        <Block
+          flex={2}
+          justifyContent="flex-start"
+          marginVertical={SIZES.padding * 2}
+        >
           <Text gray center small>
-            Enter the 4 digit code we sent to --phone--
+            Enter the 4 digit code we sent to {phone}
           </Text>
           {canResend ? (
-            <Button transparent onPress={null}>
+            <Button transparent onPress={resendOtp}>
               <Text primary center small>
                 Resend code
               </Text>
             </Button>
           ) : (
             <Button transparent>
-              <Text secondary center small>
-                Resend code in{' '}
-                <Timer
-                  onComplete={() => setCanResend(true)}
-                  secondary
-                  time={{ mins: 0, secs: 10 }}
-                />
-              </Text>
+              {resending ? (
+                <Text secondary center small>
+                  resending...
+                </Text>
+              ) : (
+                <Text secondary center small>
+                  Resend code in{'  '}
+                  <Timer
+                    onComplete={() => setCanResend(true)}
+                    secondary
+                    time={{ mins: 10, secs: 0 }}
+                  />{' '}
+                </Text>
+              )}
             </Button>
           )}
         </Block>
-        <Block justifyContent='flex-start'>
+        <Block>
           {loading ? (
-            <ActivityIndicator animating size='large' color={COLORS.primary} />
+            <ActivityIndicator animating size="large" color={COLORS.primary} />
           ) : (
             <Button onPress={handleSubmit(onSubmit)}>
               <Text white center h6>

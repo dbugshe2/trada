@@ -14,9 +14,9 @@ import { GENDERS } from '../../constants/onboarding';
 import { useForm } from 'react-hook-form';
 import { ActivityIndicator } from 'react-native-paper';
 import { COLORS } from '../../utils/theme';
-import { useVariationContext } from '../../context/variation/VariationContext';
 import { apiPost } from '../../utils/fetcher';
 import Toast from 'react-native-tiny-toast';
+import STATES from '../../constants/states';
 import { useAuthContext } from '../../context/auth/AuthContext';
 const AddFarmer = ({ navigation }) => {
   const styles = StyleSheet.create({
@@ -44,7 +44,6 @@ const AddFarmer = ({ navigation }) => {
 
   const { register, setValue, getValues, handleSubmit, errors } = useForm();
   const { validateToken } = useAuthContext();
-  const { getStatesDetails, states_and_lgas, loading } = useVariationContext();
 
   const [activeView, setActiveView] = useState(0);
   const [activeState, setActiveState] = useState(null);
@@ -182,12 +181,6 @@ const AddFarmer = ({ navigation }) => {
     );
   }, [register]);
 
-  useEffect(() => {
-    async function bootstrap() {
-      await getStatesDetails();
-    }
-    bootstrap();
-  }, []);
   return (
     <Block background>
       <Header backTitle />
@@ -261,29 +254,25 @@ const AddFarmer = ({ navigation }) => {
             <Text mtmedium gray h5 marginVertical={5}>
               What crops do farmer cultivate?
             </Text>
-            {loading ? (
-              <ActivityIndicator color={COLORS.primary} />
-            ) : (
-              <Dropdown
-                options={states_and_lgas}
-                defaultValue={loading ? 'loading...' : 'Select State'}
-                renderRow={(state, index, isSelected) => (
-                  <Text
-                    gray
-                    h6
-                    paddingHorizontal={SIZES.base}
-                    paddingVertical={SIZES.padding}
-                  >
-                    {state.name}
-                  </Text>
-                )}
-                renderButtonText={(state, index, isSelected) => {
-                  return `${state.name}`;
-                }}
-                onSelect={handleStateSelect}
-                error={errors.state}
-              />
-            )}
+            <Dropdown
+              options={STATES}
+              defaultValue={'Select State'}
+              renderRow={(state, index, isSelected) => (
+                <Text
+                  gray
+                  h6
+                  paddingHorizontal={SIZES.base}
+                  paddingVertical={SIZES.padding}
+                >
+                  {state.name}
+                </Text>
+              )}
+              renderButtonText={(state, index, isSelected) => {
+                return `${state.name}`;
+              }}
+              onSelect={handleStateSelect}
+              error={errors.state}
+            />
 
             <Dropdown
               disabled={!activeState}

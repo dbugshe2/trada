@@ -114,11 +114,18 @@ const MarketPrice = ({ navigation }) => {
         </Block>
       ) : (
         <Block>
-          <FlatList
-            keyExtractor={(item, index) => `item-${index}`}
-            data={marketPrices}
-            renderItem={renderMarketPrice}
-          />
+          {marketPrices.length === 0 ? (
+            <EmptyState
+              icon="market"
+              text="Update Daily Market Price & Earn credit points"
+            />
+          ) : (
+            <FlatList
+              keyExtractor={(item, index) => `item-${index}`}
+              data={marketPrices}
+              renderItem={renderMarketPrice}
+            />
+          )}
         </Block>
       )}
 
