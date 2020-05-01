@@ -3,8 +3,6 @@ import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 import Input from '../../components/primary/Input';
 import Button from '../../components/primary/Button';
-import Header from '../../components/Header';
-import Dropdown from '../../components/Dropdown';
 
 import { SIZES } from '../../utils/theme';
 
@@ -17,7 +15,7 @@ const VerifyBvn = () => {
         </Block>
       </Block>
       <Block paddingHorizontal={30} paddingBottom={10} flex={0}>
-        <Button>
+        <Button disabled>
           <Text white center h6>
             Verify
           </Text>

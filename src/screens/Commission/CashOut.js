@@ -1,18 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { SIZES, COLORS } from '../../utils/theme';
 import { useForm } from 'react-hook-form';
-import { useCommissionContext } from '../../context/commission/CommissionContext';
 import { ActivityIndicator } from 'react-native-paper';
 import Button from '../../components/primary/Button';
 import Input from '../../components/primary/Input';
 import Header from '../../components/Header';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
+import { useAuthContext } from '../../context/auth/AuthContext';
+import { apiPost } from '../../utils/fetcher';
+import { captureException } from 'sentry-expo';
+import { successMessage } from '../../utils/toast';
 
 const CashOut = ({ navigation }) => {
+  const { validateToken } = useAuthContext();
+
   const { register, setValue, handleSubmit, errors } = useForm();
-  const { cashOutCommission } = useCommissionContext();
   const [sending, setSending] = useState(false);
+
+  const cashOutCommission = async (formData) => {
+    try {
+      const token = await validateToken();
+      if (token) {
+        const data = await apiPost(
+          '/commissions/transfer',
+          formData,
+          token,
+          true
+        )
+          .unauthorized((err) => console.log('unauthorized', err))
+          .notFound((err) => console.log('not found', err))
+          .timeout((err) => console.log('timeout', err))
+          .internalError((err) => console.log('server Error', err))
+          .fetchError((err) => console.log('Netwrok error', err))
+          .json();
+        if (data) {
+          successMessage(`${formData.amount} cash out successful`);
+          return true;
+        }
+      }
+    } catch (error) {
+      captureException(error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     register({ name: 'amount' }, { required: 'please enter an amount' });

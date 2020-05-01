@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { SIZES, COLORS, LINE_HEIGHTS, LETTERSPACING } from '../../utils/theme';
 import { TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import { useCommissionContext } from '../../context/commission/CommissionContext';
 import { CurrencyFormatter } from '../../utils/currency';
 import { useFocusEffect } from '@react-navigation/native';
 import Button from '../../components/primary/Button';
@@ -10,18 +9,19 @@ import Header from '../../components/Header';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 import CommissionItem from '../../components/CommissionItem';
+import { apiGet } from '../../utils/fetcher';
+import { captureException } from 'sentry-expo';
+import { useAuthContext } from '../../context/auth/AuthContext';
+import { errorMessage } from '../../utils/toast';
 
 const Commission = ({ navigation }) => {
+  const { validateToken } = useAuthContext();
+
   const [loadingBalance, setLoadingBalance] = useState(true);
   const [loadingHistory, setLoadingHistory] = useState(true);
-
-  const {
-    getCommissionWallet,
-    getRecentCommissionHistory,
-    history,
-    commissionBalance,
-  } = useCommissionContext();
-
+  const [history, setHistory] = useState([]);
+  const [commissionBalance, setCommissionBalance] = useState(null);
+  const [commissionWallet, setCommissionWallet] = useState(null);
   // useEffect(() => {
   //   (async () => {
   //     setLoadingBalance(true);
@@ -40,6 +40,54 @@ const Commission = ({ navigation }) => {
       fetchData();
     }, [])
   );
+
+  const getCommissionWallet = async () => {
+    try {
+      const token = await validateToken();
+      if (token) {
+        const data = await apiGet('/commissions/wallet', {}, token, true)
+          .unauthorized((err) => console.log('unauthorized', err))
+          .notFound((err) => console.log('not found', err))
+          .timeout((err) => console.log('timeout', err))
+          .internalError((err) => console.log('server Error', err))
+          .fetchError((err) => console.log('Netwrok error', err))
+          .json();
+        if (data) {
+          setCommissionWallet(data.data);
+          setCommissionBalance(data.data.balance);
+        }
+      }
+    } catch (error) {
+      errorMessage(error.message);
+      captureException(error);
+    }
+  };
+
+  const getRecentCommissionHistory = async (limit) => {
+    try {
+      const token = await validateToken();
+      if (token) {
+        const data = await apiGet(
+          '/commissions/history',
+          { skip: 0, limit: limit },
+          token,
+          true
+        )
+          .unauthorized((err) => console.log('unauthorized', err))
+          .notFound((err) => console.log('not found', err))
+          .timeout((err) => console.log('timeout', err))
+          .internalError((err) => console.log('server Error', err))
+          .fetchError((err) => console.log('Netwrok error', err))
+          .json();
+        if (data) {
+          setHistory(data.data);
+        }
+      }
+    } catch (error) {
+      errorMessage(error.message);
+      captureException(error);
+    }
+  };
 
   // useEffect(() => {
   //   (async () => {

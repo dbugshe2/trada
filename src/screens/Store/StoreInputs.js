@@ -100,11 +100,17 @@ const StoreInputs = ({ navigation }) => {
       </Block>
     </Button>
   );
-
+  if (loading) {
+    return (
+      <Block center middle>
+        <ActivityIndicator color={COLORS.primary} />
+      </Block>
+    );
+  }
   return (
     <Block background>
-      {loading ? (
-        <ActivityIndicator color={COLORS.primary} />
+      {myInputs.length === 0 ? (
+        <EmptyState icon="add" text="Buy your Premium Inputs" />
       ) : (
         <Block space="evenly" background>
           <FlatList data={myInputs} renderItem={renderItem} />

@@ -5,7 +5,7 @@ import { COLORS, SIZES } from './theme';
 import rgba from '../utils/rgba';
 
 const defaultOptions = {
-  duration: Toast.duration.SHORT,
+  duration: Toast.duration.LONG,
   position: Toast.position.BOTTOM,
   containerStyle: { backgroundColor: COLORS.odd },
   maskColor: COLORS.primary,
