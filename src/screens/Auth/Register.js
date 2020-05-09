@@ -125,10 +125,9 @@ const Register = ({ navigation }) => {
     } else {
       const res = await signup(getValues());
       if (res) {
-        setMessage(res.message);
+        console.log('returned, by submit', res);
+        navigation.navigate('App');
       }
-      console.log('returned, by submit', res);
-      navigation.navigate('App');
     }
   };
 
@@ -255,7 +254,7 @@ const Register = ({ navigation }) => {
               </Block>
               {/* /EnterPhysical */}
               {/* EnterLocation */}
-              <Block key="location" space="around">
+              <Block key="location" space="around" scroll>
                 <Block>
                   <Dropdown
                     options={STATES}
@@ -298,7 +297,7 @@ const Register = ({ navigation }) => {
               </Block>
               {/* / EnterLocation */}
               {/* ENterBio */}
-              <Block key="bio">
+              <Block key="bio" scroll>
                 <Dropdown
                   options={GENDERS}
                   defaultValue="Gender"
@@ -366,6 +365,7 @@ const Register = ({ navigation }) => {
                   onChangeText={(text) => setPin(text)}
                   message={errors.pin && errors.pin.message}
                   error={errors.pin}
+                  keyboardType="number-pad"
                 />
                 <Input
                   label="Confirm Pin"
@@ -373,6 +373,7 @@ const Register = ({ navigation }) => {
                   onChangeText={(text) => setConfirmPin(text)}
                   message={errors.confirmPin && errors.confirmPin.message}
                   error={errors.confirmPin}
+                  keyboardType="number-pad"
                 />
                 {sending ? (
                   <ActivityIndicator animating size="large" />

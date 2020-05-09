@@ -24,8 +24,6 @@ const ResetPassword = ({ navigation }) => {
       if (res) {
         setMessage('Pin reset Successfully');
         navigation.navigate('Login');
-      } else {
-        setMessage(res.message);
       }
     } catch (error) {
       captureException(error);

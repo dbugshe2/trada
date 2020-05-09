@@ -35,7 +35,7 @@ import Text from '../../components/primary/Text';
 import { apiGet, apiPost, apiPut } from '../../utils/fetcher';
 import { isValid } from '../../utils/token';
 import { authReducer } from './authReducer';
-import { errorMessage } from '../../utils/toast';
+import { errorMessage, successMessage, toast } from '../../utils/toast';
 
 const AuthContext = createContext();
 
@@ -59,15 +59,22 @@ export const AuthProvider = (props) => {
     try {
       const res = await apiPost('/users/phone/otp', formData)
         .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
+        .notFound((err) =>
+          errorMessage('Unable to complete request ' + err.json.message)
+        )
+        .timeout((err) => errorMessage('Timeout' + err.json.message))
         .error(403, (err) => {
           errorMessage('this user exist please login instead');
         })
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
+        .internalError((err) =>
+          errorMessage('Something went wrong' + err.json.message)
+        )
+        .fetchError((err) =>
+          errorMessage('Network Error, please check your connection')
+        )
         .json();
       if (res) {
+        console.log(res);
         dispatch({
           type: OTP_SUCCESS,
           payload: formData.phone,
@@ -154,13 +161,13 @@ export const AuthProvider = (props) => {
     setLoading(true);
     try {
       const data = await apiPost('/users/login', formData)
-        .notFound((err) => errorMessage(err.json.message))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
+        .notFound((err) => errorMessage('Something went wrong'))
+        .timeout((err) => errorMessage('Login took too long'))
+        .internalError((err) => errorMessage('Something went wrong'))
+        .fetchError((err) => errorMessage('Network error'))
         .json();
       console.log('login res..', data);
-      if (data) {
+      if (data !== null && typeof data !== undefined) {
         await setUserToken(data.access_token);
         dispatch({
           type: LOGIN_SUCCESS,
@@ -181,11 +188,10 @@ export const AuthProvider = (props) => {
         }
       }
     } catch (err) {
-      dispatch({
-        type: LOGIN_FAIL,
-      });
       console.log('login err', err);
       captureException(err);
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -236,7 +242,8 @@ export const AuthProvider = (props) => {
         return res;
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.json);
+      errorMessage(error.json.message);
       captureException(error);
     }
   };
@@ -261,6 +268,7 @@ export const AuthProvider = (props) => {
         .fetchError((err) => console.log('Netwrok error', err))
         .json();
       if (res) {
+        successMessage('Pin Reset Successfully');
         dispatch({
           type: PIN_RESET_SUCCESS,
           payload: res.status,
@@ -278,6 +286,7 @@ export const AuthProvider = (props) => {
       setLoading(true);
       await removeUserToken();
       await removeUser();
+      toast(message);
       dispatch({ type: LOGOUT, payload: message });
       setLoading(false);
     } catch (err) {
@@ -297,7 +306,7 @@ export const AuthProvider = (props) => {
           return null;
         }
       } else {
-        await logout('welcome');
+        await logout('Welcome To Trada');
         return null;
       }
     } catch (error) {

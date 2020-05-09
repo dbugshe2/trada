@@ -216,7 +216,7 @@ const BuyInput = () => {
           .json();
         if (res) {
           console.log(res);
-          successMessage(res.message);
+          successMessage('Transaction Successful');
         }
       }
     } catch (error) {

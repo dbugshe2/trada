@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "trada",
-    "slug": "trada",
+    "slug": "trada-app",
     "platforms": [
       "ios",
       "android",
@@ -28,7 +28,13 @@
           "location",
           "fetch"
         ]
-      }
+      },
+      "bundleIdentifier": "com.thriveagric.trada",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.thriveagric.trada",
+      "versionCode": 1
     },
     "androidStatusBar": {
       "barStyle": "dark-content",
