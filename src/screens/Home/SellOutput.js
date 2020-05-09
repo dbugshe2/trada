@@ -184,7 +184,7 @@ const SellOutput = ({ route, navigation }) => {
           })
           .json();
         if (res) {
-          successMessage(res.message);
+          successMessage('Transaction Successfull');
         }
       }
     } catch (error) {

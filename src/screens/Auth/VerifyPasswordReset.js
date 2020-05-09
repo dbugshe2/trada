@@ -13,14 +13,15 @@ import Text from '../../components/primary/Text';
 
 const VerifyPasswordReset = ({ navigation }) => {
   const { phone, setResetPinOtp, requestResetOtp } = useAuthContext();
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, getValues } = useForm();
 
   // const = auth;
 
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [canResend, setCanResend] = useState(false);
+  const [canResend, setCanResend] = useState(true);
   const [resending, setResending] = useState(false);
+  const [timer, setTimer] = useState({ mins: 10, secs: 0 });
 
   const onSubmit = async (data) => {
     try {
@@ -37,21 +38,25 @@ const VerifyPasswordReset = ({ navigation }) => {
   const resendOtp = async () => {
     try {
       setResending(true);
-      const res = await requestResetOtp(phone);
-
+      const res = await requestResetOtp({ phone: phone });
       if (res) {
         setMessage('New OTP Sent to phone');
+        setCanResend(false);
+        setTimer({ mins: 10, secs: 0 });
       }
     } catch (error) {
       captureException(error);
-      setMessage(error.message);
     } finally {
       setResending(false);
     }
   };
   useEffect(() => {
-    register({ name: 'resetPinOtp' }, { required: true, minLength: 4 });
+    register(
+      { name: 'resetPinOtp' },
+      { required: 'Please enter the OTP ', minLength: 4 }
+    );
   }, [register]);
+  console.log(getValues('resetPinOtp'));
   return (
     <Block background>
       <Header backTitle="Enter OTP" />
@@ -66,11 +71,11 @@ const VerifyPasswordReset = ({ navigation }) => {
             style={{ width: '80%' }}
             pinCount={4}
             autoFocusOnLoad
-            onCodeChanged={(text) => {
+            onCodeFilled={(text) => {
               setValue('resetPinOtp', text);
             }}
           />
-          <Text secondary h5>
+          <Text secondary body mtregular>
             {message}
           </Text>
         </Block>
@@ -89,21 +94,15 @@ const VerifyPasswordReset = ({ navigation }) => {
               </Text>
             </Button>
           ) : (
-            <Button transparent>
-              {resending ? (
-                <Text secondary center small>
-                  resending...
-                </Text>
-              ) : (
-                <Text secondary center small>
-                  Resend code in{'  '}
-                  <Timer
-                    onComplete={() => setCanResend(true)}
-                    secondary
-                    time={{ mins: 10, secs: 0 }}
-                  />{' '}
-                </Text>
-              )}
+            <Button transparent disabled={resending}>
+              <Text secondary center small>
+                Resend code in{' '}
+                <Timer
+                  onComplete={() => setCanResend(true)}
+                  secondary
+                  time={timer}
+                />
+              </Text>
             </Button>
           )}
         </Block>

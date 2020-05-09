@@ -27,7 +27,7 @@ const VerifyPhoneNumber = ({ navigation }) => {
     //     if (res.status === "success") {
     //       navigation.navigate("Register");
     //     } else {
-    //       setMessage(res.message);
+    // successMessage('')
     //     }
     //     setLoading(false);
     //   })
@@ -43,8 +43,12 @@ const VerifyPhoneNumber = ({ navigation }) => {
   }, [register]);
   return (
     <Block background>
-      <Header backTitle='Verify Phone Number' />
-      <Block space='around' marginVertical={SIZES.padding} paddingHorizontal={SIZES.padding}>
+      <Header backTitle="Verify Phone Number" />
+      <Block
+        space="around"
+        marginVertical={SIZES.padding}
+        paddingHorizontal={SIZES.padding}
+      >
         <Block middle center flex={2}>
           <PinInput
             style={{ width: '80%' }}
@@ -58,7 +62,11 @@ const VerifyPhoneNumber = ({ navigation }) => {
             {message}
           </Text>
         </Block>
-        <Block flex={2} justifyContent='flex-start' marginVertical={SIZES.padding * 2}>
+        <Block
+          flex={2}
+          justifyContent="flex-start"
+          marginVertical={SIZES.padding * 2}
+        >
           <Button transparent>
             <Text gray center small>
               We sent a text message to --phone-- with your verification code
@@ -70,9 +78,9 @@ const VerifyPhoneNumber = ({ navigation }) => {
             </Text>
           </Button>
         </Block>
-        <Block justifyContent='flex-start'>
+        <Block justifyContent="flex-start">
           {loading ? (
-            <ActivityIndicator animating size='large' color={COLORS.primary} />
+            <ActivityIndicator animating size="large" color={COLORS.primary} />
           ) : (
             <Button onPress={handleSubmit(onSubmit)}>
               <Text white center h6>

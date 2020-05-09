@@ -24,11 +24,11 @@ import {
 export function authReducer(state, action) {
   switch (action.type) {
     case REGISTER_SUCCESS:
-      return {
-        ...state,
-        isAuthenticated: true,
-        user: action.payload.data,
-      };
+    // return {
+    // ...state,
+    // isAuthenticated: true,
+    // user: action.payload.data,
+    // };
     case REGISTER_FAIL:
     case LOGIN_SUCCESS:
       return {

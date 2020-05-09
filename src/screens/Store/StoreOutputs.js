@@ -138,7 +138,7 @@ const StoreOutputs = ({ navigation }) => {
 
   return (
     <Block background>
-      {transactions.lenght === 0 ? (
+      {transactions.length === 0 ? (
         <EmptyState icon="add" text="Sell your Farm Output" />
       ) : (
         <Block background>

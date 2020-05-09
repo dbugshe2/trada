@@ -38,7 +38,7 @@ const ForgotPassword = ({ navigation }) => {
       if (res) {
         navigation.navigate('VerifyPasswordReset');
       } else {
-        setMessage(res.message);
+        setMessage(res);
       }
     } catch (error) {
       captureException(error);
