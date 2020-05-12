@@ -1,12 +1,18 @@
-import { AsyncStorage } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-community/async-storage';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 const TOKEN_KEY = 'token';
 const USER_KEY = 'user';
 
+// for secure storage
+const storeParams = {
+  keychainService: 'trada_app_ios_secure_storage',
+  sharedPreferencesName: 'trada_app_android_secure_storage',
+};
+
 export const getUserToken = async () => {
   try {
-    const token = await SecureStore.getItemAsync(TOKEN_KEY);
+    const token = await EncryptedStorage.getItem(TOKEN_KEY);
 
     if (token !== null) {
       return token;
@@ -20,7 +26,7 @@ export const getUserToken = async () => {
 
 export const setUserToken = async (data) => {
   try {
-    await SecureStore.setItemAsync(TOKEN_KEY, data);
+    await EncryptedStorage.setItem(TOKEN_KEY, data);
   } catch (error) {
     throw new Error(error);
   }
@@ -28,7 +34,7 @@ export const setUserToken = async (data) => {
 
 export const removeUserToken = async () => {
   try {
-    await SecureStore.deleteItemAsync(TOKEN_KEY);
+    await EncryptedStorage.removeItem(TOKEN_KEY);
   } catch (error) {
     throw new Error(error);
   }

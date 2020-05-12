@@ -15,9 +15,9 @@
 
 const currencyCode = '\u20A6'; // IDR or USD
 const currencyPosition = 'left'; // left or right
-const maxFractionDigits = 2;
-const decimalSeparator = ',';
-const thousandSeparator = '.';
+const maxFractionDigits = 0;
+const decimalSeparator = '.';
+const thousandSeparator = ',';
 
 function position(currencyPosition, value) {
   return currencyPosition === 'left'
@@ -61,10 +61,6 @@ export const CurrencyFormatter = (value) => {
   return result;
 };
 
-function numberPosition(numPosition, value) {
-  return numPosition === `${value}`;
-}
-
 export const NumberFormatter = (value) => {
   const string = 'string';
   let result;
@@ -76,12 +72,10 @@ export const NumberFormatter = (value) => {
     value === '0' ||
     typeof value === string
   ) {
-    return numberPosition(currencyPosition, 0);
+    return '0';
   }
 
-  const valueSplit = String(value.toFixed(maxFractionDigits)).split(
-    `${thousandSeparator}`
-  );
+  const valueSplit = String(value.toFixed(1)).split(`${thousandSeparator}`);
   const firstvalue = valueSplit[0];
   const secondvalue = valueSplit[1];
   const valueReal = String(firstvalue).replace(
@@ -90,12 +84,9 @@ export const NumberFormatter = (value) => {
   );
 
   if (Number(secondvalue) > 0) {
-    result = position(
-      currencyPosition,
-      `${valueReal}${thousandSeparator}${secondvalue}`
-    );
+    result = `${valueReal}${thousandSeparator}${secondvalue}`;
   } else {
-    result = position(currencyPosition, `${valueReal}`);
+    result = `${valueReal}`;
   }
 
   return result;

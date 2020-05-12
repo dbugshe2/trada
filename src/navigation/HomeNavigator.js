@@ -19,8 +19,16 @@ const Tab = createMaterialTopTabNavigator();
 
 const AddCashTab = () => (
   <Tab.Navigator tabBarOptions={topTabOptions}>
-    <Tab.Screen name="AddCashViaBank" component={AddCashViaBank} />
-    <Tab.Screen name="AddCashViaUssd" component={AddCashViaUssd} />
+    <Tab.Screen
+      options={{ title: 'Via Bank Transfer' }}
+      name="AddCashViaBank"
+      component={AddCashViaBank}
+    />
+    <Tab.Screen
+      options={{ title: 'Via USSD Code' }}
+      name="AddCashViaUssd"
+      component={AddCashViaUssd}
+    />
   </Tab.Navigator>
 );
 

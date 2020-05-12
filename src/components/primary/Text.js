@@ -1,21 +1,9 @@
-import React, { Component } from "react";
-import { 
-  Animated, 
-  Text, 
-  StyleSheet 
-} from "react-native";
+import React, { Component } from 'react';
+import { Animated, Text, StyleSheet } from 'react-native';
 
-import {
-  COLORS,
-  SIZES,
-  FONTS,
-} from "../../utils/theme";
+import { COLORS, SIZES, FONTS } from '../../utils/theme';
 
-import {
-  spacing,
-  } from "../../utils/helpers";
-
-
+import { spacing as Spacing } from '../../utils/helpers';
 
 /**
  * Usage:
@@ -97,55 +85,55 @@ class Typography extends Component {
       paddingLeft,
       paddingVertical,
       paddingHorizontal,
-      theme
+      theme,
     } = this.props;
 
-    if (type === "margin") {
+    if (type === 'margin') {
       return [
-        margin && spacing(type, margin, SIZES.base),
+        margin && Spacing(type, margin, SIZES.base),
         marginTop && { marginTop: marginTop === true ? SIZES.base : marginTop },
         marginRight && {
-          marginRight: marginRight === true ? SIZES.base : marginRight
+          marginRight: marginRight === true ? SIZES.base : marginRight,
         },
         marginBottom && {
-          marginBottom: marginBottom === true ? SIZES.base : marginBottom
+          marginBottom: marginBottom === true ? SIZES.base : marginBottom,
         },
         marginLeft && {
-          marginLeft: marginLeft === true ? SIZES.base : marginLeft
+          marginLeft: marginLeft === true ? SIZES.base : marginLeft,
         },
         marginVertical && {
-          marginVertical: marginVertical === true ? SIZES.base : marginVertical
+          marginVertical: marginVertical === true ? SIZES.base : marginVertical,
         },
         marginHorizontal && {
           marginHorizontal:
-            marginHorizontal === true ? SIZES.base : marginHorizontal
-        }
+            marginHorizontal === true ? SIZES.base : marginHorizontal,
+        },
       ];
     }
 
-    if (type === "padding") {
+    if (type === 'padding') {
       return [
-        padding && spacing(type, padding, SIZES.base),
+        padding && Spacing(type, padding, SIZES.base),
         paddingTop && {
-          paddingTop: paddingTop === true ? SIZES.base : paddingTop
+          paddingTop: paddingTop === true ? SIZES.base : paddingTop,
         },
         paddingRight && {
-          paddingRight: paddingRight === true ? SIZES.base : paddingRight
+          paddingRight: paddingRight === true ? SIZES.base : paddingRight,
         },
         paddingBottom && {
-          paddingBottom: paddingBottom === true ? SIZES.base : paddingBottom
+          paddingBottom: paddingBottom === true ? SIZES.base : paddingBottom,
         },
         paddingLeft && {
-          paddingLeft: paddingLeft === true ? SIZES.base : paddingLeft
+          paddingLeft: paddingLeft === true ? SIZES.base : paddingLeft,
         },
         paddingVertical && {
           paddingVertical:
-            paddingVertical === true ? SIZES.base : paddingVertical
+            paddingVertical === true ? SIZES.base : paddingVertical,
         },
         paddingHorizontal && {
           paddingHorizontal:
-            paddingHorizontal === true ? SIZES.base : paddingHorizontal
-        }
+            paddingHorizontal === true ? SIZES.base : paddingHorizontal,
+        },
       ];
     }
   }
@@ -218,15 +206,14 @@ class Typography extends Component {
       ...props
     } = this.props;
 
-
-    const marginSpacing = this.getSpacings("margin");
-    const paddingSpacing = this.getSpacings("padding");
+    const marginSpacing = this.getSpacings('margin');
+    const paddingSpacing = this.getSpacings('padding');
 
     const textStyles = StyleSheet.flatten([
       {
         // fontWeight: WEIGHTS.regular,
         fontSize: SIZES.font,
-        color: COLORS.black
+        color: COLORS.black,
       },
       h1 && FONTS.h1,
       h2 && FONTS.h2,
@@ -269,12 +256,12 @@ class Typography extends Component {
       success && { color: COLORS.success },
       info && { color: COLORS.info },
       color && { color },
-      mtregular && {fontFamily: "montserratRegular"},
-      rbregular && {fontFamily: "robotoRegular"},
-      mtmedium && {fontFamily: "montserratMedium"},
-      rbmedium && {fontFamily: "robotoMedium"},
-      mtlight && {fontFamily: "montserratLight"},
-      style // rewrite predefined styles
+      mtregular && { fontFamily: 'Montserrat-Regular' },
+      rbregular && { fontFamily: 'Roboto-Regular' },
+      mtmedium && { fontFamily: 'Montserrat-Medium' },
+      rbmedium && { fontFamily: 'Roboto-Medium' },
+      mtlight && { fontFamily: 'Montserrat-Light' },
+      style, // rewrite predefined styles
     ]);
 
     if (animated) {
@@ -330,13 +317,13 @@ Typography.defaultProps = {
   success: false,
   info: false,
   theme: {},
-  style: {}
+  style: {},
 };
 
 export default Typography;
 
 const styles = StyleSheet.create({
   // positioning
-  center: { textAlign: "center" },
-  right: { textAlign: "right" }
+  center: { textAlign: 'center' },
+  right: { textAlign: 'right' },
 });

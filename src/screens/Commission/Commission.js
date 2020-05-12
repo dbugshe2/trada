@@ -10,7 +10,7 @@ import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 import CommissionItem from '../../components/CommissionItem';
 import { apiGet } from '../../utils/fetcher';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import { errorMessage } from '../../utils/toast';
 

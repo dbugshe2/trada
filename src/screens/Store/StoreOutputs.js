@@ -8,9 +8,14 @@ import Text from '../../components/primary/Text';
 import Block from '../../components/primary/Block';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import { apiGet } from '../../utils/fetcher';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { errorMessage } from '../../utils/toast';
-import { ActivityIndicator, Flatlist, Image, FlatList } from 'react-native';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  Image,
+  FlatList,
+} from 'react-native';
 import { CurrencyFormatter } from '../../utils/currency';
 import moment from 'moment';
 import EmptyState from '../../components/EmptyState';
@@ -21,6 +26,7 @@ const StoreOutputs = ({ navigation }) => {
   // state
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefeshing] = useState(false);
 
   // handlers
   const filterOutput = () => {};
@@ -128,6 +134,17 @@ const StoreOutputs = ({ navigation }) => {
     fetchTransactions();
   }, []);
 
+  const onRefresh = React.useCallback(() => {
+    try {
+      setRefeshing(true);
+      fetchTransactions();
+    } catch (error) {
+      captureException(error);
+    } finally {
+      setRefeshing(false);
+    }
+  }, [refreshing]);
+
   if (loading) {
     return (
       <Block center middle>
@@ -138,12 +155,15 @@ const StoreOutputs = ({ navigation }) => {
 
   return (
     <Block background>
-      {transactions.length === 0 ? (
+      {transactions.lenght === 0 ? (
         <EmptyState icon="add" text="Sell your Farm Output" />
       ) : (
         <Block background>
           <Block flex={2}>
             <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               keyExtractor={(item, index) => `item-${index}`}
               data={transactions}
               renderItem={renderOutput}

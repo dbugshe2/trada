@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SIZES, COLORS } from '../../utils/theme';
+import { RefreshControl } from 'react-native';
 import { Divider, ActivityIndicator } from 'react-native-paper';
 import FAB from '../../components/FAB';
 import Button from '../../components/primary/Button';
@@ -10,15 +11,18 @@ import { FlatList } from 'react-native';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import { apiGet } from '../../utils/fetcher';
 import { errorMessage } from '../../utils/toast';
+import { captureException } from '@sentry/react-native';
 
 const StoreInputs = ({ navigation }) => {
   const { validateToken, logout } = useAuthContext();
 
   const [myInputs, setMyInputs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchMyInput = async () => {
     try {
+      setLoading(true);
       const token = await validateToken();
       if (token) {
         const res = await apiGet(
@@ -100,6 +104,18 @@ const StoreInputs = ({ navigation }) => {
       </Block>
     </Button>
   );
+
+  const onRefresh = React.useCallback(() => {
+    try {
+      setRefreshing(true);
+      fetchMyInput();
+    } catch (error) {
+      captureException(error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refreshing]);
+
   if (loading) {
     return (
       <Block center middle>
@@ -113,7 +129,13 @@ const StoreInputs = ({ navigation }) => {
         <EmptyState icon="add" text="Buy your Premium Inputs" />
       ) : (
         <Block space="evenly" background>
-          <FlatList data={myInputs} renderItem={renderItem} />
+          <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            data={myInputs}
+            renderItem={renderItem}
+          />
         </Block>
       )}
 

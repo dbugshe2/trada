@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { useForm } from 'react-hook-form';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { SIZES, COLORS } from '../../utils/theme';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import Block from '../../components/primary/Block';
@@ -38,7 +38,7 @@ const ForgotPassword = ({ navigation }) => {
       if (res) {
         navigation.navigate('VerifyPasswordReset');
       } else {
-        setMessage(res);
+        setMessage(res.message);
       }
     } catch (error) {
       captureException(error);

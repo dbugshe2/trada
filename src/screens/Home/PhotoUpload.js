@@ -1,16 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useRef } from 'react';
+import { Platform, PermissionsAndroid } from 'react-native';
 import Block from '../../components/primary/Block';
 import Header from '../../components/Header';
-import { Camera } from 'expo-camera';
+import { RNCamera } from 'react-native-camera';
 import ImageIcon from '../../components/primary/ImageIcon';
 import Button from '../../components/primary/Button';
 import Text from '../../components/primary/Text';
 import { ActivityIndicator, Image } from 'react-native';
 import { errorMessage, successMessage } from '../../utils/toast';
 import { Modalize } from 'react-native-modalize';
-import { SIZES } from '../../utils/theme';
-import { COLORS } from '../../utils/theme';
+import { SIZES, COLORS } from '../../utils/theme';
 import { ProgressBar } from 'react-native-paper';
 // import {useAuthContext} from '../../context/auth/AuthContext'
 import ObjectID from 'bson-objectid';
@@ -19,7 +19,7 @@ const PhotoUpload = ({ navigation }) => {
   // context
 
   const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [type, setType] = useState(RNCamera.Constants.Type.back);
   const [cameraReady, setCameraReady] = useState(false);
   const [sending, setSending] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -53,10 +53,11 @@ const PhotoUpload = ({ navigation }) => {
 
   const uploadComplete = (res) => {
     successMessage('image uploaded sucessfully');
+    console.log(res);
     navigation.navigate('SellOutput', { image: JSON.stringify(res) });
   };
   const uploaFailed = (message) => {
-    errorMessage('image upload failed' + message);
+    errorMessage('image upload FAILED: ' + message);
     setSending(false);
   };
 
@@ -77,12 +78,16 @@ const PhotoUpload = ({ navigation }) => {
   // effects
   useEffect(() => {
     const bootstrap = async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+      if (Platform.OS === 'android') {
+        const status = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA
+        );
+        setHasPermission(status === 'granted');
+      }
     };
     bootstrap();
   }, []);
-  // useEffect();
+
   if (hasPermission === null) {
     return (
       <Block center middle>
@@ -92,10 +97,13 @@ const PhotoUpload = ({ navigation }) => {
   }
   if (hasPermission === false) {
     return (
-      <Block center middle>
-        <Text h4 center>
-          No access to camera
-        </Text>
+      <Block background>
+        <Header backTitle="Photo of Item" />
+        <Block center middle>
+          <Text h4 center>
+            No access to camera
+          </Text>
+        </Block>
       </Block>
     );
   }
@@ -104,13 +112,25 @@ const PhotoUpload = ({ navigation }) => {
       <Header backTitle="Photo of item" />
       <Block center>
         <Block flex={3} space="evenly">
-          <Camera
-            flashMode={Camera.Constants.FlashMode.off}
+          <RNCamera
+            flashMode={RNCamera.Constants.FlashMode.off}
             ratio="1:1"
-            pictureSize="1280,1280"
+            // pictureSize="1280,1280"
             ref={cameraRef}
             onCameraReady={() => setCameraReady(true)}
             onMountError={(err) => errorMessage('Camera Error' + err.message)}
+            androidCameraPermissionOptions={{
+              title: 'Permission to use camera',
+              message: 'We need your permission to use your camera',
+              buttonPositive: 'Ok',
+              buttonNegative: 'Cancel',
+            }}
+            androidRecordAudioPermissionOptions={{
+              title: 'Permission to use audio recording',
+              message: 'We need your permission to use your audio',
+              buttonPositive: 'Ok',
+              buttonNegative: 'Cancel',
+            }}
             type={type}
             style={{
               flex: 0,
@@ -132,7 +152,7 @@ const PhotoUpload = ({ navigation }) => {
               }}
               transparent
             />
-          </Camera>
+          </RNCamera>
           <Block marginTop={SIZES.base}>
             <Text black mtregular h4 center>
               Take a photo of your item

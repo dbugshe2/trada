@@ -1,6 +1,6 @@
 import wretch from 'wretch';
 import ObjectID from 'bson-objectid';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { Alert } from 'react-native';
 import { successMessage } from './toast';
 /*
@@ -106,13 +106,17 @@ export const apiImageUplpoad = (
     let xhr = new XMLHttpRequest();
     xhr.open('POST', imageUploadBaseUrl);
     xhr.onload = () => {
-      // console.log({ ...xhr });
+      console.log({ ...xhr });
       onLoad(JSON.parse(xhr._response));
     };
 
     xhr.onerror = () => {
-      // console.log(xhr);
-      onError(JSON.parse(xhr._response));
+      console.log(xhr);
+      onError(xhr._response);
+    };
+    // 4. catch for request timeout
+    xhr.ontimeout = (e) => {
+      console.log(e, 'cloudinary timeout');
     };
     console.log(fileName);
     xhr.send(formData);
@@ -125,6 +129,6 @@ export const apiImageUplpoad = (
     }
   } catch (error) {
     console.log(error);
-    // captureException(error);
+    captureException(error);
   }
 };

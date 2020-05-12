@@ -3,7 +3,7 @@ import { ActivityIndicator } from 'react-native';
 import { COLORS, SIZES } from '../../utils/theme';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import { useForm } from 'react-hook-form';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import Input from '../../components/primary/Input';
 import Button from '../../components/primary/Button';
 import Block from '../../components/primary/Block';
@@ -24,6 +24,8 @@ const ResetPassword = ({ navigation }) => {
       if (res) {
         setMessage('Pin reset Successfully');
         navigation.navigate('Login');
+      } else {
+        setMessage(res.message);
       }
     } catch (error) {
       captureException(error);
