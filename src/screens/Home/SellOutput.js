@@ -14,7 +14,7 @@ import {
   clearMessage,
   successMessage,
 } from '../../utils/toast';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { useForm } from 'react-hook-form';
 import { CurrencyFormatter } from '../../utils/currency';
 import STATES from '../../constants/states';
@@ -184,7 +184,7 @@ const SellOutput = ({ route, navigation }) => {
           })
           .json();
         if (res) {
-          successMessage('Transaction Successfull');
+          successMessage(res.message);
         }
       }
     } catch (error) {

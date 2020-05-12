@@ -9,7 +9,6 @@ import SettingsNavigator from './SettingsNavigator';
 import AboutNavigator from './AboutNavigator';
 import ImageIcon from '../components/primary/ImageIcon';
 import Sidebar from '../components/Sidebar';
-import CreditScroreInfo from '../screens/About/CreditScroreInfo';
 
 const Drawer = createDrawerNavigator();
 
@@ -61,7 +60,7 @@ const AppDrawer = () => {
           drawerLabel: 'How credit score works',
           drawerIcon: () => <ImageIcon name="hcsw" />,
         }}
-        component={CreditScroreInfo}
+        component={BottomTabs}
       />
       <Drawer.Screen
         name="Settings"

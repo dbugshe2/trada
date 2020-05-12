@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { SIZES, COLORS } from '../../utils/theme';
 import { useAuthContext } from '../../context/auth/AuthContext';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { useForm } from 'react-hook-form';
 import Timer from '../../components/Timer';
 import PinInput from '../../components/PinInput';
@@ -13,15 +13,14 @@ import Text from '../../components/primary/Text';
 
 const VerifyPasswordReset = ({ navigation }) => {
   const { phone, setResetPinOtp, requestResetOtp } = useAuthContext();
-  const { register, handleSubmit, setValue, getValues } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
 
   // const = auth;
 
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [canResend, setCanResend] = useState(true);
+  const [canResend, setCanResend] = useState(false);
   const [resending, setResending] = useState(false);
-  const [timer, setTimer] = useState({ mins: 10, secs: 0 });
 
   const onSubmit = async (data) => {
     try {
@@ -38,25 +37,21 @@ const VerifyPasswordReset = ({ navigation }) => {
   const resendOtp = async () => {
     try {
       setResending(true);
-      const res = await requestResetOtp({ phone: phone });
+      const res = await requestResetOtp(phone);
+
       if (res) {
         setMessage('New OTP Sent to phone');
-        setCanResend(false);
-        setTimer({ mins: 10, secs: 0 });
       }
     } catch (error) {
       captureException(error);
+      setMessage(error.message);
     } finally {
       setResending(false);
     }
   };
   useEffect(() => {
-    register(
-      { name: 'resetPinOtp' },
-      { required: 'Please enter the OTP ', minLength: 4 }
-    );
+    register({ name: 'resetPinOtp' }, { required: true, minLength: 4 });
   }, [register]);
-  console.log(getValues('resetPinOtp'));
   return (
     <Block background>
       <Header backTitle="Enter OTP" />
@@ -71,11 +66,11 @@ const VerifyPasswordReset = ({ navigation }) => {
             style={{ width: '80%' }}
             pinCount={4}
             autoFocusOnLoad
-            onCodeFilled={(text) => {
+            onCodeChanged={(text) => {
               setValue('resetPinOtp', text);
             }}
           />
-          <Text secondary body mtregular>
+          <Text secondary h5>
             {message}
           </Text>
         </Block>
@@ -94,15 +89,21 @@ const VerifyPasswordReset = ({ navigation }) => {
               </Text>
             </Button>
           ) : (
-            <Button transparent disabled={resending}>
-              <Text secondary center small>
-                Resend code in{' '}
-                <Timer
-                  onComplete={() => setCanResend(true)}
-                  secondary
-                  time={timer}
-                />
-              </Text>
+            <Button transparent>
+              {resending ? (
+                <Text secondary center small>
+                  resending...
+                </Text>
+              ) : (
+                <Text secondary center small>
+                  Resend code in{'  '}
+                  <Timer
+                    onComplete={() => setCanResend(true)}
+                    secondary
+                    time={{ mins: 10, secs: 0 }}
+                  />{' '}
+                </Text>
+              )}
             </Button>
           )}
         </Block>

@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 
 export const decode = (token) => {
   try {
@@ -20,11 +20,14 @@ export const getExpiry = (token) => {
   }
 };
 
-export const isValid = (token) => {
+export const isValid = (token = null) => {
   //  return true if token is still valid
   try {
-    const { exp } = jwtDecode(token);
-    return exp > Date.now() / 1000;
+    if (typeof token !== 'undefined' && token !== null) {
+      const { exp } = jwtDecode(token);
+      return exp > Date.now() / 1000;
+    }
+    return null;
   } catch (error) {
     captureException(error);
     return null;

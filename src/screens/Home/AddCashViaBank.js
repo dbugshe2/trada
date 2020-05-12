@@ -22,28 +22,28 @@ const AddCashViaBank = () => {
 
         <Block marginVertical={50}>
           <Block>
-            <Text gray h6>
+            <Text gray h6 mtmedium>
               ACCOUNT NAME
             </Text>
-            <Text primary small>
+            <Text primary small mtmedium>
               {userDetails.wallet.accountName}
             </Text>
           </Block>
 
           <Block marginVertical={20}>
-            <Text gray h6>
+            <Text gray h6 mtmedium>
               ACCOUNT NUMBER
             </Text>
-            <Text primary small>
+            <Text primary small mtmedium>
               {userDetails.wallet.accountNumber}
             </Text>
           </Block>
 
           <Block>
-            <Text gray h6>
+            <Text gray h6 mtmedium>
               BANK NAME
             </Text>
-            <Text primary small>
+            <Text primary small mtmedium>
               {userDetails.wallet.bankName}
             </Text>
           </Block>

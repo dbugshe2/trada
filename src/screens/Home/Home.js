@@ -11,7 +11,7 @@ import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 import { saveToClipboard } from '../../utils/clipboard';
 import { useFocusEffect } from '@react-navigation/native';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { apiGet } from '../../utils/fetcher';
 import { errorMessage, successMessage } from '../../utils/toast';
 

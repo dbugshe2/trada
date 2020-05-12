@@ -6,11 +6,10 @@ import ImageIcon from '../../components/primary/ImageIcon';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 import { FlatList } from 'react-native';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { apiGet } from '../../utils/fetcher';
 import { ActivityIndicator } from 'react-native';
 import { useAuthContext } from '../../context/auth/AuthContext';
-import Button from '../../components/primary/Button';
 
 const Leaderboard = () => {
   const { validateToken } = useAuthContext();
@@ -53,25 +52,11 @@ const Leaderboard = () => {
   return (
     <Block background>
       <Header title="LeaderBoard" />
-      {/* <Block
-        row
-        flex={0}
-        height={80}
-        space="between"
-        paddingHorizontal={SIZES.padding}
-        botttom
-        right
-      >
+      <Block row>
         <Text primary mtmedium boody>
           Credit Earned
         </Text>
-        <Button muted height={26} >
-          <Text gray mtmedium>
-            100
-          </Text>
-        </Button>
       </Block>
-       */}
       <Block paddingHorizontal={SIZES.padding}>
         <Block flex middle>
           {loading ? (

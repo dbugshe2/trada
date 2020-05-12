@@ -3,7 +3,7 @@ import { ActivityIndicator } from 'react-native';
 import { SIZES, COLORS } from '../../utils/theme';
 import { useForm } from 'react-hook-form';
 import { useAuthContext } from '../../context/auth/AuthContext';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import Button from '../../components/primary/Button';
 import Input from '../../components/primary/Input';
 import Header from '../../components/Header';

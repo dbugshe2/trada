@@ -38,5 +38,5 @@
 | react-native-tab-view                  | ^2.13.0                                                       | TODO |
 | react-native-tiny-toast                | ^1.0.7                                                        | TODO |
 | react-native-web                       | ~0.11.7                                                       | TODO |
-| sentry-expo                            | ^2.0.3                                                        | TODO |
+| @sentry/react-native                            | ^2.0.3                                                        | TODO |
 | wretch                                 | ^1.7.1                                                        | TODO |

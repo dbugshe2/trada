@@ -8,7 +8,7 @@ import Text from '../../components/primary/Text';
 import { useFocusEffect } from '@react-navigation/native';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import { apiGet } from '../../utils/fetcher';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 
 const CommissionHistory = () => {
   const { validateToken } = useAuthContext();

@@ -17,7 +17,7 @@ import {
 } from '../../constants/onboarding';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import { useForm } from 'react-hook-form';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { apiGet, apiPost } from '../../utils/fetcher';
 import {
   errorMessage,

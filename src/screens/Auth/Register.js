@@ -4,7 +4,7 @@ import ViewPager from '@react-native-community/viewpager';
 import { COLORS, SIZES } from '../../utils/theme';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import { useForm } from 'react-hook-form';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import {
   GENDERS,
   EDUCATION_LEVELS,
@@ -125,9 +125,10 @@ const Register = ({ navigation }) => {
     } else {
       const res = await signup(getValues());
       if (res) {
-        console.log('returned, by submit', res);
-        navigation.navigate('App');
+        setMessage(res.message);
       }
+      console.log('returned, by submit', res);
+      navigation.navigate('App');
     }
   };
 
@@ -210,6 +211,7 @@ const Register = ({ navigation }) => {
           <Block flex={4}>
             <ViewPager
               orientation="horizontal"
+              // eslint-disable-next-line react-native/no-inline-styles
               style={{ flex: 1 }}
               initialPage={initialViewProp}
               pageMargin={10}
@@ -254,7 +256,7 @@ const Register = ({ navigation }) => {
               </Block>
               {/* /EnterPhysical */}
               {/* EnterLocation */}
-              <Block key="location" space="around" scroll>
+              <Block key="location" space="around">
                 <Block>
                   <Dropdown
                     options={STATES}
@@ -297,7 +299,7 @@ const Register = ({ navigation }) => {
               </Block>
               {/* / EnterLocation */}
               {/* ENterBio */}
-              <Block key="bio" scroll>
+              <Block key="bio">
                 <Dropdown
                   options={GENDERS}
                   defaultValue="Gender"
@@ -365,7 +367,6 @@ const Register = ({ navigation }) => {
                   onChangeText={(text) => setPin(text)}
                   message={errors.pin && errors.pin.message}
                   error={errors.pin}
-                  keyboardType="number-pad"
                 />
                 <Input
                   label="Confirm Pin"
@@ -373,7 +374,6 @@ const Register = ({ navigation }) => {
                   onChangeText={(text) => setConfirmPin(text)}
                   message={errors.confirmPin && errors.confirmPin.message}
                   error={errors.confirmPin}
-                  keyboardType="number-pad"
                 />
                 {sending ? (
                   <ActivityIndicator animating size="large" />

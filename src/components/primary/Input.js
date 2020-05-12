@@ -221,13 +221,17 @@ const Input = (props) => {
             disabled: COLORS.muted,
             text: COLORS.gray,
           },
+          fonts: {
+            medium: 'Montserrat-Medium',
+          },
         }}
         mode="outlined"
-        style={{ height: 56 }}
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{ height: 56, fontSize: SIZES.h6 }}
         {...props}
       />
       {props.error && (
-        <Text small color={COLORS.primary}>
+        <Text small color={COLORS.primary} mtmedium>
           {props.error.message}
         </Text>
       )}

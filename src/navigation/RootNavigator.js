@@ -3,9 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AuthNavigator from './AuthNavigator';
 import AppDrawer from './AppDrawer';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import Splash from '../screens/Splash';
 import { useAuthContext } from '../context/auth/AuthContext';
+// import { SplashScreen } from 'react-native-splash-screen';
 const Stack = createStackNavigator();
 
 const RootNavigator = (props) => {
@@ -14,6 +15,7 @@ const RootNavigator = (props) => {
     const bootstrapAuth = async () => {
       try {
         await verifyLogin();
+        // SplashScreen.hide();
       } catch (error) {
         captureException(error);
       }

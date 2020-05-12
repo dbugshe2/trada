@@ -10,10 +10,8 @@ import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import Toast from 'react-native-tiny-toast';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { apiPost, apiGet } from '../../utils/fetcher';
-import { errorMessage, loadingMessage, clearMessage } from '../../utils/toast';
-import EmptyState from '../../components/EmptyState';
 
 const TransferCash = ({ navigation }) => {
   //state
@@ -84,30 +82,19 @@ const TransferCash = ({ navigation }) => {
   };
 
   const handleAccNumber = async () => {
-    if (accNumber) {
-      const fetching = loadingMessage('Fetching Account Details...');
-      try {
-        const details = await resolveBankAcc(activeBankCode, accNumber);
-        if (details) {
-          clearMessage(fetching);
-          setAccName((oldAccName) => {
-            setValue('accountName', details.data.account_name);
-            return details.data.account_name;
-          });
-          setValue('accountNumber', accNumber);
-          setReady(true);
-        } else {
-          clearMessage(fetching);
-          errorMessage('unable to confirm Account Number');
-        }
-      } catch (error) {
-        clearMessage(fetching);
-        captureException(error);
-      } finally {
-        clearMessage(fetching);
-      }
-    } else {
-      errorMessage('please enter a valid account number');
+    const fetching = Toast.showLoading('Fetching Account Details...');
+    try {
+      const details = await resolveBankAcc(activeBankCode, accNumber);
+      Toast.hide(fetching);
+      setAccName((oldAccName) => {
+        setValue('accountName', details.data.account_name);
+        return details.data.account_name;
+      });
+      setValue('accountNumber', accNumber);
+      setReady(true);
+    } catch (error) {
+      Toast.hide(fetching);
+      captureException(error);
     }
   };
 
@@ -115,9 +102,7 @@ const TransferCash = ({ navigation }) => {
     const bootstrap = async () => {
       await getBanks();
     };
-    if (!banks) {
-      bootstrap();
-    }
+    bootstrap();
   }, []);
 
   useEffect(() => {
@@ -160,13 +145,6 @@ const TransferCash = ({ navigation }) => {
       navigation.navigate('TransferOptions');
     }
   };
-  if (loading) {
-    return (
-      <Block center middle>
-        <ActivityIndicator size="large" color={COLORS.primary} />
-      </Block>
-    );
-  }
   return (
     <Block background>
       <Header backTitle="Transfer Cash" />
@@ -176,23 +154,17 @@ const TransferCash = ({ navigation }) => {
             Transfer funds to your Tmoni account
           </Text>
           <Block middle>
-            {banks === null ? (
-              <EmptyState
-                icon="add"
-                text="Money Transfer Currently unavailable, try again later"
-              />
+            {loading ? (
+              <ActivityIndicator color={COLORS.primary} />
             ) : (
               <>
                 <Dropdown
                   options={bankNames}
-                  defaultValue={
-                    (activeBankCode && banks[activeBankCode]) || 'Select Bank'
-                  }
+                  defaultValue={'Select Bank'}
                   onSelect={handleBankSelected}
                   error={errors.bankName}
                 />
                 <Input
-                  disabled={activeBankCode === null}
                   keyboardType="number-pad"
                   label="Account Number"
                   maxLength={10}

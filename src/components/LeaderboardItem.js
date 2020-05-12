@@ -29,7 +29,9 @@ const LeaderboardItem = (props) => {
           {name}
         </Text>
       </Block>
-
+      <Block center>
+        <ImageIcon absolute top={2} bottom={2} right={0} name="coin" />
+      </Block>
       <Block flex={0}>
         <Text
           mtmedium
@@ -39,16 +41,9 @@ const LeaderboardItem = (props) => {
           h6
           right
         >
-          {coins > 0 ? coins : '0'}
+          {coins > 0 ? NumberFormatter(coins) : '0'}
         </Text>
       </Block>
-      <ImageIcon
-        absolute
-        top={2}
-        bottom={2}
-        right={SIZES.width * 0.2}
-        name="coin"
-      />
     </Block>
   );
 };

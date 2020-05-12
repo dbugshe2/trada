@@ -1,64 +1,61 @@
-import React, { useEffect, useState } from 'react';
-import * as Sentry from 'sentry-expo';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AppLoading } from 'expo';
-import { Ionicons } from '@expo/vector-icons';
-import * as Font from 'expo-font';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow strict-local
+ */
+
+import React, { useEffect } from 'react';
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
+
+import * as Sentry from '@sentry/react-native';
+import { captureException } from '@sentry/react-native';
+
 import RootNavigator from './src/navigation/RootNavigator';
-import { captureException } from 'sentry-expo';
-import { COLORS } from './src/utils/theme';
+
 import { AuthProvider } from './src/context/auth/AuthContext';
 
-console.disableYellowBox = true;
+import SplashScreen from 'react-native-splash-screen';
+import { COLORS } from './src/utils/theme';
 
 Sentry.init({
-  dsn: 'https://5a462ccaf5d6424ca916b8cfc779aefe@sentry.io/5172785',
-  enableInExpoDevelopment: true,
-  debug: true,
+  dsn:
+    'https://5a462ccaf5d6424ca916b8cfc779aefe@o326364.ingest.sentry.io/5172785',
 });
 
-const skipLoading = false;
-
-export default function App() {
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
+const App = () => {
+  React.useEffect(() => {
     try {
-      async function asyncBootstrap() {
-        setLoading(true);
-        await Font.loadAsync({
-          ...Ionicons.font,
-          montserratLight: require('./assets/fonts/MontserratLight.ttf'),
-          montserratRegular: require('./assets/fonts/MontserratRegular.ttf'),
-          montserratMedium: require('./assets/fonts/MontserratMedium.ttf'),
-          robotoRegular: require('./assets/fonts/RobotoRegular.ttf'),
-          robotoMedium: require('./assets/fonts/RobotoMedium.ttf'),
-        });
-        setLoading(false);
+      SplashScreen.hide();
+      if (Platform.OS === 'android') {
+        PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        ]);
       }
-      // load assets
-      asyncBootstrap();
     } catch (error) {
       captureException(error);
-      setLoading(false);
     }
   }, []);
-
-  if (loading && !skipLoading) {
-    return <AppLoading />;
-  }
-
   return (
     <AuthProvider>
-      <SafeAreaProvider>
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <RootNavigator />
-        </View>
-      </SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        {/* <StatusBar barStyle="light-content" /> */}
+        <RootNavigator />
+      </SafeAreaView>
     </AuthProvider>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -66,3 +63,5 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
 });
+
+export default App;

@@ -15,7 +15,7 @@ import {
   clearMessage,
   successMessage,
 } from '../../utils/toast';
-import { captureException } from 'sentry-expo';
+import { captureException } from '@sentry/react-native';
 import { useForm } from 'react-hook-form';
 import { CurrencyFormatter } from '../../utils/currency';
 import { ActivityIndicator } from 'react-native';
@@ -216,7 +216,7 @@ const BuyInput = () => {
           .json();
         if (res) {
           console.log(res);
-          successMessage('Transaction Successful');
+          successMessage(res.message);
         }
       }
     } catch (error) {
