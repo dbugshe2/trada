@@ -115,7 +115,7 @@ const icons = {
     height: 70,
   },
   trada: {
-    icon: require('../assets/icons/trada.png'),
+    icon: require('../assets/icons/tradr.png'),
     width: 69,
     height: 22,
   },
@@ -195,6 +195,11 @@ const icons = {
     icon: require('../assets/icons/camera.png'),
     width: 68,
     height: 68,
+  },
+  addFarmer: {
+    icon: require('../assets/icons/add-farmer.png'),
+    width: 48,
+    height: 48,
   },
 };
 

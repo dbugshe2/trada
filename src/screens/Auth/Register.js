@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Keyboard } from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
 import { COLORS, SIZES } from '../../utils/theme';
 import { useAuthContext } from '../../context/auth/AuthContext';
@@ -20,17 +20,24 @@ import Block from '../../components/primary/Block';
 import Header from '../../components/Header';
 import Text from '../../components/primary/Text';
 import STATES from '../../constants/states';
+import { errorMessage, successMessage } from '../../utils/toast';
 
 const steps = 4;
 const initialViewProp = 0; // use initialView of 0
-
 const Register = ({ navigation }) => {
   const { signup } = useAuthContext();
-  const { register, setValue, getValues, handleSubmit, errors } = useForm();
+  const {
+    register,
+    setValue,
+    getValues,
+    triggerValidation,
+    errors,
+  } = useForm();
 
   const [activeView, setActiveView] = useState(initialViewProp); // state of activetab initialized to initialView
   const [activeState, setActiveState] = useState(null);
   const [sending, setSending] = useState(false);
+  const [validating, setValidating] = useState(false);
 
   // form state
 
@@ -40,7 +47,7 @@ const Register = ({ navigation }) => {
   const [email, setEmail] = useState(null);
   const [state, setState] = useState(null);
   const [lga, setLGA] = useState(null);
-  const [district, setDistrict] = useState(null);
+  const [district, setDistrict] = useState('');
   const [address, setAddress] = useState(null);
   const [gender, setGender] = useState(null);
   const [education, setEducation] = useState(null);
@@ -55,39 +62,54 @@ const Register = ({ navigation }) => {
 
   const labels = new Array(steps).fill('');
 
-  let TabedViewRef = null;
+  let TabedViewRef = React.useRef(null);
   // let TabsListRef = null;
 
   const handleViewSelected = (direction) => {
     if (direction === 'prev' && activeView > 0) {
       setActiveView(activeView - 1);
-      TabedViewRef.setPage(activeView - 1);
+      TabedViewRef.current?.setPage(activeView - 1);
     }
 
     if (direction === 'next' && activeView <= steps - 1) {
-      setActiveView(activeView + 1);
-      TabedViewRef.setPage(activeView + 1);
+      Keyboard.dismiss();
+      switch (activeView) {
+        case 0:
+          submitPhysical();
+          break;
+        case 1:
+          submitLocation();
+          break;
+        case 2:
+          submitBio();
+          break;
+        case 3:
+          submitPin();
+          break;
+        default:
+          break;
+      }
     }
   };
 
   const handleScroll = (position) => {
     setActiveView(position);
   };
-  // /TabedView
 
+  //#region
   const handleStateSelect = (id, state) => {
     setActiveState(state);
-    setState(state.name);
+    setValue('state', state.name);
   };
 
   const handleLGASelect = (id, name) => {
-    setLGA(name);
+    setValue('lga', name);
   };
   const handleGenderSelect = (id, gender) => {
-    setGender(gender);
+    setValue('gender', gender);
   };
   const handleEducationSelect = (id, education) => {
-    setEducation(education);
+    setValue('education', education);
   };
   const handleDateSelect = (id, date) => {
     setDate(date);
@@ -97,43 +119,88 @@ const Register = ({ navigation }) => {
   };
   const handleYearSelect = (id, year) => {
     setYear(year);
+    setValue('dateOfBirth', `${month}-${date}-${year}`);
   };
+
+  //#endregion
+
   // ------ ONSUBMIT --------
-  const onSubmit = async () => {
-    setSending(true);
-    setValue(
-      [
-        { firstName: firstName },
-        { lastName: lastName },
-        { phone: phone },
-        { email: email },
-        { state: state },
-        { lga: lga },
-        { district: district },
-        { gender: gender },
-        { education: education },
-        { pin: pin },
-        { confirmPin: confirmPin },
-        { address: address },
-        { dateOfBirth: `${date}-${month}-${year}` },
-      ],
-      true
-    );
-    if (Object.entries(errors).length > 0) {
-      setMessage('the form contains some errors');
-      setSending(false);
+  const submitPhysical = async () => {
+    setValidating(true);
+    let physical = await triggerValidation([
+      'firstName',
+      'lastName',
+      'phone',
+      'email',
+    ]);
+    if (physical) {
+      TabedViewRef.current?.setPage(activeView + 1);
+      setActiveView(activeView + 1);
     } else {
-      const res = await signup(getValues());
-      if (res) {
-        setMessage(res.message);
+      errorMessage('form contians errors');
+    }
+    setValidating(false);
+  };
+  const submitLocation = async () => {
+    setValidating(true);
+    let location = await triggerValidation([
+      'state',
+      'lga',
+      'district',
+      'address',
+    ]);
+    if (location) {
+      TabedViewRef.current?.setPage(activeView + 1);
+      setActiveView(activeView + 1);
+    } else {
+      errorMessage('form contains error');
+    }
+    setValidating(false);
+  };
+  const submitBio = async () => {
+    setValidating(true);
+    let bio = await triggerValidation(['gender', 'education', 'dateOfBirth']);
+    if (bio) {
+      TabedViewRef.current?.setPage(activeView + 1);
+      setActiveView(activeView + 1);
+    } else {
+      errorMessage('form contians errors');
+    }
+    setValidating(false);
+  };
+  const submitPin = async () => {
+    setValidating(true);
+    const pinValid = await triggerValidation(['pin', 'confirmPin']);
+    if (pinValid) {
+      onSubmit();
+    }
+    setValidating(false);
+  };
+  const onSubmit = async () => {
+    try {
+      const errorKeys = Object.keys(errors);
+      if (errorKeys.length === 0) {
+        setSending(true);
+        const res = await signup(getValues());
+        if (res) {
+          successMessage(res.message);
+          console.log('returned, by submit', res);
+          // navigation.navigate('App');
+        }
+      } else {
+        errorMessage('the form contains some errors');
+        setSending(false);
       }
-      console.log('returned, by submit', res);
-      navigation.navigate('App');
+    } catch (error) {
+      captureException(error);
+      setSending(false);
+    } finally {
+      setSending(false);
     }
   };
 
   // logs
-
+  console.log(errors);
   useEffect(() => {
     register(
       { name: 'firstName' },
@@ -163,15 +230,28 @@ const Register = ({ navigation }) => {
       { name: 'state' },
       { required: 'Please select the state you live in' }
     );
-    register({ name: 'lga' }, { required: 'pleasse select your ' });
+    register({ name: 'lga' }, { required: 'pleasse select your LGA' });
     register({ name: 'district' });
     register({ name: 'gender' }, { required: 'please select a gender' });
     register(
       { name: 'education' },
       { required: 'please select your education level' }
     );
-    register({ name: 'pin' }, { required: 'please create a pin' });
-    register({ name: 'confirmPin' }, {});
+    register(
+      { name: 'pin' },
+      {
+        required: 'please create a pin',
+        validate: (value) => value.length === 4 || 'please enter a 4 digit pin',
+      }
+    );
+    register(
+      { name: 'confirmPin' },
+      {
+        required: 'please repeat your pin to confirm',
+        validate: (value) =>
+          value === getValues('pin') || 'should be greater than 0',
+      }
+    );
     register(
       { name: 'address' },
       { required: 'Please enter your full address' }
@@ -181,12 +261,16 @@ const Register = ({ navigation }) => {
       {
         required: 'please enter your date of birth',
         pattern: {
-          value: /^\d{1,2}\/\d{1,2}\/\d{4}$/,
+          value: /^\d{1,2}-\d{1,2}-\d{4}$/,
           message: 'please complete entering your date of birth',
         },
       }
     );
   }, [register]);
+
+  // useEffect(() => {
+  //   setValue('dateOfBirth', `${month}-${date}-${year}`);
+  // }, [date, month, year]);
 
   return (
     <Block background paddingHorizontal={SIZES.padding}>
@@ -214,12 +298,10 @@ const Register = ({ navigation }) => {
               // eslint-disable-next-line react-native/no-inline-styles
               style={{ flex: 1 }}
               initialPage={initialViewProp}
-              pageMargin={10}
-              scrollEnabled={true}
+              pageMargin={0}
+              scrollEnabled={false}
               showPageIndicator={false}
-              ref={(ref) => {
-                TabedViewRef = ref;
-              }}
+              ref={TabedViewRef}
               onPageSelected={(e) => {
                 const position = e.nativeEvent.position;
                 handleScroll(position);
@@ -228,33 +310,38 @@ const Register = ({ navigation }) => {
               {/* EnterPhysical */}
               <Block key="physical" scroll>
                 <Input
-                  onChangeText={(text) => setFirstName(text)}
+                  onChangeText={(text) => setValue('firstName', text)}
                   label="First Name"
                   error={errors.firstName}
+                  onBlur={() => triggerValidation('firstName')}
                 />
                 <Input
-                  onChangeText={(text) => setLastName(text)}
+                  onChangeText={(text) => setValue('lastName', text)}
                   label="Last Name"
                   returnKeyType="next"
+                  onBlur={() => triggerValidation('lastName')}
                   error={errors.lastName}
                 />
                 <Input
-                  onChangeText={(text) => setPhone(text)}
+                  onChangeText={(text) => setValue('phone', text)}
                   keyboardType="number-pad"
                   label="Phone Number"
-                  defaultValue={(phone && phone) || ''}
+                  // defaultValue={(phone && phone) || ''}
+                  onBlur={() => triggerValidation('phone')}
                   error={errors.phone}
                   maxLength={11}
                 />
                 <Input
-                  onChangeText={(text) => setEmail(text)}
+                  onChangeText={(text) => setValue('email', text)}
                   keyboardType="email-address"
                   label="Email"
                   autoCapitalize="none"
+                  onBlur={() => triggerValidation('email')}
                   error={errors.email}
                 />
               </Block>
               {/* /EnterPhysical */}
+
               {/* EnterLocation */}
               <Block key="location" space="around">
                 <Block>
@@ -275,6 +362,7 @@ const Register = ({ navigation }) => {
                       return `${state.name}`;
                     }}
                     onSelect={handleStateSelect}
+                    onDropdownWillHide={() => triggerValidation('state')}
                     error={errors.state}
                   />
 
@@ -283,27 +371,32 @@ const Register = ({ navigation }) => {
                     options={activeState && activeState.lgas}
                     defaultValue={activeState ? 'Select LGA..' : 'loading..'}
                     onSelect={handleLGASelect}
+                    onDropdownWillHide={() => triggerValidation('lga')}
                     error={errors.lga}
                   />
                   <Input
                     label="District"
-                    onChangeText={(text) => setDistrict(text)}
-                    error={errors.address}
+                    onChangeText={(text) => setValue('district', text)}
+                    onBlur={() => triggerValidation('district')}
+                    error={errors.district}
                   />
                   <Input
                     label="Address"
-                    onChangeText={(text) => setAddress(text)}
+                    onChangeText={(text) => setValue('address', text)}
+                    onBlur={() => triggerValidation('address')}
                     error={errors.address}
                   />
                 </Block>
               </Block>
               {/* / EnterLocation */}
-              {/* ENterBio */}
+
+              {/* EnterBio */}
               <Block key="bio">
                 <Dropdown
                   options={GENDERS}
                   defaultValue="Gender"
                   onSelect={handleGenderSelect}
+                  onDropdownWillHide={() => triggerValidation('gender')}
                   error={errors.gender}
                 />
                 <Text small muted marginVertical={2}>
@@ -313,14 +406,12 @@ const Register = ({ navigation }) => {
                   <Dropdown
                     options={DATE}
                     onSelect={handleDateSelect}
-                    error={errors.dateOfBirth}
                     defaultValue="Date"
                   />
                   <Dropdown
                     flex={1}
                     options={MONTHS}
                     onSelect={handleMonthSelect}
-                    error={errors.dateOfBirth}
                     defaultValue="Month"
                     renderRow={(month, index, isSelected) => (
                       <Text
@@ -341,12 +432,12 @@ const Register = ({ navigation }) => {
                     flex={1}
                     options={YEARS}
                     onSelect={handleYearSelect}
-                    error={errors.dateOfBirth}
+                    onDropdownWillHide={() => triggerValidation('dateOfBirth')}
                     defaultValue="Year"
                   />
                 </Block>
                 {errors.dateOfBirth && (
-                  <Text small primary>
+                  <Text small error mtmedium>
                     {errors.dateOfBirth.message}
                   </Text>
                 )}
@@ -354,7 +445,7 @@ const Register = ({ navigation }) => {
                   options={EDUCATION_LEVELS}
                   defaultValue="Highest Degree"
                   onSelect={handleEducationSelect}
-                  message={errors.education && errors.education.message}
+                  onDropdownWillHide={() => triggerValidation('education')}
                   error={errors.education}
                 />
               </Block>
@@ -365,14 +456,14 @@ const Register = ({ navigation }) => {
                   label="Set Pin"
                   secureTextEntry
                   onChangeText={(text) => setPin(text)}
-                  message={errors.pin && errors.pin.message}
+                  onBlur={() => triggerValidation('pin')}
                   error={errors.pin}
                 />
                 <Input
                   label="Confirm Pin"
                   secureTextEntry
                   onChangeText={(text) => setConfirmPin(text)}
-                  message={errors.confirmPin && errors.confirmPin.message}
+                  onBlur={() => triggerValidation('confirmPin')}
                   error={errors.confirmPin}
                 />
                 {sending ? (
@@ -395,24 +486,44 @@ const Register = ({ navigation }) => {
           <Block flex={0.5} space="between" row>
             <Block>
               {activeView > 0 && (
-                <Button transparent onPress={() => handleViewSelected('prev')}>
-                  <Text mtregular gray h5>
-                    Back
-                  </Text>
+                <Button
+                  transparent
+                  onPress={() => {
+                    handleViewSelected('prev');
+                  }}
+                >
+                  <Block middle>
+                    <Text left mtregular gray h5>
+                      Back
+                    </Text>
+                  </Block>
                 </Button>
               )}
             </Block>
             <Block>
               {activeView <= steps - 2 && (
-                <Button
-                  radius={0}
-                  transparent
-                  onPress={() => handleViewSelected('next')}
-                >
-                  <Text right mtregular primary h5>
-                    Next
-                  </Text>
-                </Button>
+                <Block row bottom center>
+                  {validating && (
+                    <ActivityIndicator size="small" color={COLORS.secondary} />
+                  )}
+                  <Button
+                    radius={0}
+                    transparent
+                    onPress={() => handleViewSelected('next')}
+                  >
+                    <Block middle>
+                      <Text
+                        right
+                        mtregular
+                        primary
+                        h5
+                        marginHorizontal={SIZES.base}
+                      >
+                        Next
+                      </Text>
+                    </Block>
+                  </Button>
+                </Block>
               )}
             </Block>
           </Block>

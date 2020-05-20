@@ -75,7 +75,7 @@ export const NumberFormatter = (value) => {
     return '0';
   }
 
-  const valueSplit = String(value.toFixed(1)).split(`${thousandSeparator}`);
+  const valueSplit = String(value).split(`${thousandSeparator}`);
   const firstvalue = valueSplit[0];
   const secondvalue = valueSplit[1];
   const valueReal = String(firstvalue).replace(

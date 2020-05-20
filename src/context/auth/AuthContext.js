@@ -35,7 +35,7 @@ import Text from '../../components/primary/Text';
 import { apiGet, apiPost, apiPut } from '../../utils/fetcher';
 import { isValid } from '../../utils/token';
 import { authReducer } from './authReducer';
-import { errorMessage } from '../../utils/toast';
+import { errorMessage, toast } from '../../utils/toast';
 
 const AuthContext = createContext();
 
@@ -62,12 +62,14 @@ export const AuthProvider = (props) => {
         .notFound((err) => console.log('not found', err))
         .timeout((err) => console.log('timeout', err))
         .error(403, (err) => {
+          console.log(err);
           errorMessage('this user exist please login instead');
         })
         .internalError((err) => console.log('server Error', err))
         .fetchError((err) => console.log('Netwrok error', err))
         .json();
       if (res) {
+        console.log(res);
         dispatch({
           type: OTP_SUCCESS,
           payload: formData.phone,
@@ -154,13 +156,36 @@ export const AuthProvider = (props) => {
     setLoading(true);
     try {
       const data = await apiPost('/users/login', formData)
-        .notFound((err) => errorMessage(err.json.message))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
+        .notFound((err) => {
+          errorMessage(err.json.message);
+          dispatch({
+            type: LOGIN_FAIL,
+          });
+        })
+        .timeout((err) => {
+          console.log('timeout', err);
+          errorMessage('Timeout, Login Failed Due to Poor Network');
+          dispatch({
+            type: LOGIN_FAIL,
+          });
+        })
+        .internalError((err) => {
+          console.log('server Error', err);
+          errorMessage(err.json.message);
+          dispatch({
+            type: LOGIN_FAIL,
+          });
+        })
+        .fetchError((err) => {
+          errorMessage('Login Failed, Check Your Conection');
+          console.log('Netwrok error', err);
+          dispatch({
+            type: LOGIN_FAIL,
+          });
+        })
         .json();
-      console.log('login res..', data);
       if (data) {
+        // console.log('login res..', data);
         await setUserToken(data.access_token);
         dispatch({
           type: LOGIN_SUCCESS,
@@ -170,15 +195,21 @@ export const AuthProvider = (props) => {
         const user = await fetchUserDetails(data.access_token);
         console.log('getting that user..');
         if (user !== null) {
-          await setUser(JSON.stringify(user));
+          await setUser(JSON.stringify(user.data));
           dispatch({
             type: USER_DETAILS,
             payload: user,
           });
+          toast('Welcome back ' + user.data.firstName);
           setLoading(false);
         } else {
           console.log('fetching user failed during login');
         }
+      } else {
+        dispatch({
+          type: LOGIN_FAIL,
+        });
+        setLoading(false);
       }
     } catch (err) {
       dispatch({

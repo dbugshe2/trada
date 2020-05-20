@@ -13,7 +13,7 @@ const UserOnboarding = ({ navigation }) => {
           <ImageIcon name="logoAlt" absolute={true} top={20} left={20} />
         </ImageIcon>
         <Block paddingTop={40} flex={1}>
-          <Text h3 center mtbold>
+          <Text h3 center mtmedium>
             Access to quality inputs
           </Text>
           <Text

@@ -37,6 +37,16 @@ export function authReducer(state, action) {
         user: action.payload.data,
       };
     case LOGIN_FAIL:
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        user: null,
+        userDetails: null,
+        phone: null,
+        profileImage: null,
+        showMessage: true,
+      };
     case VERIFY_OTP_SUCCESS:
     case VERIFY_OTP_FAIL:
     case VERIFY_AUTH_SUCCESS:
@@ -44,9 +54,8 @@ export function authReducer(state, action) {
     case USER_DETAILS:
       return {
         ...state,
-        userDetails: action.payload.data,
-        phone: action.payload.data.phone,
-        message: 'Welcome back ' + action.payload.data.firstName,
+        userDetails: action.payload,
+        phone: action.payload.phone,
         showMessage: true,
         isAuthenticated: true,
       };

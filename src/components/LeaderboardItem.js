@@ -1,21 +1,23 @@
 import React from 'react';
-import { SIZES, LINE_HEIGHTS, LETTERSPACING } from '../utils/theme';
+import { SIZES, LINE_HEIGHTS, LETTERSPACING, COLORS } from '../utils/theme';
 import Block from './primary/Block';
 import ImageIcon from './primary/ImageIcon';
 import { NumberFormatter } from '../utils/currency';
 import Text from './primary/Text';
 
 const LeaderboardItem = (props) => {
-  const { id, coins, name } = props;
+  const { id, coins, user, isUser } = props;
   return (
     <Block
       row
       middle
       center
-      marginVertical={20}
+      marginTop={5}
+      paddingVertical={20}
       paddingHorizontal={SIZES.padding}
+      secondary={isUser}
     >
-      <Text muted paddingRight={8}>
+      <Text paddingRight={8} color={(isUser && COLORS.white) || COLORS.gray}>
         {id}
       </Text>
       <Block flex={4}>
@@ -23,10 +25,10 @@ const LeaderboardItem = (props) => {
           mtmedium
           spacing={LETTERSPACING.point_25}
           height={LINE_HEIGHTS.twenty}
-          gray
+          color={(isUser && COLORS.white) || COLORS.gray}
           h6
         >
-          {name}
+          {user.firstName} {user.lastName}
         </Text>
       </Block>
       <Block center>
@@ -37,7 +39,7 @@ const LeaderboardItem = (props) => {
           mtmedium
           spacing={LETTERSPACING.point_25}
           height={LINE_HEIGHTS.twenty}
-          gray
+          color={(isUser && COLORS.white) || COLORS.gray}
           h6
           right
         >
