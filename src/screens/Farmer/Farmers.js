@@ -10,6 +10,7 @@ import { apiGet } from '../../utils/fetcher';
 import { SIZES, LETTERSPACING } from '../../utils/theme';
 import { Image, StyleSheet } from 'react-native';
 import { Divider } from 'react-native-paper';
+import Button from '../../components/primary/Button';
 
 const Farmers = ({ navigation }) => {
   const { validateToken } = useAuthContext();
@@ -34,7 +35,6 @@ const Farmers = ({ navigation }) => {
           .json();
 
         if (res) {
-          console.log(res);
           setFarmers(res.data);
         }
         setLoading(false);
@@ -46,7 +46,13 @@ const Farmers = ({ navigation }) => {
   }, []);
 
   const RenderFarmers = ({ item }) => (
-    <>
+    <Button
+      transparent
+      height={58}
+      onPress={() =>
+        navigation.navigate('FarmerSummary', { farmer: JSON.stringify(item) })
+      }
+    >
       <Block
         row
         space="between"
@@ -56,7 +62,9 @@ const Farmers = ({ navigation }) => {
         <Block center>
           <Image
             source={{
-              uri: 'https://via.placeholder.com/140',
+              uri:
+                (item.farmerImage && item.farmerImage) ||
+                'https://via.placeholder.com/40?text="No Image"',
             }}
             // eslint-disable-next-line react-native/no-inline-styles
             style={{ width: 44, height: 44, borderRadius: 44 }}
@@ -83,7 +91,7 @@ const Farmers = ({ navigation }) => {
           width: '90%',
         }}
       />
-    </>
+    </Button>
   );
 
   return (
@@ -107,6 +115,7 @@ const Farmers = ({ navigation }) => {
       )}
 
       <FAB
+        name="addFarmer"
         right={15}
         bottom={35}
         onPress={() => navigation.navigate('AddFarmer')}

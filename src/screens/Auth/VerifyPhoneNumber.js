@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { SIZES, COLORS } from '../../utils/theme';
-// import { useAuthContext } from "../../context";
+import { useAuthContext } from '../../context/auth/AuthContext';
 import { captureException } from '@sentry/react-native';
 import { useForm } from 'react-hook-form';
 import PinInput from '../../components/PinInput';
@@ -9,44 +9,78 @@ import Button from '../../components/primary/Button';
 import Header from '../../components/Header';
 import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
+import { errorMessage, successMessage } from '../../utils/toast';
+import Timer from '../../components/Timer';
 
 const VerifyPhoneNumber = ({ navigation }) => {
-  // const auth = useAuthContext();
+  const { phone, verifyOtp, requestOtp } = useAuthContext();
   const { register, handleSubmit, setValue } = useForm();
-
-  // const { phone, verifyOtp } = auth;
 
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [canResend, setCanResend] = useState(false);
+  const [resending, setResending] = useState(false);
 
   const onSubmit = async (data) => {
     setLoading(true);
     setMessage('');
-    // verifyOtp(data)
-    //   .then((res) => {
-    //     if (res.status === "success") {
-    //       navigation.navigate("Register");
-    //     } else {
-    //       setMessage(res.message);
-    //     }
-    //     setLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     setMessage(err.message);
-    //     captureException(err);
-    //     setLoading(false);
-    //     return;
-    //   });
+    try {
+      const res = await verifyOtp(data)
+        .notFound((err) => {
+          errorMessage(err.json.message);
+        })
+        .timeout((err) => {
+          console.log('timeout', err);
+          errorMessage('Timeout, Login Failed Due to Poor Network');
+        })
+        .internalError((err) => {
+          console.log('server Error', err);
+          errorMessage(err.json.message);
+        })
+        .fetchError((err) => {
+          errorMessage('Login Failed, Check Your Conection');
+          console.log('Netwrok error', err);
+        })
+        .json();
+      if (res) {
+        successMessage('Phone Number Verified');
+        navigation.navigate('Register');
+      }
+    } catch (error) {
+      setLoading(false);
+      captureException(error);
+    }
+  };
+
+  const resendOtp = async () => {
+    try {
+      setResending(true);
+      const res = await requestOtp({ phone: phone });
+
+      if (res) {
+        successMessage('New OTP Sent to phone');
+      }
+    } catch (error) {
+      captureException(error);
+      setMessage(error.message);
+    } finally {
+      setResending(false);
+    }
   };
   useEffect(() => {
     register({ name: 'verifyPhoneOtp' }, { required: true, minLength: 4 });
   }, [register]);
   return (
     <Block background>
-      <Header backTitle='Verify Phone Number' />
-      <Block space='around' marginVertical={SIZES.padding} paddingHorizontal={SIZES.padding}>
+      <Header backTitle="Verify Phone Number" />
+      <Block
+        space="around"
+        marginVertical={SIZES.padding}
+        paddingHorizontal={SIZES.padding}
+      >
         <Block middle center flex={2}>
           <PinInput
+            // eslint-disable-next-line react-native/no-inline-styles
             style={{ width: '80%' }}
             pinCount={4}
             autoFocusOnLoad
@@ -58,21 +92,44 @@ const VerifyPhoneNumber = ({ navigation }) => {
             {message}
           </Text>
         </Block>
-        <Block flex={2} justifyContent='flex-start' marginVertical={SIZES.padding * 2}>
-          <Button transparent>
-            <Text gray center small>
-              We sent a text message to --phone-- with your verification code
-            </Text>
-          </Button>
-          <Button transparent>
-            <Text secondary center small>
-              Resend code in 09:23
-            </Text>
-          </Button>
+        <Block
+          flex={2}
+          justifyContent="flex-start"
+          marginVertical={SIZES.padding * 2}
+        >
+          {/* <Button transparent> */}
+          <Text gray center small>
+            We sent a text message to {phone} with your verification code
+          </Text>
+          {/* </Button> */}
+          {canResend ? (
+            <Button transparent onPress={resendOtp}>
+              <Text primary center small>
+                Resend code
+              </Text>
+            </Button>
+          ) : (
+            <Button transparent>
+              {!resending ? (
+                <Text secondary center small>
+                  Resend code in{' '}
+                  <Timer
+                    onComplete={() => setCanResend(true)}
+                    secondary
+                    time={{ mins: 10, secs: 0 }}
+                  />{' '}
+                </Text>
+              ) : (
+                <Text secondary center small>
+                  Resending...
+                </Text>
+              )}
+            </Button>
+          )}
         </Block>
-        <Block justifyContent='flex-start'>
+        <Block justifyContent="flex-start">
           {loading ? (
-            <ActivityIndicator animating size='large' color={COLORS.primary} />
+            <ActivityIndicator animating size="large" color={COLORS.primary} />
           ) : (
             <Button onPress={handleSubmit(onSubmit)}>
               <Text white center h6>

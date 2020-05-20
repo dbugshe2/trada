@@ -29,7 +29,6 @@ const VerifyPasswordReset = ({ navigation }) => {
       navigation.navigate('ResetPassword');
     } catch (error) {
       captureException(error);
-    } finally {
       setLoading(false);
     }
   };

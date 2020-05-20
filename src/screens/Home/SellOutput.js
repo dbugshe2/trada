@@ -185,6 +185,7 @@ const SellOutput = ({ route, navigation }) => {
           .json();
         if (res) {
           successMessage(res.message);
+          navigation.navigate('Store', { screen: 'MyOutputs' });
         }
       }
     } catch (error) {
@@ -264,7 +265,6 @@ const SellOutput = ({ route, navigation }) => {
     if (Object.entries(errors).length === 0) {
       console.log('values', getValues());
       await sellOutput(getValues());
-      navigation.navigate('Store', { screen: 'MyOutputs' });
     }
   };
   return (
@@ -325,13 +325,13 @@ const SellOutput = ({ route, navigation }) => {
           />
           <Dropdown
             disabled={activeState === null}
-            options={activeState && activeState.lgas}
+            options={(activeState && activeState.lgas) || null}
             defaultValue={activeState ? 'Select LGA' : 'loading...'}
             onSelect={handleLgaSelected}
           />
           <Dropdown
             disabled={activeState === null}
-            options={categories.length !== 0 && categories}
+            options={(categories.length !== 0 && categories) || null}
             defaultValue="Category"
             onSelect={handleCategorySelected}
           />

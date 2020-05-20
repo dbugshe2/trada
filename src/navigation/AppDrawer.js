@@ -9,6 +9,8 @@ import SettingsNavigator from './SettingsNavigator';
 import AboutNavigator from './AboutNavigator';
 import ImageIcon from '../components/primary/ImageIcon';
 import Sidebar from '../components/Sidebar';
+import HCSW from '../screens/HowCreditWorks/HCSW';
+import Support from '../screens/Support/Support';
 
 const Drawer = createDrawerNavigator();
 
@@ -60,7 +62,7 @@ const AppDrawer = () => {
           drawerLabel: 'How credit score works',
           drawerIcon: () => <ImageIcon name="hcsw" />,
         }}
-        component={BottomTabs}
+        component={HCSW}
       />
       <Drawer.Screen
         name="Settings"
@@ -70,14 +72,14 @@ const AppDrawer = () => {
         }}
         component={SettingsNavigator}
       />
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name="Support"
         options={{
           drawerLabel: 'Support',
           drawerIcon: () => <ImageIcon name="support" />,
         }}
-        component={BottomTabs}
-      /> */}
+        component={Support}
+      />
       <Drawer.Screen
         name="About"
         options={{

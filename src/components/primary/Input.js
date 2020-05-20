@@ -231,7 +231,7 @@ const Input = (props) => {
         {...props}
       />
       {props.error && (
-        <Text small color={COLORS.primary} mtmedium>
+        <Text small color={COLORS.secondary} mtmedium>
           {props.error.message}
         </Text>
       )}

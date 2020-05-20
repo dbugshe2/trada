@@ -94,19 +94,11 @@ export const apiImageUplpoad = (
   try {
     const fileName = name;
 
-    const formData = new FormData();
-    formData.append('file', {
-      uri: data.uri,
-      type: 'image/jpg',
-      name: fileName,
-    });
-    formData.append('cloud_name', 'standesu');
-    formData.append('upload_preset', UPLOAD_PRESET);
-
     let xhr = new XMLHttpRequest();
     xhr.open('POST', imageUploadBaseUrl);
+    xhr.withCredentials = false;
     xhr.onload = () => {
-      console.log({ ...xhr });
+      // console.log('worked aparently', xhr);
       onLoad(JSON.parse(xhr._response));
     };
 
@@ -118,13 +110,21 @@ export const apiImageUplpoad = (
     xhr.ontimeout = (e) => {
       console.log(e, 'cloudinary timeout');
     };
-    console.log(fileName);
+
+    const formData = new FormData();
+    formData.append('file', {
+      uri: data.uri,
+      type: 'image/jpg',
+      name: fileName,
+    });
+    // formData.append('cloud_name', 'standesu');
+    formData.append('upload_preset', UPLOAD_PRESET);
+
     xhr.send(formData);
     if (xhr.upload) {
       xhr.upload.onprogress = ({ total, loaded }) => {
-        const uploadProgress = loaded / total;
+        let uploadProgress = loaded / total;
         onProgress(uploadProgress);
-        // console.log(uploadProgress);
       };
     }
   } catch (error) {

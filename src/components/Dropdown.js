@@ -56,7 +56,7 @@ const Dropdown = (props) => {
         size={15}
       />
       {props.error && (
-        <Text small error>
+        <Text small error mtmedium>
           {props.error.message}
         </Text>
       )}

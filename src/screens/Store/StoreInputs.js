@@ -12,6 +12,8 @@ import { useAuthContext } from '../../context/auth/AuthContext';
 import { apiGet } from '../../utils/fetcher';
 import { errorMessage } from '../../utils/toast';
 import { captureException } from '@sentry/react-native';
+import { CurrencyFormatter } from '../../utils/currency';
+import moment from 'moment';
 
 const StoreInputs = ({ navigation }) => {
   const { validateToken, logout } = useAuthContext();
@@ -70,7 +72,7 @@ const StoreInputs = ({ navigation }) => {
     fetchMyInput();
   }, []);
 
-  const renderItem = (props) => (
+  const renderItem = (item, index) => (
     <Button
       center
       middle
@@ -86,10 +88,10 @@ const StoreInputs = ({ navigation }) => {
       <Block paddingHorizontal={SIZES.padding} paddingVertical={SIZES.base}>
         <Block space="between" center middle row>
           <Text mtmedium gray h4>
-            Fertilizer NPK
+            {item.inputName}
           </Text>
           <Text black mtregular h2>
-            N25, 000
+            {CurrencyFormatter(item.amount)}
           </Text>
         </Block>
         <Divider />
@@ -98,7 +100,9 @@ const StoreInputs = ({ navigation }) => {
             Pickup Status
           </Text>
           <Text mtmedium gray body>
-            Panshi Jos, Monday Jan 09
+            {`${item.lga}, ${item.state}, ${moment(item.initiatedAt).format(
+              'dddd MMM YY'
+            )}`}
           </Text>
         </Block>
       </Block>

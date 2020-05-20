@@ -273,7 +273,7 @@ class Block extends Component {
       muted && { backgroundColor: COLORS.muted },
       inactive && { backgroundColor: COLORS.inactive },
       lightgray && { backgroundColor: COLORS.lightgray },
-      outlined && { borderWidth: 1 },
+      outlined && { borderWidth: 1, borderColor: COLORS.muted },
       style, // rewrite predefined styles
     ]);
 
