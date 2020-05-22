@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SIZES, COLORS } from '../../utils/theme';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl } from 'react-native';
 import Header from '../../components/Header';
 import CommissionItem from '../../components/CommissionItem';
 import Block from '../../components/primary/Block';
@@ -17,6 +17,7 @@ const CommissionHistory = () => {
   const [full, setFull] = useState(false);
   const [fullHistory, setFullHistory] = useState([]);
   const [historyCount, setHistoryCount] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getCommissionHistory = async (limit, skip) => {
     try {
@@ -32,7 +33,7 @@ const CommissionHistory = () => {
           .notFound((err) => console.log('not found', err))
           .timeout((err) => console.log('timeout', err))
           .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
+          .fetchError((err) => console.log('Network error', err))
           .json();
         if (res) {
           setHistoryCount(res.totalDocumentCount);
@@ -58,6 +59,19 @@ const CommissionHistory = () => {
       return await getCommissionHistory(10, fullHistory.length);
     }
   };
+
+  const onRefresh = React.useCallback(() => {
+    try {
+      setRefreshing(true);
+      setFullHistory([]);
+      setHistoryCount(null);
+      getCommissionHistory(10, 0);
+    } catch (error) {
+      captureException(error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refreshing]);
   return (
     <Block background>
       <Header backTitle="Your Activity" />
@@ -67,6 +81,9 @@ const CommissionHistory = () => {
             <ActivityIndicator animating size="large" color={COLORS.primary} />
           ) : (
             <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               data={fullHistory}
               keyExtractor={(item, index) => `item-${index}`}
               renderItem={({ item }) => {

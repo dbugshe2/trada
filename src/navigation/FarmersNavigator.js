@@ -10,10 +10,10 @@ const Stack = createStackNavigator();
 const FarmerNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Farmer"
+      initialRouteName="Farmers"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="Farmer" component={Farmers} />
+      <Stack.Screen name="Farmers" component={Farmers} />
       <Stack.Screen name="AddFarmer" component={AddFarmer} />
       <Stack.Screen name="FarmerPhoto" component={FarmerPhoto} />
       <Stack.Screen name="FarmerSummary" component={FarmerSummary} />

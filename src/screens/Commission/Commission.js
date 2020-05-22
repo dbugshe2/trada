@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { SIZES, COLORS, LINE_HEIGHTS, LETTERSPACING } from '../../utils/theme';
-import { TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import {
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import { CurrencyFormatter } from '../../utils/currency';
 import { useFocusEffect } from '@react-navigation/native';
 import Button from '../../components/primary/Button';
@@ -22,6 +27,8 @@ const Commission = ({ navigation }) => {
   const [history, setHistory] = useState([]);
   const [commissionBalance, setCommissionBalance] = useState(null);
   const [commissionWallet, setCommissionWallet] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+
   // useEffect(() => {
   //   (async () => {
   //     setLoadingBalance(true);
@@ -50,7 +57,7 @@ const Commission = ({ navigation }) => {
           .notFound((err) => console.log('not found', err))
           .timeout((err) => console.log('timeout', err))
           .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
+          .fetchError((err) => console.log('Network error', err))
           .json();
         if (data) {
           setCommissionWallet(data.data);
@@ -77,7 +84,7 @@ const Commission = ({ navigation }) => {
           .notFound((err) => console.log('not found', err))
           .timeout((err) => console.log('timeout', err))
           .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
+          .fetchError((err) => console.log('Network error', err))
           .json();
         if (data) {
           setHistory(data.data);
@@ -107,6 +114,17 @@ const Commission = ({ navigation }) => {
       fetchData();
     }, [])
   );
+  const onRefresh = React.useCallback(() => {
+    try {
+      setRefreshing(true);
+      getRecentCommissionHistory(15);
+    } catch (error) {
+      captureException(error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refreshing]);
+
   return (
     <Block background>
       <Header backTitle="Comission Activities" />
@@ -158,6 +176,9 @@ const Commission = ({ navigation }) => {
             <ActivityIndicator />
           ) : (
             <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               showsVerticalScrollIndicator={false}
               data={history}
               keyExtractor={(item, index) => `item-${index}`}

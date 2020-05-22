@@ -297,7 +297,7 @@ const BuyInput = () => {
             </Block>
           </Block>
           <Input
-            disabled={lga === null}
+            disabled={units < 1}
             label="Pickup location"
             onChangeText={(text) => setDeliveryLocation(text)}
           />

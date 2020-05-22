@@ -44,7 +44,7 @@ const Leaderboard = () => {
           .notFound((err) => console.log('not found', err))
           .timeout((err) => console.log('timeout', err))
           .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
+          .fetchError((err) => console.log('Network error', err))
           .json();
         if (res) {
           await loadUser();

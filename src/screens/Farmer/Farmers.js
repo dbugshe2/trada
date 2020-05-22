@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import EmptyState from '../../components/EmptyState';
 import FAB from '../../components/FAB';
 import Header from '../../components/Header';
@@ -11,39 +11,30 @@ import { SIZES, LETTERSPACING } from '../../utils/theme';
 import { Image, StyleSheet } from 'react-native';
 import { Divider } from 'react-native-paper';
 import Button from '../../components/primary/Button';
+import { captureException } from '@sentry/react-native';
 
 const Farmers = ({ navigation }) => {
   const { validateToken } = useAuthContext();
   const [farmers, setFarmers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  async function fetchFarmers() {
+    const token = await validateToken();
+    if (token) {
+      const res = await apiGet('/farmers', { skip: 0, limit: 10 }, token, true)
+        .unauthorized((err) => console.log('unauthorized', err))
+        .notFound((err) => console.log('not found', err))
+        .timeout((err) => console.log('timeout', err))
+        .internalError((err) => console.log('server Error', err))
+        .fetchError((err) => console.log('Network error', err))
+        .json();
 
-  useEffect(() => {
-    async function fetchFamrers() {
-      const token = await validateToken();
-      if (token) {
-        const res = await apiGet(
-          '/farmers',
-          { skip: 0, limit: 10 },
-          token,
-          true
-        )
-          .unauthorized((err) => console.log('unauthorized', err))
-          .notFound((err) => console.log('not found', err))
-          .timeout((err) => console.log('timeout', err))
-          .internalError((err) => console.log('server Error', err))
-          .fetchError((err) => console.log('Netwrok error', err))
-          .json();
-
-        if (res) {
-          setFarmers(res.data);
-        }
-        setLoading(false);
+      if (res) {
+        setFarmers(res.data);
       }
+      setLoading(false);
     }
-
-    fetchFamrers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }
 
   const RenderFarmers = ({ item }) => (
     <Button
@@ -94,6 +85,22 @@ const Farmers = ({ navigation }) => {
     </Button>
   );
 
+  useEffect(() => {
+    fetchFarmers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onRefresh = React.useCallback(() => {
+    try {
+      setRefreshing(true);
+      fetchFarmers();
+    } catch (error) {
+      captureException(error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refreshing]);
+
   return (
     <Block background>
       <Header backTitle="Farmer Activities" />
@@ -101,15 +108,20 @@ const Farmers = ({ navigation }) => {
         <EmptyState
           text={`Onboard Farmers in your
              location and earn commissions`}
-          icon="logo"
+          icon="market"
           loading={loading}
         />
       ) : (
-        <Block paddingHorizontal={SIZES.padding}>
+        <Block height={'100%'} flex={1}>
           <FlatList
+            style={{ flex: 1, paddingHorizontal: SIZES.padding }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             data={farmers}
             keyExtractor={(item, index) => `item-${index}`}
             renderItem={RenderFarmers}
+            showsVerticalScrollIndicator={false}
           />
         </Block>
       )}

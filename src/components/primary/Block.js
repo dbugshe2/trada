@@ -287,11 +287,7 @@ class Block extends Component {
 
     if (safe) {
       return (
-        <SafeAreaView
-          showVerticalScrollIndicator={false}
-          style={blockStyles}
-          {...props}
-        >
+        <SafeAreaView style={blockStyles} {...props}>
           {children}
         </SafeAreaView>
       );
@@ -299,7 +295,13 @@ class Block extends Component {
     if (scroll) {
       return (
         <View style={blockStyles}>
-          <ScrollView {...props}>{children}</ScrollView>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            {...props}
+          >
+            {children}
+          </ScrollView>
         </View>
       );
     }
