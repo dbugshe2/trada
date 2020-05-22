@@ -66,7 +66,7 @@ export const AuthProvider = (props) => {
           errorMessage('this user exist please login instead');
         })
         .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
+        .fetchError((err) => console.log('Network error', err))
         .json();
       if (res) {
         console.log(res);
@@ -85,11 +85,23 @@ export const AuthProvider = (props) => {
   const verifyOtp = async (formData) => {
     try {
       const res = await apiPost('/users/phone/otp/confirm', formData)
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
+        .unauthorized((err) => {
+          errorMessage('unauthorized: ' + err.json.message);
+        })
+        .notFound((err) => {
+          errorMessage('not found:' + err.json.message);
+        })
+        .timeout((err) => errorMessage('timeout: ', +err.json.message))
+        .error(403, (err) => {
+          console.log(err);
+          errorMessage('Error: ' + err.json.message);
+        })
+        .internalError((err) => {
+          errorMessage('server Error: ' + err.json.message);
+        })
+        .fetchError((err) => {
+          errorMessage('Network error: ' + err.json.message);
+        })
         .json();
       if (res) {
         dispatch({
@@ -113,11 +125,23 @@ export const AuthProvider = (props) => {
   const signup = async (formData) => {
     try {
       const res = await apiPost('/users/onboarding', formData)
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
+        .unauthorized((err) => {
+          errorMessage('unauthorized: ' + err.json.message);
+        })
+        .notFound((err) => {
+          errorMessage('not found:' + err.json.message);
+        })
+        .timeout((err) => errorMessage('timeout: ', +err.json.message))
+        .error(403, (err) => {
+          console.log(err);
+          errorMessage('Error: ' + err.json.message);
+        })
+        .internalError((err) => {
+          errorMessage('server Error: ' + err.json.message);
+        })
+        .fetchError((err) => {
+          errorMessage('Network error: ' + err.json.message);
+        })
         .json();
       if (res) {
         dispatch({
@@ -140,7 +164,7 @@ export const AuthProvider = (props) => {
       .notFound((err) => console.log('not found', err))
       .timeout((err) => console.log('timeout', err))
       .internalError((err) => console.log('server Error', err))
-      .fetchError((err) => console.log('Netwrok error', err))
+      .fetchError((err) => console.log('Network error', err))
       .json()
       .then((data) => {
         console.log('data from fetchuserdta', data);
@@ -178,7 +202,7 @@ export const AuthProvider = (props) => {
         })
         .fetchError((err) => {
           errorMessage('Login Failed, Check Your Conection');
-          console.log('Netwrok error', err);
+          console.log('Network error', err);
           dispatch({
             type: LOGIN_FAIL,
           });
@@ -257,7 +281,7 @@ export const AuthProvider = (props) => {
         .notFound((err) => console.log('not found', err))
         .timeout((err) => console.log('timeout', err))
         .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
+        .fetchError((err) => console.log('Network error', err))
         .json();
       if (res) {
         dispatch({
@@ -289,7 +313,7 @@ export const AuthProvider = (props) => {
         .notFound((err) => console.log('not found', err))
         .timeout((err) => console.log('timeout', err))
         .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
+        .fetchError((err) => console.log('Network error', err))
         .json();
       if (res) {
         dispatch({

@@ -2,20 +2,10 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  ScrollView,
   Text,
-  Dimensions,
   Platform,
-  RefreshControl,
   Image,
-  TouchableHighlight,
-  AppState,
-  Modal,
-  AlertIOS,
-  StatusBar,
-  SafeAreaView,
   TouchableOpacity,
-  TextInput,
   ImageBackground,
   Linking,
 } from 'react-native';
@@ -135,7 +125,9 @@ class Support extends Component {
                     <View style={{ flexDirection: 'row' }}>
                       <TouchableOpacity
                         onPress={() =>
-                          Linking.openURL('http://www.facebook.com/thriveagric')
+                          Linking.openURL(
+                            'https://www.facebook.com/thriveagric'
+                          )
                         }
                       >
                         <Image
@@ -155,7 +147,7 @@ class Support extends Component {
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={() =>
-                          Linking.openURL('http://instagram.com/thriveagrichq')
+                          Linking.openURL('https://instagram.com/thriveagrichq')
                         }
                       >
                         <Image
@@ -163,9 +155,16 @@ class Support extends Component {
                           style={{ marginRight: 20, height: 30, width: 30 }}
                         />
                       </TouchableOpacity>
-                      {/* <TouchableOpacity onPress={() => Linking.openURL('https://medium.com/thrive-agric')}>
-                                                     <Image source={require("../../../assets/images/medium.png")} style={{height:30,width:30}}/>
-                                                </TouchableOpacity> */}
+                      <TouchableOpacity
+                        onPress={() =>
+                          Linking.openURL('https://medium.com/thrive-agric')
+                        }
+                      >
+                        <Image
+                          source={require('../../assets/images/medium.png')}
+                          style={{ height: 30, width: 30 }}
+                        />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>

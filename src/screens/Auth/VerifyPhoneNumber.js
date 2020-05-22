@@ -20,6 +20,7 @@ const VerifyPhoneNumber = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [canResend, setCanResend] = useState(false);
   const [resending, setResending] = useState(false);
+  const [timer, setTimer] = useState({ mins: 10, secs: 0 });
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -31,15 +32,18 @@ const VerifyPhoneNumber = ({ navigation }) => {
         })
         .timeout((err) => {
           console.log('timeout', err);
-          errorMessage('Timeout, Login Failed Due to Poor Network');
+          errorMessage('Timeout: ' + err.json.message);
         })
         .internalError((err) => {
           console.log('server Error', err);
-          errorMessage(err.json.message);
+          errorMessage('Error: ' + err.json.message);
+        })
+        .error(406, (err) => {
+          errorMessage('Error: ' + err.json.message);
         })
         .fetchError((err) => {
-          errorMessage('Login Failed, Check Your Conection');
-          console.log('Netwrok error', err);
+          errorMessage('Network Error, Check Your Conection');
+          console.log('Network error', err);
         })
         .json();
       if (res) {
@@ -59,10 +63,13 @@ const VerifyPhoneNumber = ({ navigation }) => {
 
       if (res) {
         successMessage('New OTP Sent to phone');
+        setTimer({ mins: 10, secs: 0 });
+        setCanResend(false);
       }
     } catch (error) {
       captureException(error);
       setMessage(error.message);
+      setResending(false);
     } finally {
       setResending(false);
     }
@@ -116,7 +123,7 @@ const VerifyPhoneNumber = ({ navigation }) => {
                   <Timer
                     onComplete={() => setCanResend(true)}
                     secondary
-                    time={{ mins: 10, secs: 0 }}
+                    time={timer}
                   />{' '}
                 </Text>
               ) : (

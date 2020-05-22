@@ -30,7 +30,7 @@ const Dropdown = (props) => {
   const textStyle = {
     paddingHorizontal: SIZES.padding,
     fontSize: SIZES.h6,
-    color: COLORS.muted,
+    color: COLORS.gray,
     fontFamily: 'Montserrat-Medium',
   };
   const dropdownStyle = { width: '50%', height: SIZES.height * 0.3 };
@@ -244,8 +244,20 @@ class DropdownType extends Component {
         onPress={this._onButtonPress}
       >
         {children || (
-          <View style={styles.button}>
-            <Text style={[styles.buttonText, textStyle]} numberOfLines={1}>
+          <View
+            style={[
+              styles.button,
+              disabled && { borderColor: COLORS.inactive },
+            ]}
+          >
+            <Text
+              style={[
+                styles.buttonText,
+                textStyle,
+                disabled && { color: COLORS.inactive },
+              ]}
+              numberOfLines={1}
+            >
               {buttonText}
             </Text>
           </View>

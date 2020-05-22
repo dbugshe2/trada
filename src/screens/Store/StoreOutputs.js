@@ -26,7 +26,7 @@ const StoreOutputs = ({ navigation }) => {
   // state
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefeshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   // handlers
   const filterOutput = () => {};
@@ -78,7 +78,7 @@ const StoreOutputs = ({ navigation }) => {
           </Text>
           <Text mtmedium gray body height={LINE_HEIGHTS.twenty}>
             {`${item.lga}, ${item.state}, ${moment(item.initiatedAt).format(
-              'dddd MMM YY'
+              'Do MMM YYYY'
             )}`}
           </Text>
         </Block>
@@ -136,12 +136,12 @@ const StoreOutputs = ({ navigation }) => {
 
   const onRefresh = React.useCallback(() => {
     try {
-      setRefeshing(true);
+      setRefreshing(true);
       fetchTransactions();
     } catch (error) {
       captureException(error);
     } finally {
-      setRefeshing(false);
+      setRefreshing(false);
     }
   }, [refreshing]);
 
@@ -156,7 +156,7 @@ const StoreOutputs = ({ navigation }) => {
   return (
     <Block background>
       {transactions.lenght === 0 ? (
-        <EmptyState icon="add" text="Sell your Farm Output" />
+        <EmptyState icon="market" text="Sell your Farm Output" />
       ) : (
         <Block background>
           <Block flex={2}>

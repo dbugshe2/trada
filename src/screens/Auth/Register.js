@@ -21,6 +21,7 @@ import Header from '../../components/Header';
 import Text from '../../components/primary/Text';
 import STATES from '../../constants/states';
 import { errorMessage, successMessage } from '../../utils/toast';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const steps = 4;
 const initialViewProp = 0; // use initialView of 0
@@ -57,6 +58,7 @@ const Register = ({ navigation }) => {
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [message, setMessage] = useState(null);
+  const [confirmPinError, setConfirmPinError] = useState(null);
 
   // TabedView
 
@@ -119,13 +121,23 @@ const Register = ({ navigation }) => {
   };
   const handleYearSelect = (id, year) => {
     setYear(year);
-    setValue('dateOfBirth', `${month}-${date}-${year}`);
+    // setValue('dateOfBirth', `${month}-${date}-${year}`);
   };
-
+  const handleValidateConfirmPin = () => {
+    let validated = getValues('pin') === confirmPin;
+    if (validated) {
+      setConfirmPinError({});
+    } else if (confirmPin === null) {
+      setConfirmPinError({ message: 'please repeat your pin to confirm it' });
+    } else {
+      setConfirmPinError({ message: 'This does not match your PIN above' });
+    }
+  };
   //#endregion
 
   // ------ ONSUBMIT --------
   const submitPhysical = async () => {
+    Keyboard.dismiss();
     setValidating(true);
     let physical = await triggerValidation([
       'firstName',
@@ -142,6 +154,7 @@ const Register = ({ navigation }) => {
     setValidating(false);
   };
   const submitLocation = async () => {
+    Keyboard.dismiss();
     setValidating(true);
     let location = await triggerValidation([
       'state',
@@ -158,6 +171,7 @@ const Register = ({ navigation }) => {
     setValidating(false);
   };
   const submitBio = async () => {
+    Keyboard.dismiss();
     setValidating(true);
     let bio = await triggerValidation(['gender', 'education', 'dateOfBirth']);
     if (bio) {
@@ -169,6 +183,7 @@ const Register = ({ navigation }) => {
     setValidating(false);
   };
   const submitPin = async () => {
+    Keyboard.dismiss();
     setValidating(true);
     const pinValid = await triggerValidation(['pin', 'confirmPin']);
     if (pinValid) {
@@ -178,29 +193,23 @@ const Register = ({ navigation }) => {
   };
   const onSubmit = async () => {
     try {
-      const errorKeys = Object.keys(errors);
-      if (errorKeys.length === 0) {
-        setSending(true);
-        const res = await signup(getValues());
-        if (res) {
-          successMessage(res.message);
-          console.log('returned, by submit', res);
-          // navigation.navigate('App');
-        }
+      setSending(true);
+      const res = await signup(getValues());
+      if (res) {
+        successMessage(res.message);
+        console.log('returned, by submit', res);
+        navigation.navigate('Login');
       } else {
-        errorMessage('the form contains some errors');
         setSending(false);
       }
     } catch (error) {
       captureException(error);
       setSending(false);
-    } finally {
-      setSending(false);
     }
   };
-
   // logs
-  console.log(errors);
+  // console.log(errors);
+  // console.log('form state', getValues());
   useEffect(() => {
     register(
       { name: 'firstName' },
@@ -249,7 +258,7 @@ const Register = ({ navigation }) => {
       {
         required: 'please repeat your pin to confirm',
         validate: (value) =>
-          value === getValues('pin') || 'should be greater than 0',
+          value === getValues('pin') || 'This does not match your PIN above',
       }
     );
     register(
@@ -268,9 +277,9 @@ const Register = ({ navigation }) => {
     );
   }, [register]);
 
-  // useEffect(() => {
-  //   setValue('dateOfBirth', `${month}-${date}-${year}`);
-  // }, [date, month, year]);
+  useEffect(() => {
+    setValue('dateOfBirth', `${month}-${date}-${year}`);
+  }, [date, month, year]);
 
   return (
     <Block background paddingHorizontal={SIZES.padding}>
@@ -343,55 +352,53 @@ const Register = ({ navigation }) => {
               {/* /EnterPhysical */}
 
               {/* EnterLocation */}
-              <Block key="location" space="around">
-                <Block>
-                  <Dropdown
-                    options={STATES}
-                    defaultValue={'Select State'}
-                    renderRow={(state, index, isSelected) => (
-                      <Text
-                        gray
-                        h6
-                        paddingHorizontal={SIZES.base}
-                        paddingVertical={SIZES.padding}
-                      >
-                        {state.name}
-                      </Text>
-                    )}
-                    renderButtonText={(state, index, isSelected) => {
-                      return `${state.name}`;
-                    }}
-                    onSelect={handleStateSelect}
-                    onDropdownWillHide={() => triggerValidation('state')}
-                    error={errors.state}
-                  />
+              <Block key="location" scroll>
+                <Dropdown
+                  options={STATES}
+                  defaultValue={'Select State'}
+                  renderRow={(state, index, isSelected) => (
+                    <Text
+                      gray
+                      h6
+                      paddingHorizontal={SIZES.base}
+                      paddingVertical={SIZES.padding}
+                    >
+                      {state.name}
+                    </Text>
+                  )}
+                  renderButtonText={(state, index, isSelected) => {
+                    return `${state.name}`;
+                  }}
+                  onSelect={handleStateSelect}
+                  onDropdownWillHide={() => triggerValidation('state')}
+                  error={errors.state}
+                />
 
-                  <Dropdown
-                    disabled={!activeState}
-                    options={activeState && activeState.lgas}
-                    defaultValue={activeState ? 'Select LGA..' : 'loading..'}
-                    onSelect={handleLGASelect}
-                    onDropdownWillHide={() => triggerValidation('lga')}
-                    error={errors.lga}
-                  />
-                  <Input
-                    label="District"
-                    onChangeText={(text) => setValue('district', text)}
-                    onBlur={() => triggerValidation('district')}
-                    error={errors.district}
-                  />
-                  <Input
-                    label="Address"
-                    onChangeText={(text) => setValue('address', text)}
-                    onBlur={() => triggerValidation('address')}
-                    error={errors.address}
-                  />
-                </Block>
+                <Dropdown
+                  disabled={!activeState}
+                  options={activeState && activeState.lgas}
+                  defaultValue={activeState ? 'Select LGA..' : 'loading..'}
+                  onSelect={handleLGASelect}
+                  onDropdownWillHide={() => triggerValidation('lga')}
+                  error={errors.lga}
+                />
+                <Input
+                  label="District"
+                  onChangeText={(text) => setValue('district', text)}
+                  onBlur={() => triggerValidation('district')}
+                  error={errors.district}
+                />
+                <Input
+                  label="Address"
+                  onChangeText={(text) => setValue('address', text)}
+                  onBlur={() => triggerValidation('address')}
+                  error={errors.address}
+                />
               </Block>
               {/* / EnterLocation */}
 
               {/* EnterBio */}
-              <Block key="bio">
+              <Block key="bio" scroll>
                 <Dropdown
                   options={GENDERS}
                   defaultValue="Gender"
@@ -432,7 +439,7 @@ const Register = ({ navigation }) => {
                     flex={1}
                     options={YEARS}
                     onSelect={handleYearSelect}
-                    onDropdownWillHide={() => triggerValidation('dateOfBirth')}
+                    // onDropdownWillHide={() => triggerValidation('dateOfBirth')}
                     defaultValue="Year"
                   />
                 </Block>
@@ -451,18 +458,22 @@ const Register = ({ navigation }) => {
               </Block>
               {/* EnterBio */}
               {/* SetPassword */}
-              <Block key="password">
+              <Block key="password" scroll>
                 <Input
                   label="Set Pin"
+                  maxLength={4}
                   secureTextEntry
-                  onChangeText={(text) => setPin(text)}
+                  keyboardType="number-pad"
+                  onChangeText={(text) => setValue('pin', text)}
                   onBlur={() => triggerValidation('pin')}
                   error={errors.pin}
                 />
                 <Input
                   label="Confirm Pin"
                   secureTextEntry
-                  onChangeText={(text) => setConfirmPin(text)}
+                  maxLength={4}
+                  keyboardType="number-pad"
+                  onChangeText={(text) => setValue('confirmPin', text)}
                   onBlur={() => triggerValidation('confirmPin')}
                   error={errors.confirmPin}
                 />
@@ -483,17 +494,23 @@ const Register = ({ navigation }) => {
               {/* /SetPassword */}
             </ViewPager>
           </Block>
-          <Block flex={0.5} space="between" row>
+          <Block flex={0} space="between" row>
             <Block>
               {activeView > 0 && (
                 <Button
+                  radius={0}
                   transparent
                   onPress={() => {
                     handleViewSelected('prev');
                   }}
                 >
-                  <Block middle>
-                    <Text left mtregular gray h5>
+                  <Block center row left marginVertical={SIZES.base}>
+                    <Ionicons
+                      name="ios-arrow-back"
+                      size={28}
+                      color={COLORS.gray}
+                    />
+                    <Text left mtregular gray h5 marginHorizontal={SIZES.base}>
                       Back
                     </Text>
                   </Block>
@@ -502,28 +519,29 @@ const Register = ({ navigation }) => {
             </Block>
             <Block>
               {activeView <= steps - 2 && (
-                <Block row bottom center>
-                  {validating && (
-                    <ActivityIndicator size="small" color={COLORS.secondary} />
-                  )}
-                  <Button
-                    radius={0}
-                    transparent
-                    onPress={() => handleViewSelected('next')}
-                  >
-                    <Block middle>
-                      <Text
-                        right
-                        mtregular
-                        primary
-                        h5
-                        marginHorizontal={SIZES.base}
-                      >
-                        Next
-                      </Text>
-                    </Block>
-                  </Button>
-                </Block>
+                <Button
+                  disabled={validating}
+                  radius={0}
+                  transparent
+                  onPress={() => handleViewSelected('next')}
+                >
+                  <Block right row center marginVertical={SIZES.base}>
+                    <Text
+                      right
+                      mtregular
+                      primary
+                      h5
+                      marginHorizontal={SIZES.base}
+                    >
+                      Next
+                    </Text>
+                    <Ionicons
+                      name="ios-arrow-forward"
+                      size={28}
+                      color={COLORS.primary}
+                    />
+                  </Block>
+                </Button>
               )}
             </Block>
           </Block>

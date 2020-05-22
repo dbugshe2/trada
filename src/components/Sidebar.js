@@ -22,7 +22,7 @@ const Sidebar = (props) => {
         <Block
           height={166}
           center
-          marginVertical={SIZES.padding * 2}
+          marginVertical={SIZES.padding}
           space="evenly"
         >
           {userDetails !== null && typeof userDetails !== undefined ? (

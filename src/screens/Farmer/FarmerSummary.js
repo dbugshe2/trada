@@ -68,27 +68,26 @@ const FarmerSummary = ({ navigation, route }) => {
 
         <Block paddingVertical={10}>
           <Block outlined white>
-            <Block paddingHorizontal={SIZES.padding} row>
+            <Block paddingHorizontal={SIZES.padding}>
               {/* first column */}
-              <Block>
+              <Block row>
                 {renderSummmaryItem('First Name', farmer.firstName)}
-                {renderSummmaryItem('Phone', farmer.phone)}
-                {renderSummmaryItem('LGA', farmer.lga)}
-                {renderSummmaryItem(
-                  'Est. farm size (hec.)',
-                  farmer.farmSizeHectarage
-                )}
-                {renderSummmaryItem(
-                  'Est. farm size (hec.)',
-                  farmer.farmSizeHectarage
-                )}
-              </Block>
-
-              {/* second column */}
-              <Block>
                 {renderSummmaryItem('Last Name', farmer.lastName)}
+              </Block>
+              <Block row>
+                {renderSummmaryItem('Phone', farmer.phone)}
                 {renderSummmaryItem('State', farmer.state)}
+              </Block>
+              <Block row>
+                {renderSummmaryItem('LGA', farmer.lga)}
                 {renderSummmaryItem('Crop Type', farmer.cropCultivated)}
+              </Block>
+              <Block row>
+                {renderSummmaryItem(
+                  'Est. farm size (hec.)',
+                  farmer.farmSizeHectarage
+                )}
+
                 {renderSummmaryItem(
                   'Bags after harvest (kg)',
                   farmer.kg_bagsAfterHarvest

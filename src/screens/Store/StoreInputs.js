@@ -101,7 +101,7 @@ const StoreInputs = ({ navigation }) => {
           </Text>
           <Text mtmedium gray body>
             {`${item.lga}, ${item.state}, ${moment(item.initiatedAt).format(
-              'dddd MMM YY'
+              'Do MMM YYYY'
             )}`}
           </Text>
         </Block>
@@ -130,7 +130,7 @@ const StoreInputs = ({ navigation }) => {
   return (
     <Block background>
       {myInputs.length === 0 ? (
-        <EmptyState icon="add" text="Buy your Premium Inputs" />
+        <EmptyState icon="market" text="Buy your Premium Inputs" />
       ) : (
         <Block space="evenly" background>
           <FlatList

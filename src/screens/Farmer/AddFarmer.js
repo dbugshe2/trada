@@ -188,27 +188,38 @@ const AddFarmer = ({ navigation }) => {
         const token = await validateToken();
         if (token) {
           const res = await apiPost('/farmers', getValues(), token, true)
-            .unauthorized((err) =>
-              errorMessage('unauthorized' + err.json.message)
-            )
-            .notFound((err) => errorMessage('not found' + err.json.message))
-            .timeout((err) => errorMessage('timeout' + err.json.message))
-            .internalError((err) =>
-              errorMessage('server Error' + err.json.mesage)
-            )
-            .fetchError((err) => errorMessage('Netwrok error'))
+            .unauthorized((err) => {
+              errorMessage('unauthorized: ' + err.json.message);
+            })
+            .notFound((err) => {
+              errorMessage('not found: ' + err.json.message);
+            })
+            .timeout((err) => {
+              errorMessage('timeout: ' + err.json.message);
+            })
+            .error(403, (err) => {
+              console.log(err);
+              errorMessage('Error: ' + err.json.message);
+            })
+            .internalError((err) => {
+              errorMessage('server Error: ' + err.json.message);
+            })
+            .fetchError((err) => {
+              errorMessage('Network error: ', err.json.message);
+            })
             .json();
           if (res) {
-            console.log(res);
-            Toast.showSuccess('Farmer added');
+            successMessage('Farmer added');
             navigation.navigate('Farmers');
           }
+          setSending(false);
         }
       } else {
         setSending(false);
         errorMessage('the form contains some errors');
       }
     } catch (error) {
+      setSending(false);
       captureException(error);
     }
   };
@@ -239,7 +250,7 @@ const AddFarmer = ({ navigation }) => {
     successMessage('image uploaded sucessfully');
     console.log(res);
     setCurImage(res);
-    setValue('farmerImage', res.url);
+    setValue('farmerImage', res.secure_url);
     TabedViewRef.current?.setPage(activeView + 1);
     setActiveView(activeView + 1);
     setUploading(false);
@@ -610,17 +621,19 @@ const AddFarmer = ({ navigation }) => {
                 )}
               </Block>
               <Block flex={0}>
-                <Button
-                  secondary
-                  onPress={() => {
-                    handlePreviewClosed();
-                    handleViewSelected('prev');
-                  }}
-                >
-                  <Text white center h6 mtregular>
-                    Retake photo
-                  </Text>
-                </Button>
+                {!uploading && (
+                  <Button
+                    secondary
+                    onPress={() => {
+                      handlePreviewClosed();
+                      handleViewSelected('prev');
+                    }}
+                  >
+                    <Text white center h6 mtregular>
+                      Retake photo
+                    </Text>
+                  </Button>
+                )}
               </Block>
             </Block>
           </Block>
@@ -634,7 +647,7 @@ const AddFarmer = ({ navigation }) => {
               <Image
                 source={{
                   uri:
-                    (curImage && curImage.url) ||
+                    (curImage && curImage.secure_url) ||
                     'https://via.placeholder.com/116?text="No Image"',
                 }}
                 style={{ width: 116, height: 116, borderRadius: 116 }}
@@ -642,37 +655,35 @@ const AddFarmer = ({ navigation }) => {
             </Block>
 
             <Block>
-              <Block flex={1}>
-                <Block outlined white>
-                  <Block paddingHorizontal={SIZES.padding} row>
-                    {/* first column */}
-                    <Block>
-                      {renderSummmaryItem('First Name', getValues('firstName'))}
-                      {renderSummmaryItem('Phone', getValues('phone'))}
-                      {renderSummmaryItem('LGA', getValues('lga'))}
-                      {renderSummmaryItem(
-                        'Est. farm size (hec.)',
-                        getValues('farmSizeHectarage')
-                      )}
-                      {renderSummmaryItem(
-                        'Est. farm size (hec.)',
-                        getValues('farmSizeHectarage')
-                      )}
-                    </Block>
+              <Block outlined white>
+                <Block paddingHorizontal={SIZES.padding}>
+                  {/* first column */}
+                  <Block row space="between">
+                    {renderSummmaryItem('First Name', getValues('firstName'))}
+                    {renderSummmaryItem('Last Name', getValues('lastName'))}
+                  </Block>
+                  <Block row space="between">
+                    {renderSummmaryItem('Phone', getValues('phone'))}
+                    {renderSummmaryItem('State', getValues('state'))}
+                  </Block>
+                  <Block row space="between">
+                    {renderSummmaryItem('LGA', getValues('lga'))}
+                    {renderSummmaryItem(
+                      'Crop Type',
+                      getValues('cropCultivated')
+                    )}
 
                     {/* second column */}
-                    <Block>
-                      {renderSummmaryItem('Last Name', getValues('lastName'))}
-                      {renderSummmaryItem('State', getValues('state'))}
-                      {renderSummmaryItem(
-                        'Crop Type',
-                        getValues('cropCultivated')
-                      )}
-                      {renderSummmaryItem(
-                        'Bags after harvest (kg)',
-                        getValues('kg_bagsAfterHarvest')
-                      )}
-                    </Block>
+                  </Block>
+                  <Block row space="between">
+                    {renderSummmaryItem(
+                      'Est. farm size (hec.)',
+                      getValues('farmSizeHectarage')
+                    )}
+                    {renderSummmaryItem(
+                      'Bags after harvest (kg)',
+                      getValues('kg_bagsAfterHarvest')
+                    )}
                   </Block>
                 </Block>
               </Block>

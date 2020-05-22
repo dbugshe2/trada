@@ -30,7 +30,7 @@ const errorOptions = {
 };
 const successOptions = {
   duration: Toast.duration.SHORT,
-  position: Toast.position.BOTTOM,
+  position: Toast.position.CENTER,
   maskColor: COLORS.primary,
   textStyle: { fontFamily: 'montserratMedium', fontSize: SIZES.small },
   containerStyle: { backgroundColor: COLORS.primary },

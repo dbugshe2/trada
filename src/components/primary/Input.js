@@ -218,7 +218,9 @@ const Input = (props) => {
             primary: COLORS.primary,
             surface: COLORS.background,
             background: COLORS.background,
-            disabled: COLORS.muted,
+            disabled: COLORS.inactive,
+            underlineColor: 'transparent',
+            placeholder: COLORS.muted,
             text: COLORS.gray,
           },
           fonts: {
@@ -227,7 +229,8 @@ const Input = (props) => {
         }}
         mode="outlined"
         // eslint-disable-next-line react-native/no-inline-styles
-        style={{ height: 56, fontSize: SIZES.h6 }}
+        style={{ fontSize: SIZES.h6 }}
+        scrollEnabled={false}
         {...props}
       />
       {props.error && (

@@ -258,7 +258,7 @@ const SellOutput = ({ route, navigation }) => {
         { units: units },
         { outputPickupLocation: pickupLocation },
         { description: description },
-        { imageUrl: image.url },
+        { imageUrl: image.secure_url },
       ],
       true
     );
@@ -277,7 +277,7 @@ const SellOutput = ({ route, navigation }) => {
         <Block marginVertical={8} center middle flex={0} column>
           {image ? (
             <Image
-              source={{ uri: image.url }}
+              source={{ uri: image.secure_url }}
               // eslint-disable-next-line react-native/no-inline-styles
               style={{ height: 100, width: 100 }}
             />

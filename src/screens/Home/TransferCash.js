@@ -22,17 +22,25 @@ import BANKS from '../../constants/banks';
 const TransferCash = ({ navigation }) => {
   //state
   const [sending, setSending] = useState(false);
-  const [selectedBank, setSelectedBank] = useState(null);
+  // const [selectedBank, setSelectedBank] = useState(null);
   const [ready, setReady] = useState(false);
-  const [activeBankCode, setActiveBankCode] = useState(null);
-  const [accName, setAccName] = useState('');
-  const [accNumber, setAccNumber] = useState('');
+  // const [activeBankCode, setActiveBankCode] = useState(null);
+  // const [accName, setAccName] = useState('');
+  // const [accNumber, setAccNumber] = useState('');
   const [banks, setBanks] = useState(BANKS);
   const [bankNames, setBankNames] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { register, setValue, handleSubmit, errors } = useForm();
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    getValues,
+    triggerValidation,
+    errors,
+  } = useForm();
 
   const { validateToken } = useAuthContext();
+
   const getBanks = async () => {
     try {
       setLoading(true);
@@ -48,53 +56,72 @@ const TransferCash = ({ navigation }) => {
       setLoading(false);
     }
   };
+
   const resolveBankAcc = async (code, number) => {
+    const fetching = loadingMessage('Fetching Account Details...');
     try {
       const res = await apiPost('/variation/banks/resolve', {
-        bankCode: code,
-        bankAccount: number,
+        bankCode: getValues('bankCode'),
+        bankAccount: getValues('accountNumber'),
       })
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Netwrok error', err))
+        .unauthorized((err) => {
+          clearMessage(fetching);
+          errorMessage('unauthorized: ' + err.json.message);
+        })
+        .notFound((err) => {
+          clearMessage(fetching);
+          errorMessage('not found: ' + err.json.message);
+        })
+        .timeout((err) => {
+          clearMessage(fetching);
+          errorMessage('timeout: ' + err.json.message);
+        })
+        .internalError((err) => {
+          clearMessage(fetching);
+          errorMessage('server Error: ' + err.json.message);
+        })
+        .fetchError((err) => {
+          clearMessage(fetching);
+          errorMessage('Network error: ', err.json.message);
+        })
         .json();
       if (res) {
+        clearMessage(fetching);
         return res;
+      } else {
+        clearMessage(fetching);
+        return null;
       }
     } catch (error) {
+      clearMessage(fetching);
       captureException(error);
+      return null;
     }
   };
   // handlers
   const getKeyByValue = (object, value) => {
     return Object.keys(object).find((key) => object[key] === value);
   };
-
+  console.log('form State', getValues());
   const handleBankSelected = (id, name) => {
-    setActiveBankCode(getKeyByValue(banks, name));
-    setValue('bankCode', activeBankCode);
+    let code = getKeyByValue(banks, name);
+    setValue('bankCode', code);
     setValue('bankName', name);
   };
   const handleAccNumber = async () => {
-    const fetching = loadingMessage('Fetching Account Details...');
-    try {
-      const details = await resolveBankAcc(activeBankCode, accNumber);
-      if (details) {
-        clearMessage(fetching);
-        setAccName((oldAccName) => {
+    const accNo = triggerValidation('accountNumber');
+    if (accNo) {
+      try {
+        let code = getValues('bankCode');
+        let accNumber = getValues('accountNumber');
+        let details = await resolveBankAcc(code, accNumber);
+        if (details) {
           setValue('accountName', details.data.account_name);
-          return details.data.account_name;
-        });
-        setValue('accountNumber', accNumber);
-        setReady(true);
+          setReady(true);
+        }
+      } catch (error) {
+        captureException(error);
       }
-    } catch (error) {
-      clearMessage(fetching);
-      captureException(error);
-    } finally {
-      clearMessage(fetching);
     }
   };
 
@@ -107,11 +134,14 @@ const TransferCash = ({ navigation }) => {
 
   useEffect(() => {
     register('bankName', { required: 'please select a bank' });
-    register('bankCode');
+    register('bankCode', { required: true });
     register('accountNumber', { required: 'please enter an account number' });
-    register('accountName');
+    register('accountName', { required: true });
     register('phone', { required: 'please enter recipients phone number' });
-    register('amount', { required: 'please enter an amount to transfer' });
+    register('amount', {
+      required: 'please enter an amount to transfer',
+      min: { value: 10, message: 'amount larger than 10' },
+    });
     register('narration', {
       required: 'please enter a narration for the transfer',
     });
@@ -120,40 +150,43 @@ const TransferCash = ({ navigation }) => {
   const onSubmit = async (data) => {
     console.log(data);
     setSending(true);
-    try {
-      const token = await validateToken();
-      if (token) {
-        const res = await apiPost('/wallet/withdraw', data, token, true)
-          .unauthorized((err) => console.log('unauthorized', err))
-          .notFound((err) => {
-            errorMessage(err.json.message);
-          })
-          .timeout((err) => {
-            console.log('timeout', err);
-            errorMessage('Timeout, Transfer Failed Due to Poor Network');
-          })
-          .internalError((err) => {
-            console.log('server Error', err);
-            errorMessage(err.json.message);
-          })
-          .fetchError((err) => {
-            errorMessage('Transfer Failed, Check Your Conection');
-            console.log('Netwrok error', err);
-          })
-          .json();
-        console.log(res);
-        if (res) {
-          successMessage(`${data.amount} sent to ${data.accountName}`);
+    let validated = await triggerValidation();
+    if (validated) {
+      try {
+        const token = await validateToken();
+        if (token) {
+          const res = await apiPost('/wallet/withdraw', data, token, true)
+            .unauthorized((err) => console.log('unauthorized', err))
+            .notFound((err) => {
+              errorMessage(err.json.message);
+            })
+            .timeout((err) => {
+              console.log('timeout', err);
+              errorMessage('Timeout, Transfer Failed Due to Poor Network');
+            })
+            .internalError((err) => {
+              console.log('server Error', err);
+              errorMessage(err.json.message);
+            })
+            .fetchError((err) => {
+              errorMessage('Transfer Failed, Check Your Connection');
+              console.log('Network error', err);
+            })
+            .json();
+          console.log(res);
+          if (res) {
+            successMessage(`${data.amount} sent to ${data.accountName}`);
+            navigation.navigate('Home');
+          }
         }
+        setSending(false);
+      } catch (error) {
+        // errorMessage(`An error occurred, ${error.message}`);
+        console.log(error);
+        setSending(false);
+        // errorMessage('Something Went wrong' + error.json && error.json.message);
+        captureException(error);
       }
-      setSending(false);
-    } catch (error) {
-      errorMessage(`An error occurred, ${error.message}`);
-      console.log(error);
-      setSending(false);
-      captureException(error);
-    } finally {
-      navigation.navigate('TransferOptions');
     }
   };
 
@@ -185,12 +218,12 @@ const TransferCash = ({ navigation }) => {
                 keyboardType="number-pad"
                 label="Account Number"
                 maxLength={10}
-                onChangeText={(text) => setAccNumber(text)}
+                onChangeText={(text) => setValue('accountNumber', text)}
                 onBlur={handleAccNumber}
                 error={errors.accountNumber}
               />
               <Input
-                value={accName}
+                value={getValues('accountName')}
                 disabled
                 label="Account Name"
                 error={errors.accName}

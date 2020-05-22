@@ -77,7 +77,7 @@ const icons = {
   holdingGrain: {
     icon: require('../assets/icons/holding-grain.png'),
     width: 467,
-    height: 310,
+    height: 352,
   },
   logo: {
     icon: require('../assets/icons/logo.png'),
@@ -147,7 +147,7 @@ const icons = {
     height: 30,
   },
   hcsw: {
-    icon: require('../assets/icons/logout.png'),
+    icon: require('../assets/icons/hcsw.png'),
     width: 23,
     height: 30,
   },
@@ -196,10 +196,41 @@ const icons = {
     width: 68,
     height: 68,
   },
+  cameraAlt: {
+    icon: require('../assets/icons/camera-alt.png'),
+    width: 24,
+    height: 24,
+  },
   addFarmer: {
     icon: require('../assets/icons/add-farmer.png'),
     width: 48,
     height: 48,
+  },
+  // onboading slide bgs
+  slide01: {
+    icon: require('../assets/images/slide01.png'),
+    width: 402,
+    height: 352,
+  },
+  slide02: {
+    icon: require('../assets/images/slide02.png'),
+    width: 402,
+    height: 352,
+  },
+  slide03: {
+    icon: require('../assets/images/slide03.png'),
+    width: 402,
+    height: 352,
+  },
+  slide04: {
+    icon: require('../assets/images/slide04.png'),
+    width: 402,
+    height: 352,
+  },
+  slide05: {
+    icon: require('../assets/images/slide05.png'),
+    width: 402,
+    height: 352,
   },
 };
 
