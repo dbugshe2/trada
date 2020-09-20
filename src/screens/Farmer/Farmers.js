@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, RefreshControl } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Image } from 'react-native';
 import EmptyState from '../../components/EmptyState';
 import FAB from '../../components/FAB';
 import Header from '../../components/Header';
@@ -7,9 +7,7 @@ import Block from '../../components/primary/Block';
 import Text from '../../components/primary/Text';
 import { useAuthContext } from '../../context/auth/AuthContext';
 import { apiGet } from '../../utils/fetcher';
-import { SIZES, LETTERSPACING } from '../../utils/theme';
-import { Image, StyleSheet } from 'react-native';
-import { Divider } from 'react-native-paper';
+import { SIZES, LETTERSPACING, COLORS } from '../../utils/theme';
 import Button from '../../components/primary/Button';
 import { captureException } from '@sentry/react-native';
 
@@ -39,18 +37,19 @@ const Farmers = ({ navigation }) => {
   const RenderFarmers = ({ item }) => (
     <Button
       transparent
+      radius={0}
       height={58}
+      marginVertical={SIZES.base}
+      style={{
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderColor: COLORS.inactive,
+      }}
       onPress={() =>
         navigation.navigate('FarmerSummary', { farmer: JSON.stringify(item) })
       }
     >
-      <Block
-        row
-        space="between"
-        paddingTop={SIZES.padding}
-        marginVertical={SIZES.base}
-      >
-        <Block center>
+      <Block row space="between">
+        <Block center middle>
           <Image
             source={{
               uri:
@@ -61,27 +60,27 @@ const Farmers = ({ navigation }) => {
             style={{ width: 44, height: 44, borderRadius: 44 }}
           />
         </Block>
-        <Block flex={2}>
+        <Block flex={2} middle>
           <Text
             mtmedium
             body
             gray
           >{` ${item.firstName} ${item.lastName}`}</Text>
-          <Text muted mtmedium small>{` ${item.lga} ${item.state}`}</Text>
+          <Text muted mtmedium small>{`${item.lga} ${item.state}`}</Text>
         </Block>
         <Block center middle>
           <Text primary mtmedium body spacing={LETTERSPACING.point_4}>
-            +10 point
+            +100 points
           </Text>
+          {/* <Divider
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{
+              alignSelf: 'center',
+              width: '90%',
+            }}
+          /> */}
         </Block>
       </Block>
-      <Divider
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{
-          alignSelf: 'center',
-          width: '90%',
-        }}
-      />
     </Button>
   );
 

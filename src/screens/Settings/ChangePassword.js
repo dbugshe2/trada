@@ -87,7 +87,7 @@ const ChangePassword = ({ navigation }) => {
             errorMessage('server Error: ' + err.json.message);
           })
           .fetchError((err) => {
-            errorMessage('Network error: ' + err.json.message);
+            errorMessage('Network error');
           })
           .json();
         if (res) {

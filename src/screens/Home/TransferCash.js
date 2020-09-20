@@ -82,7 +82,7 @@ const TransferCash = ({ navigation }) => {
         })
         .fetchError((err) => {
           clearMessage(fetching);
-          errorMessage('Network error: ', err.json.message);
+          errorMessage('Network error, please check your connection');
         })
         .json();
       if (res) {
@@ -102,7 +102,6 @@ const TransferCash = ({ navigation }) => {
   const getKeyByValue = (object, value) => {
     return Object.keys(object).find((key) => object[key] === value);
   };
-  console.log('form State', getValues());
   const handleBankSelected = (id, name) => {
     let code = getKeyByValue(banks, name);
     setValue('bankCode', code);

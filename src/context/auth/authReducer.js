@@ -26,8 +26,8 @@ export function authReducer(state, action) {
     case REGISTER_SUCCESS:
       return {
         ...state,
-        isAuthenticated: true,
-        user: action.payload.data,
+        // isAuthenticated: true,
+        // user: action.payload.data,
       };
     case REGISTER_FAIL:
     case LOGIN_SUCCESS:
@@ -55,7 +55,7 @@ export function authReducer(state, action) {
       return {
         ...state,
         userDetails: action.payload,
-        phone: action.payload.phone,
+        // phone: action.payload.phone,
         showMessage: true,
         isAuthenticated: true,
       };

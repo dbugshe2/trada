@@ -3,6 +3,7 @@ import ObjectID from 'bson-objectid';
 import { captureException } from '@sentry/react-native';
 import { Alert } from 'react-native';
 import { successMessage } from './toast';
+import qs from 'qs';
 /*
  * Fetcher - wrapppers and helpers
  * for making call to Trada backend API
@@ -34,7 +35,7 @@ export const apiGet = (url, query = {}, token = '', auth = false) =>
       }
       return w;
     })
-    .query(query)
+    .query(qs.stringify(query))
     .get();
 
 export const apiPost = (url, data, token = '', auth = false) =>

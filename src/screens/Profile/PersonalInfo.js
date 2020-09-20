@@ -32,10 +32,11 @@ import ImageIcon from '../../components/primary/ImageIcon';
 import ImagePicker from 'react-native-image-picker';
 import { RefreshControl } from 'react-native';
 import { setUser as setLocalUser } from '../../utils/asyncstorage';
+import { apiPut } from '../../utils/fetcher';
 
 const PersonalInfo = ({ navigation }) => {
   // context
-  const { validateToken } = useAuthContext();
+  const { validateToken, setUserDetails } = useAuthContext();
 
   // form hook
   const { register, setValue, getValues, handleSubmit, errors } = useForm();
@@ -94,10 +95,6 @@ const PersonalInfo = ({ navigation }) => {
     try {
       setSending(true);
 
-      if (date !== null || month !== null || year !== null) {
-        setDateOfBirth(`${date}-${month}-${year}`);
-      }
-
       setValue(
         [
           { firstName: firstName },
@@ -111,11 +108,13 @@ const PersonalInfo = ({ navigation }) => {
           { gender: gender },
           { address: address },
           { education: education },
+          { profileImage: profileImage },
           { dateOfBirth: dateOfBirth }, // TODO
         ],
         true
       );
       if (Object.entries(errors).length > 0) {
+        errorMessage('form contains errors');
         setSending(false);
       } else {
         await updateUserDetails(getValues());
@@ -165,7 +164,7 @@ const PersonalInfo = ({ navigation }) => {
             let uploaded = JSON.parse(xhr._response);
             let token = await validateToken();
             if (token) {
-              const res = await apiPost(
+              const res = await apiPut(
                 '/users/update',
                 {
                   firstName: firstName,
@@ -178,6 +177,7 @@ const PersonalInfo = ({ navigation }) => {
                   street: street,
                   education: education,
                   profileImage: uploaded.secure_url,
+                  dateOfBirth: dateOfBirth,
                 },
                 token,
                 true
@@ -197,11 +197,13 @@ const PersonalInfo = ({ navigation }) => {
                   errorMessage('server Error: ' + err.json.message);
                 })
                 .fetchError((err) => {
-                  errorMessage('Network error: ' + err.json.message);
+                  errorMessage('Network error');
                 })
                 .json();
               if (res) {
                 console.log(res);
+                setUser(JSON.stringify(res.data));
+                setUserDetails(res.data);
                 successMessage('avatar updated');
               }
             }
@@ -280,21 +282,25 @@ const PersonalInfo = ({ navigation }) => {
       { name: 'address' },
       { required: 'Please enter your full address' }
     );
-    // register(
-    //   { name: 'dateOfBirth' },
-    //   {
-    //     required: 'please enter your date of birth',
-    //     pattern: {
-    //       value: /^\d{1,2}\/\d{1,2}\/\d{4}$/,
-    //       message: 'please complete entering your date of birth',
-    //     },
-    //   }
-    // );
+    register({ name: 'profileImage' }, { required: true });
+    register(
+      { name: 'dateOfBirth' },
+      {
+        required: 'please enter your date of birth',
+        pattern: {
+          value: /^\d{1,2}\/\d{1,2}\/\d{4}$/,
+          message: 'please complete entering your date of birth',
+        },
+      }
+    );
   }, [register]);
 
   useEffect(() => {
     fetchUserDetails();
   }, []);
+  useEffect(() => {
+    setDateOfBirth(`${date}-${month}-${year}`);
+  }, [date, month, year]);
 
   // api calls
   const fetchUserDetails = async () => {
@@ -324,11 +330,11 @@ const PersonalInfo = ({ navigation }) => {
           setEducation(res.data.education);
           setStreet(res.data.street);
           setGender(res.data.gender);
-          // setDateOfBirth(moment(res.data.dateOfBirth).format('DD-MM-YYYY'));
-          // const dobArray = dateOfBirth.split('-');
-          // setDate(dobArray[0]);
-          // setMonth(dobArray[1]);
-          // setYear(dobArray[2]);
+          setDateOfBirth(res.data.dateOfBirth);
+          const dobArray = res.data.dateOfBirth.split('-');
+          setDate(dobArray[0]);
+          setMonth(dobArray[1]);
+          setYear(dobArray[2]);
         }
       }
     } catch (error) {
@@ -343,7 +349,7 @@ const PersonalInfo = ({ navigation }) => {
       setLoading(true);
       const token = await validateToken();
       if (token) {
-        const res = await apiPost('/users/update', formData, token, true)
+        const res = await apiPut('/users/update', formData, token, true)
           .unauthorized((err) => console.log('unauthorized', err))
           .notFound((err) => console.log('not found', err))
           .timeout((err) => console.log('timeout', err))
@@ -365,17 +371,31 @@ const PersonalInfo = ({ navigation }) => {
       setRefreshing(true);
       fetchUserDetails();
       setLocalUser(JSON.stringify(user));
+      setUserDetails(user);
     } catch (error) {
       captureException(error);
     } finally {
       setRefreshing(false);
     }
   }, [refreshing]);
+
+  if (loading) {
+    return (
+      <Block background center middle>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </Block>
+    );
+  }
   return (
     <Block background>
-      {loading ? (
+      {user === null || typeof user === undefined ? (
         <Block center middle>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+          <Text h2 mtmedium gray center>
+            Unable to fetch user details
+          </Text>
+          <Button secondary onPres={fetchUserDetails}>
+            <Text>Retry</Text>
+          </Button>
         </Block>
       ) : (
         <Block paddingHorizontal={SIZES.padding} paddingTop={SIZES.base}>
@@ -397,7 +417,6 @@ const PersonalInfo = ({ navigation }) => {
                 />
                 <Button
                   onPress={handleSelectImage}
-                  disabled
                   width={48}
                   height={48}
                   white
@@ -498,23 +517,24 @@ const PersonalInfo = ({ navigation }) => {
               onSelect={handleLgaSelected}
               error={errors.lga}
             />
-            {/* <Text small muted marginVertical={2}>
+            <Text small muted marginVertical={2}>
               {`Date of Birth  (${
-                dateOfBirth && moment(user.dateOfBirth).format('DD-MM-YYYY')
+                dateOfBirth &&
+                moment(user.dateOfBirth, 'DD-MM-YYYY').format('Do MMMM YYYY')
               })`}
-            </Text> */}
-            {/* <Block row>
+            </Text>
+            <Block row>
               <Dropdown
                 options={DATE}
                 flex={2}
-                // defaultValue={(date && date) || 'Date'}
+                defaultValue={(date && date) || 'Date'}
                 onSelect={handleDateSelect}
               />
               <Dropdown
                 options={MONTHS}
                 marginHorizontal={8}
                 flex={3}
-                // defaultValue={(month && month) || 'Month'}
+                defaultValue={(month && month) || 'Month'}
                 renderRow={(monthItem, index, isSelected) => (
                   <Text
                     gray
@@ -534,7 +554,7 @@ const PersonalInfo = ({ navigation }) => {
                 options={YEARS}
                 marginLeft={10}
                 flex={2}
-                // defaultValue={(year && year) || 'Year'}
+                defaultValue={(year && year) || 'Year'}
                 onSelect={handleYearSelect}
               />
             </Block>
@@ -542,13 +562,13 @@ const PersonalInfo = ({ navigation }) => {
               <Text small primary>
                 {errors.dateOfBirth.message}
               </Text>
-            )} */}
+            )}
           </Block>
           <Block flex={0} paddingVertical={SIZES.base}>
             {sending ? (
               <ActivityIndicator size="large" color={COLORS.primary} />
             ) : (
-              <Button onPress={onSubmit} disabled>
+              <Button onPress={onSubmit}>
                 <Text white center h6>
                   Save
                 </Text>

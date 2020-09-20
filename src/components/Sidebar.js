@@ -11,11 +11,11 @@ import ImageIcon from './primary/ImageIcon';
 
 const Sidebar = (props) => {
   const { logout, userDetails } = useAuthContext();
+
   const navigation = useNavigation();
   async function logMeOut() {
     await logout();
   }
-
   return (
     <Block space="between">
       <Block scroll showVerticalScrollIndicator={false}>

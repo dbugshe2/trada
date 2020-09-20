@@ -20,16 +20,22 @@ import { useForm } from 'react-hook-form';
 import { CurrencyFormatter } from '../../utils/currency';
 import { ActivityIndicator } from 'react-native';
 
-const BuyInput = () => {
+const BuyInput = ({ navigation }) => {
   // context
   const { validateToken } = useAuthContext();
   // form hook
-  const { register, setValue, getValues, handleSubmit, errors } = useForm();
+  const {
+    register,
+    setValue,
+    getValues,
+    triggerValidation,
+    errors,
+  } = useForm();
   //state
   const [state, setState] = useState(null);
   const [activeState, setActiveState] = useState(null);
-  const [lga, setLGA] = useState();
-  const [availableInputs, setAvailableInputs] = useState([]);
+  const [lga, setLGA] = useState(null);
+  const [availableInputs, setAvailableInputs] = useState(null);
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [inputItems, setInputItems] = useState([]);
@@ -65,11 +71,14 @@ const BuyInput = () => {
 
   const handleItemSelected = (id, input) => {
     setActiveItem(input);
+    setValue('inputId', input._id);
   };
 
   const handleSetUnits = (units) => {
-    setUnits(units);
+    // setUnits(units);
+    setValue('units', units);
     setAmount(units * activeItem.perUnitPrice);
+    setValue('amount', units * activeItem.perUnitPrice);
   };
   // render Functions
   const renderStateItem = (state, index, isSelected) => (
@@ -93,37 +102,37 @@ const BuyInput = () => {
     </Text>
   );
   // apiCalls
-  const fetchInputsWithLocationFilters = async (
-    skip = 0,
-    limit = 10,
-    inputState = state,
-    inputLga = lga
-  ) => {
+  const fetchInputsWithLocationFilters = async (skip = 0, limit = 10) => {
     const loading = loadingMessage('loading available Inputs...');
     try {
       const token = await validateToken();
 
       if (token) {
-        const res = await apiGet('/inputs/filter/location', {
-          skip,
-          limit,
-          inputState,
-          inputLga,
-        })
+        const res = await apiGet(
+          '/inputs/filter/location',
+          {
+            skip,
+            limit,
+            inputState: state,
+            inputLga: `${lga}`,
+          },
+          token,
+          true
+        )
           .badRequest((err) => {
-            console.log(err.status);
+            errorMessage(err.json.message);
           })
           .unauthorized((err) => {
-            console.log(err);
+            errorMessage(err.json.message);
           })
           .forbidden((err) => {
-            console.log(err.status);
+            errorMessage(err.json.message);
           })
           .notFound((err) => {
-            console.log(err.status);
+            errorMessage(err.json.message);
           })
           .timeout((err) => {
-            console.log(err.status);
+            errorMessage(err.json.message);
           })
           .internalError((err) => {
             console.log(err);
@@ -171,7 +180,7 @@ const BuyInput = () => {
         },
         max: {
           value: (activeItem && activeItem.unitsRemaining) || 10,
-          message: 'quantity no available',
+          message: 'this quantity is not available',
         },
         pattern: {
           value: /^[0-9]*$/,
@@ -179,9 +188,24 @@ const BuyInput = () => {
         },
       }
     );
-    register({ name: 'inputId' });
-    register({ name: 'amount' });
-    register({ name: 'inputDeliveryLocation' });
+    register(
+      { name: 'inputId' },
+      {
+        required: 'please select an Item',
+      }
+    );
+    register(
+      { name: 'amount' },
+      {
+        required: 'invalid Amount',
+      }
+    );
+    register(
+      { name: 'inputDeliveryLocation' },
+      {
+        required: 'please enter a Delivery Location',
+      }
+    );
   }, [register]);
 
   const buyInput = async (data) => {
@@ -191,19 +215,19 @@ const BuyInput = () => {
       if (token) {
         const res = await apiPost('/inputs/buy', data, token, true)
           .badRequest((err) => {
-            console.log(err.status);
+            errorMessage(err.json.message);
           })
           .unauthorized((err) => {
-            console.log(err);
+            errorMessage(err.json.message);
           })
           .forbidden((err) => {
-            console.log(err.status);
+            errorMessage(err.json.message);
           })
           .notFound((err) => {
-            console.log(err.status);
+            errorMessage(err.json.message);
           })
           .timeout((err) => {
-            console.log(err.status);
+            errorMessage(err.json.message);
           })
           .internalError((err) => {
             console.log(err);
@@ -217,6 +241,7 @@ const BuyInput = () => {
         if (res) {
           console.log(res);
           successMessage(res.message);
+          navigation.navigate('Store', { screen: 'MyInputs' });
         }
       }
     } catch (error) {
@@ -227,15 +252,15 @@ const BuyInput = () => {
     }
   };
   const onSubmit = () => {
-    setValue(
-      [
-        { inputId: activeItem._id },
-        { amount: amount },
-        { units: units },
-        { inputDeliveryLocation: deliveryLocation },
-      ],
-      true
-    );
+    // setValue(
+    //   [
+    //     { inputId: activeItem._id },
+    //     { amount: amount },
+    //     { units: units },
+    //     { inputDeliveryLocation: deliveryLocation },
+    //   ],
+    //   true
+    // );
     console.log('values', getValues());
     buyInput(getValues());
   };
@@ -258,14 +283,17 @@ const BuyInput = () => {
           />
           <Dropdown
             disabled={activeState === null}
-            options={activeState && activeState.lgas}
+            options={(activeState && activeState.lgas) || null}
             defaultValue={activeState ? 'Select LGA' : 'loading...'}
             onSelect={handleLgaSelected}
           />
           <Dropdown
-            disabled={activeState === null}
+            disabled={lga === null}
             options={categories.length !== 0 && categories}
-            defaultValue="Category"
+            defaultValue={
+              (categories.length !== 0 && 'Category') ||
+              'Inputs Temporarily unavailable'
+            }
             onSelect={handleCategorySelected}
           />
           <Block space="between" row>
@@ -279,6 +307,7 @@ const BuyInput = () => {
                   return `${input.inputName}`;
                 }}
                 onSelect={handleItemSelected}
+                onDropdownWillHide={() => triggerValidation('inputId')}
               />
               <Text primary small>
                 {activeItem
@@ -290,16 +319,19 @@ const BuyInput = () => {
               <Input
                 disabled={activeItem === null}
                 keyboardType="number-pad"
-                label="Qty:10"
+                label="Qty"
+                defaultValue={activeItem && activeItem.minimumRequestLimit}
                 onChangeText={handleSetUnits}
+                onBlur={() => triggerValidation('units')}
                 error={errors.units}
               />
             </Block>
           </Block>
           <Input
-            disabled={units < 1}
+            disabled={activeItem === null}
             label="Pickup location"
-            onChangeText={(text) => setDeliveryLocation(text)}
+            onChangeText={(text) => setValue('inputDeliveryLocation', text)}
+            onBlur={() => triggerValidation('inputDeliveryLocation')}
           />
         </Block>
       </Block>

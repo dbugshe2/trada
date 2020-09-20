@@ -14,17 +14,17 @@ import { useFocusEffect } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import { apiGet } from '../../utils/fetcher';
 import { errorMessage, successMessage } from '../../utils/toast';
-
+import { setUser } from '../../utils/asyncstorage';
 const Home = ({ navigation }) => {
-  const { validateToken, logout } = useAuthContext();
+  const { validateToken, logout, setUserDetails } = useAuthContext();
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefeshing] = useState(false);
-  const [user, setUser] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
   const handleCopy = async () => {
-    await saveToClipboard(user.data.wallet.accountNumber);
-    successMessage(`${user.data.wallet.accountNumber} copied`);
+    await saveToClipboard(userInfo.data.wallet.accountNumber);
+    successMessage(`${userInfo.data.wallet.accountNumber} copied`);
   };
 
   const refreshUserDetails = async () => {
@@ -59,7 +59,9 @@ const Home = ({ navigation }) => {
           })
           .json();
         if (res) {
-          setUser(res);
+          setUserInfo(res);
+          setUser(JSON.stringify(res.data));
+          setUserDetails(res.data);
         } else {
           console.log('failed to update user details');
         }
@@ -104,7 +106,7 @@ const Home = ({ navigation }) => {
           }
         >
           <Block paddingTop={SIZES.padding} paddingBottom={SIZES.padding * 2}>
-            {user !== null && typeof user !== 'undefined' ? (
+            {userInfo !== null && typeof userInfo !== 'undefined' ? (
               <Swiper showPagination>
                 {/* one */}
                 <Block center middle width={SIZES.width}>
@@ -112,7 +114,7 @@ const Home = ({ navigation }) => {
                     Tmoni Wallet Balance
                   </Text>
                   <Text gray height={LINE_HEIGHTS.fourty_1} h1 mtregular>
-                    {CurrencyFormatter(user.data.wallet.balance)}
+                    {CurrencyFormatter(userInfo.data.wallet.balance)}
                   </Text>
 
                   <Block
@@ -125,7 +127,7 @@ const Home = ({ navigation }) => {
                     row
                   >
                     <Text primary mtlight small marginHorizontal={SIZES.base}>
-                      {user.data.wallet.bankName}
+                      {userInfo.data.wallet.bankName}
                     </Text>
                     <Text
                       muted
@@ -133,7 +135,7 @@ const Home = ({ navigation }) => {
                       small
                       spacing={LETTERSPACING.two_point_4}
                     >
-                      {user.data.wallet.accountNumber}
+                      {userInfo.data.wallet.accountNumber}
                     </Text>
 
                     <Button
@@ -151,7 +153,7 @@ const Home = ({ navigation }) => {
                     Commission Balance
                   </Text>
                   <Text gray height={LINE_HEIGHTS.fourty_1} h1 mtregular>
-                    {CurrencyFormatter(user.data.commissionWallet.balance)}
+                    {CurrencyFormatter(userInfo.data.commissionWallet.balance)}
                   </Text>
                   <Block
                     marginTop={SIZES.padding}
@@ -163,7 +165,7 @@ const Home = ({ navigation }) => {
                     row
                   >
                     <Text primary mtlight small marginHorizontal={SIZES.base}>
-                      {user.data.wallet.bankName}
+                      {userInfo.data.wallet.bankName}
                     </Text>
                     <Text
                       muted
@@ -171,7 +173,7 @@ const Home = ({ navigation }) => {
                       small
                       spacing={LETTERSPACING.two_point_4}
                     >
-                      {user.data.wallet.accountNumber}
+                      {userInfo.data.wallet.accountNumber}
                     </Text>
 
                     <Button

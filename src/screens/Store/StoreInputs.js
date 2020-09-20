@@ -72,7 +72,7 @@ const StoreInputs = ({ navigation }) => {
     fetchMyInput();
   }, []);
 
-  const renderItem = (item, index) => (
+  const renderItem = ({ item, index }) => (
     <Button
       center
       middle
@@ -139,6 +139,7 @@ const StoreInputs = ({ navigation }) => {
             }
             data={myInputs}
             renderItem={renderItem}
+            keyExtractor={(item, index) => `item-${index}`}
           />
         </Block>
       )}

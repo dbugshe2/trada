@@ -14,6 +14,7 @@ import { useAuthContext } from '../../context/auth/AuthContext';
 import { Divider } from 'react-native-paper';
 import { CurrencyFormatter } from '../../utils/currency';
 import { captureException } from '@sentry/react-native';
+import Button from '../../components/primary/Button';
 
 const MarketPrice = ({ navigation }) => {
   // context
@@ -23,45 +24,47 @@ const MarketPrice = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const renderMarketPrice = ({ item, index }) => (
-    <Block
-      height={88}
-      radius={8}
-      white
-      shadow
-      elevation={8}
-      marginHorizontal={SIZES.padding}
-      marginVertical={SIZES.padding}
-    >
-      <Block paddingHorizontal={SIZES.padding} paddingVertical={SIZES.base}>
-        <Text h4 mtmedium gray>
-          {item.output.outputName}
-        </Text>
-      </Block>
-      <Divider />
+  const renderMarketPrice = ({ item, index }) =>
+    item.output && (
       <Block
-        row
-        space="between"
-        paddingHorizontal={SIZES.padding}
-        paddingVertical={SIZES.base * 2}
+        radius={8}
+        white
+        shadow
+        elevation={8}
+        marginHorizontal={SIZES.padding}
+        height={'100%'}
+        marginVertical={SIZES.padding}
       >
-        <Block>
-          <Text muted small mtmedium>
-            Price Range
+        <Block paddingHorizontal={SIZES.padding} paddingVertical={SIZES.base}>
+          <Text h4 mtmedium gray>
+            {item.output.outputName}
           </Text>
-          <Text body gray mtmedium>{`${CurrencyFormatter(
-            item.minPrice
-          )} - ${CurrencyFormatter(item.maxPrice)}`}</Text>
         </Block>
-        <Block>
-          <Text muted small mtmedium right>
-            Location
-          </Text>
-          <Text right>{`${item.lga}, ${item.state}`}</Text>
+        <Divider />
+        <Block
+          row
+          space="between"
+          paddingHorizontal={SIZES.padding}
+          paddingVertical={SIZES.base * 2}
+          height={'100%'}
+        >
+          <Block>
+            <Text muted small mtmedium>
+              Price Range
+            </Text>
+            <Text body gray mtmedium>{`${CurrencyFormatter(
+              item.minPrice
+            )} - ${CurrencyFormatter(item.maxPrice)}`}</Text>
+          </Block>
+          <Block>
+            <Text muted small mtmedium right>
+              Location
+            </Text>
+            <Text right>{`${item.lga}, ${item.state}`}</Text>
+          </Block>
         </Block>
       </Block>
-    </Block>
-  );
+    );
   const fetchAllMarketPrices = async () => {
     try {
       const token = await validateToken();
@@ -122,13 +125,26 @@ const MarketPrice = ({ navigation }) => {
     }
   }, [refreshing]);
 
+  if (loading) {
+    return (
+      <Block center middle background>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </Block>
+    );
+  }
+
   return (
     <Block background>
       <Header title="Market Price" />
 
-      {loading ? (
+      {marketPrices === null ? (
         <Block background center middle>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+          <Text h2 mtmedium gray center>
+            Unable to fetch Market Prices
+          </Text>
+          <Button secondary onPress={fetchAllMarketPrices}>
+            <Text>Retry</Text>
+          </Button>
         </Block>
       ) : (
         <Block>

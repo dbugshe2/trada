@@ -58,15 +58,15 @@ export const AuthProvider = (props) => {
   const requestOtp = async (formData) => {
     try {
       const res = await apiPost('/users/phone/otp', formData)
-        .unauthorized((err) => console.log('unauthorized', err))
-        .notFound((err) => console.log('not found', err))
-        .timeout((err) => console.log('timeout', err))
+        .unauthorized((err) => errorMessage('unauthorized', err.json.message))
+        .notFound((err) => errorMessage('not found', err.json.message))
+        .timeout((err) => errorMessage('timeout', err.json.message))
         .error(403, (err) => {
           console.log(err);
           errorMessage('this user exist please login instead');
         })
-        .internalError((err) => console.log('server Error', err))
-        .fetchError((err) => console.log('Network error', err))
+        .internalError((err) => errorMessage('server Error', err.json.message))
+        .fetchError((err) => errorMessage('Network error'))
         .json();
       if (res) {
         console.log(res);
@@ -78,7 +78,7 @@ export const AuthProvider = (props) => {
       }
     } catch (error) {
       captureException(error);
-      return error;
+      return null;
     }
   };
 
@@ -89,9 +89,9 @@ export const AuthProvider = (props) => {
           errorMessage('unauthorized: ' + err.json.message);
         })
         .notFound((err) => {
-          errorMessage('not found:' + err.json.message);
+          errorMessage('not found: ' + err.json.message);
         })
-        .timeout((err) => errorMessage('timeout: ', +err.json.message))
+        .timeout((err) => errorMessage('timeout: ' + err.json.message))
         .error(403, (err) => {
           console.log(err);
           errorMessage('Error: ' + err.json.message);
@@ -100,7 +100,7 @@ export const AuthProvider = (props) => {
           errorMessage('server Error: ' + err.json.message);
         })
         .fetchError((err) => {
-          errorMessage('Network error: ' + err.json.message);
+          errorMessage('Network error');
         })
         .json();
       if (res) {
@@ -112,6 +112,7 @@ export const AuthProvider = (props) => {
     } catch (error) {
       console.log(error);
       captureException(error);
+      return null;
     }
   };
 
@@ -136,11 +137,15 @@ export const AuthProvider = (props) => {
           console.log(err);
           errorMessage('Error: ' + err.json.message);
         })
+        .error(406, (err) => {
+          console.log(err);
+          errorMessage('Error: ' + err.json.message);
+        })
         .internalError((err) => {
           errorMessage('server Error: ' + err.json.message);
         })
         .fetchError((err) => {
-          errorMessage('Network error: ' + err.json.message);
+          errorMessage('Network error');
         })
         .json();
       if (res) {
@@ -217,12 +222,11 @@ export const AuthProvider = (props) => {
         });
 
         const user = await fetchUserDetails(data.access_token);
-        console.log('getting that user..');
         if (user !== null) {
           await setUser(JSON.stringify(user.data));
           dispatch({
             type: USER_DETAILS,
-            payload: user,
+            payload: user.data,
           });
           toast('Welcome back ' + user.data.firstName);
           setLoading(false);
@@ -386,7 +390,6 @@ export const AuthProvider = (props) => {
       validateToken,
     };
   }, [state, loading]);
-
   return (
     <AuthContext.Provider value={values}>{props.children}</AuthContext.Provider>
   );

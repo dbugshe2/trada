@@ -205,7 +205,7 @@ const AddFarmer = ({ navigation }) => {
               errorMessage('server Error: ' + err.json.message);
             })
             .fetchError((err) => {
-              errorMessage('Network error: ', err.json.message);
+              errorMessage('Network error, Please Check your connection');
             })
             .json();
           if (res) {

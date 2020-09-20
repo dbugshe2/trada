@@ -11,7 +11,7 @@
     "react-native/no-raw-text": 2,
     "react-native/no-single-element-style-arrays": 2,
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
   },
   "plugins": [
     "react",
