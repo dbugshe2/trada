@@ -1,0 +1,42 @@
+# Trada App React Native Mobile Client
+
+## project dependecies
+
+| name                                   | version                                                       | link |
+| -------------------------------------- | ------------------------------------------------------------- | ---- |
+| @react-native-community/async-storage  | ^1.9.0                                                        | TODO |
+| @react-native-community/masked-view    | 0.1.6                                                         | TODO |
+| @react-native-community/viewpager      | 3.3.0                                                         | TODO |
+| @react-navigation/drawer               | ^5.3.2                                                        | TODO |
+| @react-navigation/material-bottom-tabs | ^5.1.4                                                        | TODO |
+| @react-navigation/material-top-tabs    | ^5.1.5                                                        | TODO |
+| @react-navigation/native               | ^5.1.1                                                        | TODO |
+| @react-navigation/stack                | ^5.2.3                                                        | TODO |
+| @twotalltotems/react-native-otp-input  | ^1.2.2                                                        | TODO |
+| expo                                   | ~37.0.3                                                       | TODO |
+| expo-asset                             | ~8.1.3                                                        | TODO |
+| expo-background-fetch                  | ~8.1.0                                                        | TODO |
+| expo-camera                            | ~8.2.0                                                        | TODO |
+| expo-font                              | ~8.1.0                                                        | TODO |
+| expo-secure-store                      | ~8.1.0                                                        | TODO |
+| jwt-decode                             | ^2.2.0                                                        | TODO |
+| moment                                 | ^2.24.0                                                       | TODO |
+| react                                  | ~16.9.0                                                       | TODO |
+| react-dom                              | ~16.9.0                                                       | TODO |
+| react-hook-form                        | ^5.1.1                                                        | TODO |
+| react-moment                           | ^0.9.7                                                        | TODO |
+| react-native                           | https//github.com/expo/react-native/archive/sdk-37.0.1.tar.gz | TODO |
+| react-native-gesture-handler           | ~1.6.0                                                        | TODO |
+| react-native-masked-text               | ^1.13.0                                                       | TODO |
+| react-native-modal-dropdown            | ^0.7.0                                                        | TODO |
+| react-native-modalize                  | ^1.3.7-rc.17                                                  | TODO |
+| react-native-paper                     | ^3.6.0                                                        | TODO |
+| react-native-reanimated                | ~1.7.0                                                        | TODO |
+| react-native-safe-area-context         | 0.7.3                                                         | TODO |
+| react-native-screens                   | ~2.2.0                                                        | TODO |
+| react-native-swiper-flatlist           | ^2.0.4                                                        | TODO |
+| react-native-tab-view                  | ^2.13.0                                                       | TODO |
+| react-native-tiny-toast                | ^1.0.7                                                        | TODO |
+| react-native-web                       | ~0.11.7                                                       | TODO |
+| @sentry/react-native                            | ^2.0.3                                                        | TODO |
+| wretch                                 | ^1.7.1                                                        | TODO |
